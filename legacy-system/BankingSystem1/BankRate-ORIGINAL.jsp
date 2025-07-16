@@ -1,4 +1,5 @@
 
+
 <%@page import="java.io.File"%>
 <%@page import="java.io.InputStreamReader"%>
 <%@page import="java.net.URL"%>
@@ -76,49 +77,30 @@
         </nav>
 
     <%
-    // FIXED: Use relative path instead of hard-coded Windows path
-    // Old hard-coded path: "C:/tomcat/apache-tomcat-7.0.34/webapps/BankingSystem1/BankRate.txt"
-    // New platform-independent approach: use ServletContext to get current deployment directory
-    String webAppPath = application.getRealPath("/");
-    String txtFilePath = webAppPath + "BankRate.txt";
-    
-    try {
-        BufferedReader reader = new BufferedReader(new FileReader(txtFilePath));
-        StringBuilder sb = new StringBuilder();
+    String jspPath = session.getServletContext().getRealPath("C:/tomcat/apache-tomcat-7.0.34/webapps/BankingSystem1");
+    String txtFilePath ="C:/tomcat/apache-tomcat-7.0.34/webapps/BankingSystem1/BankRate.txt";
+    BufferedReader reader = new BufferedReader(new FileReader(txtFilePath));
+    StringBuilder sb = new StringBuilder();
 
-        String line;
+    String line;
         sb.append("<main><div class=\"container\">");
-        while((line = reader.readLine())!= null){
-            //sb.append(line);
-            
-            int lastClose = line.lastIndexOf("...");
-            int lastOpen = line.lastIndexOf(":", lastClose);
-            String title=line.substring(0, lastOpen).trim() ;
-            String desc= line.substring(lastOpen + 1, lastClose).trim() ;
-            String link=line.substring(lastClose + 3).trim();
+    while((line = reader.readLine())!= null){
+    //sb.append(line);
+    
+    int lastClose = line.lastIndexOf("...");
+    int lastOpen = line.lastIndexOf(":", lastClose);
+    String title=line.substring(0, lastOpen).trim() ;
+    String desc= line.substring(lastOpen + 1, lastClose).trim() ;
+    String link=line.substring(lastClose + 3).trim();
 
-            sb.append("<div class=\"bg-faded p-4 my-4\" style='height: 350px;'><div class=\"card card-inverse\"><img class=\"card-img img-fluid w-100\" src=\"img/p1.jpg\" style='height:300px;' alt=><div class=\"card-img-overlay bg-overlay\"><h2 class=\"card-title text-shadow text-white text-uppercase mb-0\">");
-            sb.append(title+"</h2><p class=\"lead card-text text-shadow text-white w-50 d-none d-lg-block\">");
-            sb.append(desc+"</p><a href="+link+" class=\"btn btn-secondary\" target='_blank'>Read More</a></div></div></div>");  
-        }
-        reader.close();
-        
-        out.println(sb.toString());
-        
-    } catch(Exception e) {
-        // Better error handling for debugging
-        out.println("<div class='container'>");
-        out.println("<div class='alert alert-danger'>");
-        out.println("<h4>Error Loading Bank Rate Information</h4>");
-        out.println("<p>Error: " + e.getMessage() + "</p>");
-        out.println("<p>Looking for file at: " + txtFilePath + "</p>");
-        out.println("<p>Web app path: " + webAppPath + "</p>");
-        out.println("</div>");
-        out.println("</div>");
-    }
+    sb.append("<div class=\"bg-faded p-4 my-4\" style='height: 350px;'><div class=\"card card-inverse\"><img class=\"card-img img-fluid w-100\" src=\"img/p1.jpg\" style='height:300px;' alt=><div class=\"card-img-overlay bg-overlay\"><h2 class=\"card-title text-shadow text-white text-uppercase mb-0\">");
+    sb.append(title+"</h2><p class=\"lead card-text text-shadow text-white w-50 d-none d-lg-block\">");
+    sb.append(desc+"</p><a href="+link+" class=\"btn btn-secondary\" target='_blank'>Read More</a></div></div></div>");  
+}
+
+
+out.println(sb.toString());
 %>
-
-</main></div>
 
 <footer class="bg-faded text-center py-5">
     <div class="container">

@@ -2,5 +2,21 @@ CLAUDE.md
 
 # Conversation history - personal learning documentation
 docs/conversation-history/
+
+# macOS files
 .DS_Store
 **/.DS_Store
+
+# IntelliJ IDEA files (personal development environment)
+legacy-system/intellij-setup/
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Other IDE files
+.vscode/
+*.swp
+*.swo
+*~
