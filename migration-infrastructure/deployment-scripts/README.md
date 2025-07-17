@@ -76,16 +76,6 @@ These scripts deploy the legacy banking application to EC2 using manual, control
 - Tests application connectivity
 - Provides resource warnings
 
-## File Upload Process
-
-Before running the deployment scripts, upload the necessary files to EC2:
-
-```bash
-# From your local machine
-scp -i "your-key.pem" legacy-system/banking.war ubuntu@your-ip:/opt/banking-modernization/legacy-system/
-scp -i "your-key.pem" legacy-system/dump_bk.sql ubuntu@your-ip:/opt/banking-modernization/legacy-system/
-```
-
 ## Complete Deployment Example
 
 ```bash
