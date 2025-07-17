@@ -15,7 +15,21 @@ These scripts deploy the legacy banking application to EC2 using manual, control
 
 ## Script Execution Order
 
-### 1. Environment Setup
+### 1. Build Application (Local)
+```bash
+./build-legacy-war.sh
+```
+**What it does:**
+- Compiles Java source files from `legacy-system/BankingSystem1/`
+- Packages everything into `legacy-system/banking.war`
+- Handles classpath and servlet dependencies
+- Validates WAR file creation
+
+**Prerequisites:**
+- Java 17 SDK installed locally
+- Run from banking-modernization root directory
+
+### 2. Environment Setup (EC2)
 ```bash
 ./setup-ec2-environment.sh
 ```
@@ -25,7 +39,7 @@ These scripts deploy the legacy banking application to EC2 using manual, control
 - Creates directory structure at `/opt/banking-modernization/`
 - Configures conservative memory settings (128MB max heap)
 
-### 2. Application Deployment
+### 3. Application Deployment
 ```bash
 ./deploy-legacy-manual.sh
 ```
@@ -38,7 +52,7 @@ These scripts deploy the legacy banking application to EC2 using manual, control
 **Prerequisites:**
 - banking.war file must be present in `/opt/banking-modernization/legacy-system/`
 
-### 3. Database Setup
+### 4. Database Setup
 ```bash
 ./database-setup.sh
 ```
@@ -51,7 +65,7 @@ These scripts deploy the legacy banking application to EC2 using manual, control
 **Prerequisites:**
 - dump_bk.sql file must be present in `/opt/banking-modernization/legacy-system/`
 
-### 4. Resource Monitoring
+### 5. Resource Monitoring
 ```bash
 ./resource-monitoring.sh
 ```
@@ -75,32 +89,36 @@ scp -i "your-key.pem" legacy-system/dump_bk.sql ubuntu@your-ip:/opt/banking-mode
 ## Complete Deployment Example
 
 ```bash
-# 1. Upload files to EC2
+# 1. Build application locally
+cd /path/to/banking-modernization
+./migration-infrastructure/deployment-scripts/build-legacy-war.sh
+
+# 2. Upload files to EC2
 scp -i "japanese-drama-source-key-pair.pem" legacy-system/banking.war ubuntu@13.223.22.205:~/
 scp -i "japanese-drama-source-key-pair.pem" legacy-system/dump_bk.sql ubuntu@13.223.22.205:~/
 
-# 2. SSH to EC2 and run deployment scripts
+# 3. SSH to EC2 and run deployment scripts
 ssh -i "japanese-drama-source-key-pair.pem" ubuntu@13.223.22.205
 
-# 3. Copy deployment scripts to EC2
+# 4. Copy deployment scripts to EC2
 scp -i "japanese-drama-source-key-pair.pem" migration-infrastructure/deployment-scripts/* ubuntu@13.223.22.205:~/scripts/
 
-# 4. Run setup
+# 5. Run setup
 cd ~/scripts
 chmod +x *.sh
 ./setup-ec2-environment.sh
 
-# 5. Move uploaded files to correct location
+# 6. Move uploaded files to correct location
 sudo mv ~/banking.war /opt/banking-modernization/legacy-system/
 sudo mv ~/dump_bk.sql /opt/banking-modernization/legacy-system/
 
-# 6. Deploy application
+# 7. Deploy application
 ./deploy-legacy-manual.sh
 
-# 7. Setup database
+# 8. Setup database
 ./database-setup.sh
 
-# 8. Monitor resources
+# 9. Monitor resources
 ./resource-monitoring.sh
 ```
 
