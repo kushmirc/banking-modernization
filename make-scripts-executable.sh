@@ -3,6 +3,7 @@
 # Make all deployment scripts executable
 
 chmod +x migration-infrastructure/deployment-scripts/*.sh
+chmod +x migration-infrastructure/deployment-scripts/javax-to-jakarta-migration.sh
 chmod +x make-scripts-executable.sh
 echo "All deployment scripts are now executable!"
 echo "Scripts ready:"
