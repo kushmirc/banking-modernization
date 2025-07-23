@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chicago Bank - Home</title>
+    
+    <!-- External CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/brand-colors.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/home.css" rel="stylesheet">
+</head>
+<body class="home-page">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <img src="/images/chicago-bank-logo.svg" alt="Chicago Bank" class="nav-logo">
+                <span class="nav-title">Chicago Bank</span>
+            </a>
+            <div>
+                <a href="/login" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Welcome to Chicago Bank</h1>
+        <p>Modern Banking for the Digital Age</p>
+    </section>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <div class="card">
+            <h2>Banking Modernization in Progress</h2>
+            <p>
+                We're upgrading our systems to provide you with a better, more secure banking experience. 
+                During this transition, you'll see improvements rolling out feature by feature.
+            </p>
+        </div>
+        
+        <div class="card">
+            <h2>Our Color Scheme</h2>
+            <div class="color-showcase">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: var(--primary-solid);"></div>
+                    <p class="color-label">Primary</p>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));"></div>
+                    <p class="color-label">Primary Gradient</p>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: var(--secondary-blue);"></div>
+                    <p class="color-label">Secondary Blue</p>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: var(--success);"></div>
+                    <p class="color-label">Success</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- External JavaScript -->
+    <script src="/js/main.js"></script>
+</body>
+</html>
