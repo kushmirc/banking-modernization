@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Chicago Bank</title>
+    
+    <!-- External CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Project CSS -->
+    <link href="/css/brand-colors.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/about.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation (keeping current design) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <img src="/images/chicago-bank-logo.svg" alt="Chicago Bank" class="nav-logo">
+                <span class="nav-title">Chicago Bank</span>
+            </a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/about" class="active">About</a>
+                <a href="/services">Services</a>
+                <a href="/contact">Contact</a>
+                <a href="/login" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Building Trust Since 1970</h1>
+            <p>For over 50 years, Chicago Bank has been at the forefront of banking innovation, 
+               serving our community with integrity, excellence, and a commitment to your financial success.</p>
+        </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section class="content-section">
+        <h2 class="section-title">Our Purpose</h2>
+        <div class="cards-grid">
+            <div class="info-card">
+                <div class="info-card-icon">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <h3>Our Mission</h3>
+                <p>To empower individuals and businesses in Chicago and beyond with innovative financial solutions, 
+                   exceptional service, and unwavering commitment to their success. We strive to make banking 
+                   accessible, transparent, and beneficial for all our customers.</p>
+            </div>
+            <div class="info-card">
+                <div class="info-card-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3>Our Vision</h3>
+                <p>To be the most trusted and innovative financial partner in the Midwest, setting the standard 
+                   for digital banking excellence while maintaining the personal touch that makes us uniquely Chicago. 
+                   We envision a future where banking empowers dreams and builds communities.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="content-section values-section">
+        <h2 class="section-title">Our Core Values</h2>
+        <div class="values-grid">
+            <div class="value-item">
+                <div class="value-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h4>Security First</h4>
+                <p>Your financial security is our top priority. We employ cutting-edge technology to protect your assets.</p>
+            </div>
+            <div class="value-item">
+                <div class="value-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h4>Trust & Integrity</h4>
+                <p>We build lasting relationships through transparent practices and honest communication.</p>
+            </div>
+            <div class="value-item">
+                <div class="value-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <h4>Innovation</h4>
+                <p>Continuously evolving to bring you the latest in banking technology and services.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Years of Service</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">250K+</div>
+                <div class="stat-label">Happy Customers</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">15</div>
+                <div class="stat-label">Branch Locations</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="content-section">
+        <h2 class="section-title">Our Journey</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">1970</div>
+                    <div class="timeline-title">Founded in Chicago</div>
+                    <div class="timeline-description">Started as a small community bank serving local businesses</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">1995</div>
+                    <div class="timeline-title">Digital Banking Pioneer</div>
+                    <div class="timeline-description">One of the first banks in Illinois to offer online banking</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">2010</div>
+                    <div class="timeline-title">Mobile First</div>
+                    <div class="timeline-description">Launched award-winning mobile banking app</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">2025</div>
+                    <div class="timeline-title">Modern Banking Revolution</div>
+                    <div class="timeline-description">Complete digital transformation with AI-powered services</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leadership Team -->
+    <section class="content-section">
+        <h2 class="section-title">Leadership Team</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="team-member-avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="team-member-info">
+                    <h4 class="team-member-name">Sarah Johnson</h4>
+                    <p class="team-member-role">Chief Executive Officer</p>
+                    <p class="team-member-bio">25+ years in banking, leading our digital transformation journey</p>
+                </div>
+            </div>
+            <div class="team-member">
+                <div class="team-member-avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="team-member-info">
+                    <h4 class="team-member-name">Michael Chen</h4>
+                    <p class="team-member-role">Chief Technology Officer</p>
+                    <p class="team-member-bio">Pioneer in fintech innovation and cybersecurity</p>
+                </div>
+            </div>
+            <div class="team-member">
+                <div class="team-member-avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="team-member-info">
+                    <h4 class="team-member-name">Maria Rodriguez</h4>
+                    <p class="team-member-role">Chief Customer Officer</p>
+                    <p class="team-member-bio">Passionate about creating exceptional banking experiences</p>
+                </div>
+            </div>
+            <div class="team-member">
+                <div class="team-member-avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="team-member-info">
+                    <h4 class="team-member-name">David Thompson</h4>
+                    <p class="team-member-role">Chief Financial Officer</p>
+                    <p class="team-member-bio">Expert in sustainable growth and financial stewardship</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="content-section">
+        <div class="cta-section">
+            <h2>Ready to Experience Modern Banking?</h2>
+            <p>Join thousands of satisfied customers who've made the switch to smarter banking</p>
+            <div class="cta-buttons">
+                <a href="/register" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i>
+                    Open an Account
+                </a>
+                <a href="/contact" class="btn btn-secondary">
+                    <i class="fas fa-comments"></i>
+                    Talk to Us
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Chicago Bank. All rights reserved. | Equal Housing Lender | Member FDIC</p>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="/js/main.js"></script>
+</body>
+</html>
