@@ -51,6 +51,29 @@ body {
     color: var(--text-primary);
 }
 
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--primary-gradient-start);
+}
+
+/* Override for buttons in nav - more specific selector */
+.nav-links .btn.btn-primary {
+    color: white;
+}
+
 .nav-logo {
     width: 40px;
     height: 40px;
