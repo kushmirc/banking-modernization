@@ -1,35 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - Chicago Bank</title>
-    
-    <!-- External CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- Project CSS -->
-    <link href="/css/brand-colors.css" rel="stylesheet">
-    <link href="/css/main.css" rel="stylesheet">
+    <th:block th:replace="~{fragments/common :: head('About Us')}"></th:block>
+    <!-- Page-specific CSS -->
     <link href="/css/about.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation (keeping current design) -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="/" class="nav-brand">
-                <img src="/images/chicago-bank-logo.svg" alt="Chicago Bank" class="nav-logo">
-                <span class="nav-title">Chicago Bank</span>
-            </a>
-            <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="/about" class="active">About</a>
-                <a href="/services">Services</a>
-                <a href="/contact">Contact</a>
-                <a href="/login" class="btn btn-primary">Login</a>
-            </div>
-        </div>
-    </nav>
+    <!-- Include navigation fragment with 'about' marked as active -->
+    <div th:replace="~{fragments/common :: nav('about')}"></div>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -90,6 +68,13 @@
                 <h4>Innovation</h4>
                 <p>Continuously evolving to bring you the latest in banking technology and services.</p>
             </div>
+            <div class="value-item">
+                <div class="value-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h4>Community Focus</h4>
+                <p>Deeply rooted in Chicago, we're committed to supporting local businesses and neighborhoods.</p>
+            </div>
         </div>
     </section>
 
@@ -107,6 +92,10 @@
             <div class="stat-item">
                 <div class="stat-number">15</div>
                 <div class="stat-label">Branch Locations</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">$2B+</div>
+                <div class="stat-label">Assets Managed</div>
             </div>
         </div>
     </section>
@@ -215,12 +204,10 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 Chicago Bank. All rights reserved. | Equal Housing Lender | Member FDIC</p>
-    </footer>
+    <!-- Include footer fragment -->
+    <footer th:replace="~{fragments/common :: footer}"></footer>
     
-    <!-- JavaScript -->
-    <script src="/js/main.js"></script>
+    <!-- Include common scripts -->
+    <div th:replace="~{fragments/common :: scripts}"></div>
 </body>
 </html>

@@ -1,0 +1,79 @@
+<!-- Thymeleaf Fragment File - No HTML/BODY wrapper needed -->
+
+<!-- ===== HEAD FRAGMENT ===== -->
+<!-- Common head content that all pages share -->
+<th:block th:fragment="head(title)" xmlns:th="http://www.thymeleaf.org">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title th:text="${title} + ' - Chicago Bank'">Chicago Bank</title>
+        
+        <!-- Favicon -->
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        
+        <!-- External CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        
+        <!-- Project CSS - Always loaded -->
+        <link href="/css/brand-colors.css" rel="stylesheet">
+        <link href="/css/main.css" rel="stylesheet">
+    </th:block>
+    
+    <!-- ===== MAIN NAVIGATION FRAGMENT ===== -->
+    <!-- Standard navigation used across all public pages -->
+    <nav th:fragment="nav(activeItem)" class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <img src="/images/chicago-bank-logo.svg" alt="Chicago Bank" class="nav-logo">
+                <span class="nav-title">Chicago Bank</span>
+            </a>
+            <div class="nav-links">
+                <a href="/" th:classappend="${activeItem == 'home'} ? 'active' : ''">Home</a>
+                <a href="/about" th:classappend="${activeItem == 'about'} ? 'active' : ''">About</a>
+                <a href="/services" th:classappend="${activeItem == 'services'} ? 'active' : ''">Services</a>
+                <a href="/contact" th:classappend="${activeItem == 'contact'} ? 'active' : ''">Contact</a>
+                <a href="/login" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== FOOTER FRAGMENT ===== -->
+    <!-- Common footer used across all pages -->
+    <footer th:fragment="footer">
+        <p>&copy; 2025 Chicago Bank. All rights reserved. | Equal Housing Lender | Member FDIC</p>
+    </footer>
+    
+    <!-- ===== SCRIPTS FRAGMENT ===== -->
+    <!-- Common JavaScript files -->
+    <th:block th:fragment="scripts">
+        <!-- External JavaScript -->
+        <script src="/js/main.js"></script>
+        <!-- Page-specific scripts will be added after this fragment -->
+    </th:block>
+    
+    <!-- ===== MESSAGE FRAGMENTS ===== -->
+    <!-- Success message -->
+    <div th:fragment="success-message(message)" class="alert alert-success" th:if="${message}">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${message}">Success message</span>
+    </div>
+    
+    <!-- Error message -->
+    <div th:fragment="error-message(message)" class="alert alert-error" th:if="${message}">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span th:text="${message}">Error message</span>
+    </div>
+    
+    <!-- Info message -->
+    <div th:fragment="info-message(message)" class="alert alert-info" th:if="${message}">
+        <i class="fas fa-info-circle"></i>
+        <span th:text="${message}">Info message</span>
+    </div>
+    
+    <!-- Warning message -->
+    <div th:fragment="warning-message(message)" class="alert alert-warning" th:if="${message}">
+        <i class="fas fa-exclamation-circle"></i>
+        <span th:text="${message}">Warning message</span>
+    </div>

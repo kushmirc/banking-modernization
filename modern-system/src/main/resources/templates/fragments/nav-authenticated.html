@@ -1,0 +1,21 @@
+<!-- ===== AUTHENTICATED NAVIGATION FRAGMENT ===== -->
+<!-- Navigation for logged-in users (future use) -->
+<nav th:fragment="nav-authenticated(activeItem, username)" class="navbar" xmlns:th="http://www.thymeleaf.org">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            <img src="/images/chicago-bank-logo.svg" alt="Chicago Bank" class="nav-logo">
+            <span class="nav-title">Chicago Bank</span>
+        </a>
+        <div class="nav-links">
+            <a href="/" th:classappend="${activeItem == 'home'} ? 'active' : ''">Home</a>
+            <a href="/about" th:classappend="${activeItem == 'about'} ? 'active' : ''">About</a>
+            <a href="/services" th:classappend="${activeItem == 'services'} ? 'active' : ''">Services</a>
+            <a href="/contact" th:classappend="${activeItem == 'contact'} ? 'active' : ''">Contact</a>
+            <a href="/profile" th:classappend="${activeItem == 'profile'} ? 'active' : ''">Profile</a>
+            <div class="user-menu">
+                <span class="user-name" th:text="'Welcome, ' + ${username}">Welcome, User</span>
+                <a href="/logout" class="btn btn-secondary">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>

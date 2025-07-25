@@ -1,32 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chicago Bank - Home</title>
-    
-    <!-- External CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="/css/brand-colors.css" rel="stylesheet">
-    <link href="/css/main.css" rel="stylesheet">
+    <th:block th:replace="~{fragments/common :: head('Home')}"></th:block>
+    <!-- Page-specific CSS -->
     <link href="/css/home.css" rel="stylesheet">
 </head>
 <body class="home-page">
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="/" class="nav-brand">
-                <img src="/images/chicago-bank-logo.svg" alt="Chicago Bank" class="nav-logo">
-                <span class="nav-title">Chicago Bank</span>
-            </a>
-            <div>
-                <a href="/login" class="btn btn-primary">Login</a>
-            </div>
-        </div>
-    </nav>
+    <header>
+        <!-- Include navigation fragment with 'home' marked as active -->
+        <th:block th:replace="~{fragments/common :: nav('home')}"></th:block>
+    </header>
     
-    <!-- Hero Section -->
-    <section class="hero">
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
         <h1>Welcome to Chicago Bank</h1>
         <p>Modern Banking for the Digital Age</p>
     </section>
@@ -49,6 +36,10 @@
                     <p class="color-label">Primary</p>
                 </div>
                 <div class="color-swatch">
+                    <div class="color-box" style="background: var(--primary-gradient-light);"></div>
+                    <p class="color-label">Primary Light</p>
+                </div>
+                <div class="color-swatch">
                     <div class="color-box" style="background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));"></div>
                     <p class="color-label">Primary Gradient</p>
                 </div>
@@ -63,8 +54,12 @@
             </div>
         </div>
     </div>
+    </main>
     
-    <!-- External JavaScript -->
-    <script src="/js/main.js"></script>
+    <!-- Include footer fragment -->
+    <footer th:replace="~{fragments/common :: footer}"></footer>
+    
+    <!-- Include common scripts -->
+    <div th:replace="~{fragments/common :: scripts}"></div>
 </body>
 </html>
