@@ -1,5 +1,9 @@
 # Banking Application Modernization: Java JSP/Servlets to Spring Boot
 
+### <em>Video Walkthrough: </em>https://youtu.be/wd9cKoyIxMw
+<a href="https://youtu.be/wd9cKoyIxMw">
+<img width="3446" height="1916" alt="banking_modernization_screenshot" src="https://github.com/user-attachments/assets/f004cea6-c020-4482-bdf5-e82e906c747b" />
+
 [![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://openjdk.java.net/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue.svg)](https://www.postgresql.org/)
@@ -7,9 +11,9 @@
 
 > **Incremental modernization of a legacy Java JSP/Servlets banking application to Spring Boot 3.x**
 
-## 🎯 Project Overview
+## Project Overview
 
-This project demonstrates **enterprise-level legacy system modernization** using the Strangler Fig pattern to incrementally migrate a banking application from JSP/Servlets to Spring Boot 3.x. Rather than a risky "big bang" rewrite, this approach maintains business continuity while delivering continuous value through feature-by-feature migration.
+This project demonstrates enterprise-level legacy system modernization using the Strangler Fig pattern to incrementally migrate a banking application from JSP/Servlets to Spring Boot 3.x. Rather than a risky "big bang" rewrite, this approach maintains business continuity while delivering continuous value through feature-by-feature migration.
 
 ### Why This Approach Matters
 
@@ -18,7 +22,7 @@ This project demonstrates **enterprise-level legacy system modernization** using
 - **Risk mitigation** through feature flags and rollback capabilities
 - **Continuous value delivery** rather than waiting months/years for completion
 
-## 🏗️ Architecture & Migration Strategy
+## Architecture & Migration Strategy
 
 ### Current Infrastructure
 
@@ -34,7 +38,7 @@ This project demonstrates **enterprise-level legacy system modernization** using
 │  ┌─────────▼───────┐    ┌─────────────▼───────────────────┐ │
 │  │ Legacy System   │    │    Modern System                │ │
 │  │ JSP/Servlets    │    │    Spring Boot 3.x              │ │
-│  │ Tomcat 9        │    │    Embedded Tomcat              │ │
+│  │ Tomcat 10       │    │    Embedded Tomcat              │ │
 │  └─────────────────┘    └─────────────────────────────────┘ │
 ├─────────────────────────────────────────────────────────────┤
 │                     Database Layer                          │
@@ -71,7 +75,7 @@ This project demonstrates **enterprise-level legacy system modernization** using
 - **Fund transfers** (Internal and external bank transfers)
 - **Complaint system** (Customer service and resolution tracking)
 
-## 🔧 Technical Implementation
+## Technical Implementation
 
 ### Legacy System (Reference Baseline)
 - **Framework**: Traditional JSP/Servlets with manual MVC implementation
@@ -109,4 +113,7 @@ Infrastructure:
   - Docker (containerization)
   - Feature flags (gradual migration)
 ```
+
+
+
 
