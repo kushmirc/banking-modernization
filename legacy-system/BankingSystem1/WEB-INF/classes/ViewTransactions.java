@@ -37,8 +37,8 @@ public class ViewTransactions extends HttpServlet {
 
 try{
 			
-			Class.forName("com.mysql.jdbc.Driver");
-			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/BNS","root","Passw0rd!");
+			Class.forName("org.postgresql.Driver");
+			con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/banking_system","postgres","Passw0rd!");
 			System.out.println("Database connection established successfully");
 			
 		}

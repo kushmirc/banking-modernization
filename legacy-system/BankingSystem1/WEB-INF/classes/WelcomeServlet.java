@@ -44,7 +44,7 @@ import java.sql.*;
 
 
 				PrintWriter pw=response.getWriter();
-				ResultSet rs= MySqlDataStoreUtilities.getUserData(un, usertype);
+				ResultSet rs= PostgreSqlDataStoreUtilities.getUserData(un, usertype);
 
 				Utilities utility = new Utilities(request, pw);
 				if(!utility.isLoggedin()){
@@ -133,7 +133,7 @@ import java.sql.*;
 			// // +"}"
 			// +"return false; }</script>");
 						pw.println("<h4>List of Complaints :</h4><table style='width:100%; text-align:center;' border=2>");
-						ResultSet r = MySqlDataStoreUtilities.getComplaints();
+						ResultSet r = PostgreSqlDataStoreUtilities.getComplaints();
 						pw.print("<thead><tr>");
 						if(r.absolute(1))
 						{
