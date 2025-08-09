@@ -55,7 +55,7 @@ public class customerdetails extends HttpServlet {
 
 		
 		try{
-			ResultSet rs= MySqlDataStoreUtilities.getUserDetailAccount(un);
+			ResultSet rs= PostgreSqlDataStoreUtilities.getUserDetailAccount(un);
 			
 
 			if(rs !=null){

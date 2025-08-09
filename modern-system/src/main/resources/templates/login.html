@@ -24,7 +24,6 @@
                 <!-- Success/Error Messages using fragments -->
                 <div th:replace="~{fragments/common :: success-message(${param.logout} ? 'You have been successfully logged out.' : null)}"></div>
                 <div th:replace="~{fragments/common :: error-message(${param.error} ? 'Invalid username or password. Please try again.' : null)}"></div>
-                
                 <form th:action="@{/login}" method="post" id="loginForm">
                     <!-- Role Selection -->
                     <div class="form-group">

@@ -49,7 +49,7 @@ pw.println("<strong><a href=welcome>Home</a></strong>\t\t");
 		if (actno.equals(""))	
 		{
 			
-			ResultSet rs = MySqlDataStoreUtilities.getAllTransactions();
+			ResultSet rs = PostgreSqlDataStoreUtilities.getAllTransactions();
 			
 			
 			if(rs.absolute(1))
@@ -93,7 +93,7 @@ pw.println("<strong><a href=welcome>Home</a></strong>\t\t");
 				
 		}else{
 			System.out.println("entering");
-			ResultSet rs = MySqlDataStoreUtilities.getParticularTransactions(actno);
+			ResultSet rs = PostgreSqlDataStoreUtilities.getParticularTransactions(actno);
 			System.out.println("fetched");
 			if(rs.absolute(1))
 			{
@@ -144,7 +144,7 @@ pw.println("<strong><a href=welcome>Home</a></strong>\t\t");
 	}
 		
 		// try{
-		// 	ResultSet rs =  MySqlDataStoreUtilities.getUserDetailAccount(actno);
+		// 	ResultSet rs =  PostgreSqlDataStoreUtilities.getUserDetailAccount(actno);
 		// 	rs.next();
 		// 	balance = rs.getString(8);
 		// }catch(Exception e){
@@ -174,9 +174,9 @@ pw.println("<strong><a href=welcome>Home</a></strong>\t\t");
 		// // if(remark.equals("good")){
 		// try
 		// {
-		// 	remark = MySqlDataStoreUtilities.UpdateBalance(actno, Finalamt);
+		// 	remark = PostgreSqlDataStoreUtilities.UpdateBalance(actno, Finalamt);
 		// 	transtatus="pass";
-		// 	MySqlDataStoreUtilities.insertTranscationRecord(actno,trandesc,transtatus,remark);
+		// 	PostgreSqlDataStoreUtilities.insertTranscationRecord(actno,trandesc,transtatus,remark);
 		// }
 		// catch(Exception e)
 		// { 

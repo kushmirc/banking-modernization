@@ -42,8 +42,8 @@ public class FTOtherBank extends HttpServlet {
 			
 try{
 			
-			Class.forName("com.mysql.jdbc.Driver");
-			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/BNS","root","Passw0rd!");
+			Class.forName("org.postgresql.Driver");
+			con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/banking_system","kushmirchandani","");
 			System.out.println("Database connection established successfully in user credentials change servlet");
 			
 		}
@@ -157,11 +157,11 @@ try{
 		
 		try {
 
-			MySqlDataStoreUtilities.insertTranscationRecord(actno,s1,trandesc,transtatus,remark,Integer.parseInt(s2),"debit");
+			PostgreSqlDataStoreUtilities.insertTranscationRecord(actno,s1,trandesc,transtatus,remark,Integer.parseInt(s2),"debit");
 
 			System.out.println("Transaction table updated successfully");
 
-			MySqlDataStoreUtilities.insertholdTranscationRecord((int) tranid,actno,s1);
+			PostgreSqlDataStoreUtilities.insertholdTranscationRecord((int) tranid,actno,s1);
 
 			System.out.println("entry done in hold transaction table");
 

@@ -48,11 +48,11 @@ public class createCustomer extends HttpServlet {
 		state = request.getParameter("state");
 		zip = Integer.parseInt(request.getParameter("zip").trim());
 
-		if(MySqlDataStoreUtilities.checkAccountExsist(actno) == 1){
+		if(PostgreSqlDataStoreUtilities.checkAccountExsist(actno) == 1){
 			msg = "Account number already taken";
 
 		}
-		if(MySqlDataStoreUtilities.checkUserName(userid) == 1){
+		if(PostgreSqlDataStoreUtilities.checkUserName(userid) == 1){
 			msg = "UserID already taken";
 
 		}
@@ -62,7 +62,7 @@ public class createCustomer extends HttpServlet {
 		if(msg.equals("good")){
 			try
 			{
-				msg = MySqlDataStoreUtilities.addCustomer(fname, lname, dob, userid,pword,actno ,gender, balance,addressline1,addressline2,city,state,zip);
+				msg = PostgreSqlDataStoreUtilities.addCustomer(fname, lname, dob, userid,pword,actno ,gender, balance,addressline1,addressline2,city,state,zip);
 			}
 			catch(Exception e)
 			{ 

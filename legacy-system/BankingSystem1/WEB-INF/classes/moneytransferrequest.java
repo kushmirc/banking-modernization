@@ -42,7 +42,7 @@ public class moneytransferrequest extends HttpServlet {
 		}
 		try
 		{
-			msg = MySqlDataStoreUtilities.approveTranscation(holdID,action,tranid, un);
+			msg = PostgreSqlDataStoreUtilities.approveTranscation(holdID,action,tranid, un);
 		}
 		catch(Exception e)
 		{ 
@@ -103,7 +103,7 @@ public class moneytransferrequest extends HttpServlet {
 
 		try{
 
-			ResultSet rs =MySqlDataStoreUtilities.getAllholdTranscationRecord();
+			ResultSet rs =PostgreSqlDataStoreUtilities.getAllholdTranscationRecord();
 			if(rs.absolute(1))
 			{
 				ResultSetMetaData rm=rs.getMetaData();				

@@ -57,7 +57,7 @@ public class deleteCustomer extends HttpServlet {
 		// if(msg.equals("good")){
 			try
 			{
-				msg = MySqlDataStoreUtilities.deleteUserAccount(actno);
+				msg = PostgreSqlDataStoreUtilities.deleteUserAccount(actno);
 			}
 			catch(Exception e)
 			{ 

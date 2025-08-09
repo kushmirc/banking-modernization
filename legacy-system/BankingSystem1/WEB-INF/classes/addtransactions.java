@@ -36,7 +36,7 @@ public class addtransactions extends HttpServlet {
 		
 		
 		try{
-			ResultSet rs =  MySqlDataStoreUtilities.getUserDetailAccount(actno);
+			ResultSet rs =  PostgreSqlDataStoreUtilities.getUserDetailAccount(actno);
 			rs.next();
 			balance = rs.getString(8);
 		}catch(Exception e){
@@ -65,9 +65,9 @@ public class addtransactions extends HttpServlet {
 		// if(remark.equals("good")){
 		try
 		{
-			remark = MySqlDataStoreUtilities.UpdateBalance(actno, Finalamt);
+			remark = PostgreSqlDataStoreUtilities.UpdateBalance(actno, Finalamt);
 			transtatus="pass";
-			MySqlDataStoreUtilities.insertTranscationRecord(actno,actno,trandesc,transtatus,remark,Integer.parseInt(amt),option);
+			PostgreSqlDataStoreUtilities.insertTranscationRecord(actno,actno,trandesc,transtatus,remark,Integer.parseInt(amt),option);
 		}
 		catch(Exception e)
 		{ 

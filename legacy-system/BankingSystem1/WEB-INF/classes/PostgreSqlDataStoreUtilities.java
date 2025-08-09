@@ -28,7 +28,7 @@ public class PostgreSqlDataStoreUtilities
 			// Using lowercase database name for PostgreSQL best practices
 			conn = DriverManager.getConnection(
 				"jdbc:postgresql://localhost:5432/banking_system",
-				"postgres", 
+				"banking_user", 
 				"Passw0rd!"
 			);							
 			message="Successful";

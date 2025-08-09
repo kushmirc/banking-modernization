@@ -40,8 +40,8 @@ public class FTWithin extends HttpServlet {
 		
 try{
 			
-			Class.forName("com.mysql.jdbc.Driver");
-			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/BNS","root","Passw0rd!");
+			Class.forName("org.postgresql.Driver");
+			con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/banking_system","kushmirchandani","");
 			System.out.println("Database connection established successfully in Funds transfer With in bank servlet");
 			
 		}
@@ -178,8 +178,8 @@ try{
 			
 			
 			System.out.println("New balance is updated successfully in database");
-			MySqlDataStoreUtilities.insertTranscationRecord(actno,s1,trandesc,transtatus,remark,Integer.parseInt(s2),"debit");
-			MySqlDataStoreUtilities.insertTranscationRecord(s1,actno,trandesc,transtatus,remark,Integer.parseInt(s2),"credit");
+			PostgreSqlDataStoreUtilities.insertTranscationRecord(actno,s1,trandesc,transtatus,remark,Integer.parseInt(s2),"debit");
+			PostgreSqlDataStoreUtilities.insertTranscationRecord(s1,actno,trandesc,transtatus,remark,Integer.parseInt(s2),"credit");
 			
 			System.out.println("Transaction table updated successfully");
 			

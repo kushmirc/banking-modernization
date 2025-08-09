@@ -82,7 +82,7 @@ import jakarta.servlet.RequestDispatcher;
 		//else error message will be shown
 		try
 		{		
-			hm=MySqlDataStoreUtilities.selectUser(s1,s2,s3);			
+			hm=PostgreSqlDataStoreUtilities.selectUser(s1,s2,s3);			
 		}
 		catch(Exception e)
 		{

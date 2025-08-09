@@ -51,7 +51,7 @@ public class updateCustomer extends HttpServlet {
 
 		if(pword.isEmpty()){
 			try{
-				ResultSet rs =  MySqlDataStoreUtilities.getUserDetailAccount(actno);
+				ResultSet rs =  PostgreSqlDataStoreUtilities.getUserDetailAccount(actno);
 				rs.next();
 				pword = rs.getString(5);
 			}catch(Exception e){
@@ -67,7 +67,7 @@ public class updateCustomer extends HttpServlet {
 		if(msg.equals("good")){
 			try
 			{
-				msg = MySqlDataStoreUtilities.updateCustomer(fname, lname, dob, userid,pword,actno ,gender, balance,addressline1,addressline2,city,state,zip);
+				msg = PostgreSqlDataStoreUtilities.updateCustomer(fname, lname, dob, userid,pword,actno ,gender, balance,addressline1,addressline2,city,state,zip);
 			}
 			catch(Exception e)
 			{ 
