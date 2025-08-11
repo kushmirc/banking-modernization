@@ -38,7 +38,7 @@ public class ViewTransactions extends HttpServlet {
 try{
 			
 			Class.forName("org.postgresql.Driver");
-			con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/banking_system","postgres","Passw0rd!");
+			con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/banking_system","banking_user","Passw0rd!");
 			System.out.println("Database connection established successfully");
 			
 		}
@@ -79,53 +79,43 @@ pw.println("<strong><a href=welcome>Home</a></strong>\t\t");
 		
 		try{
 			
-			pstmt=con.prepareStatement("select * from transaction where fromactno=?",ResultSet.TYPE_SCROLL_INSENSITIVE,
-				ResultSet.CONCUR_UPDATABLE);
+			// Use forward-only ResultSet for PostgreSQL compatibility
+			pstmt=con.prepareStatement("select * from transaction where fromactno=?");
 			pstmt.setString(1, actno);
 			
 			ResultSet rs=pstmt.executeQuery();
 			
-		
-			if(rs.absolute(1))
-			{
+			// Check if ResultSet has data by trying to move to first record
+			boolean hasData = false;
 			
+			// First, get metadata and print headers
+			ResultSetMetaData rm=rs.getMetaData();
+			int colcnt=rm.getColumnCount();
 			
-						
-						
-						ResultSetMetaData rm=rs.getMetaData();
-						
-						int colcnt=rm.getColumnCount();
-						
-						pw.print("<thead><tr>");
-						
-						for(int i=1;i<=colcnt;i++){
-							
-							pw.print("<th>"+rm.getColumnName(i).toLowerCase()+"</th>");
-							
-						}//for
-						pw.print("</tr></thead><tbody>");
-						rs.first();
-						do {
-							pw.print("<tr>");
-							
-							
-							
-							for(int i=1;i<=colcnt;i++){
-								
-								pw.print("<td>"+rs.getString(i)+"</td>");
-								
-							} //for
-							pw.print("</tr>");
-										
-						} while(rs.next());//while
-						pw.print("</tbody></table>");
+			pw.print("<thead><tr>");
+			for(int i=1;i<=colcnt;i++){
+				pw.print("<th>"+rm.getColumnName(i).toLowerCase()+"</th>");
+			}//for
+			pw.print("</tr></thead><tbody>");
 			
-			}//if
+			// Now iterate through results
+			while(rs.next()) {
+				hasData = true;
+				pw.print("<tr>");
+				
+				for(int i=1;i<=colcnt;i++){
+					pw.print("<td>"+rs.getString(i)+"</td>");
+				} //for
+				pw.print("</tr>");
+			} //while
 			
-			else{
-				pw.println("There are no Transactions happened in this account");
-
+			if(hasData) {
+				pw.print("</tbody></table>");
+			} else {
+				pw.print("</tbody></table>");
+				pw.println("<p>There are no Transactions happened in this account</p>");
 			}
+		
 			pw.print("</td></div></div></div></div></div></div></center></center>");
 			utility.printHtml("Footer.html");
 		}

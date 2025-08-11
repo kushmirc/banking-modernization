@@ -45,7 +45,7 @@ public class CustomerLogin extends HttpServlet {
 			
 			sc=getServletContext();
 			Class.forName("org.postgresql.Driver");
-			con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/banking_system","root","Passw0rd!");
+			con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/banking_system","banking_user","Passw0rd!");
 			System.out.println("Database connection established successfully in validating Login credential servlet");
 			
 		}

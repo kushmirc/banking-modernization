@@ -43,7 +43,7 @@ public class FTOtherBank extends HttpServlet {
 try{
 			
 			Class.forName("org.postgresql.Driver");
-			con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/banking_system","kushmirchandani","");
+			con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/banking_system","banking_user","Passw0rd!");
 			System.out.println("Database connection established successfully in user credentials change servlet");
 			
 		}

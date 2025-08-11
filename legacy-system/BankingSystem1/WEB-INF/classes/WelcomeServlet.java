@@ -134,11 +134,18 @@ import java.sql.*;
 			// +"return false; }</script>");
 						pw.println("<h4>List of Complaints :</h4><table style='width:100%; text-align:center;' border=2>");
 						ResultSet r = PostgreSqlDataStoreUtilities.getComplaints();
-						pw.print("<thead><tr>");
-						if(r.absolute(1))
-						{
-							ResultSetMetaData rm=r.getMetaData();
-							int colcnt=rm.getColumnCount();
+						
+						// Use forward-only ResultSet for PostgreSQL compatibility
+						boolean hasData = false;
+						ResultSetMetaData rm = null;
+						int colcnt = 0;
+						
+						if(r != null) {
+							rm = r.getMetaData();
+							colcnt = rm.getColumnCount();
+							
+							// Print table headers
+							pw.print("<thead><tr>");
 							for(int i=1;i<=colcnt;i++){
 								if (i==8){
 									continue;
@@ -146,10 +153,11 @@ import java.sql.*;
 								pw.print("<th>"+rm.getColumnName(i).toLowerCase()+"</th>");
 							}
 							pw.print("</tr></thead><tbody>");
-							r.first();
-							String id;
-							do {
-								id="";
+							
+							// Iterate through results
+							while(r.next()) {
+								hasData = true;
+								String id = "";
 								pw.print("<tr>");
 								for(int i=1;i<=colcnt;i++){
 									if (i==8){
@@ -165,18 +173,21 @@ import java.sql.*;
 										} else{
 											s = "<select onchange='changeClosed("+id+",this);'><option value='True'>True</option><option value='False'>False</option></select>";
 										}
-										
 									} 
 									pw.print("<td>"+s+"</td>");
-									
 								}
 								pw.print("</tr>");
-							} while(r.next());
+							}
+							
+							if(hasData) {
+								pw.print("</tbody></table>");
+							} else {
+								pw.print("</tbody></table>");
+								pw.println("<h4>There are no Complaints</h4>");
+							}
+						} else {
 							pw.print("</tbody></table>");
-						} else{
 							pw.println("<h4>There are no Complaints</h4>");
-							pw.print("</table></div></div></div></div></div></div></center></center>");
-							utility.printHtml("Footer.html");
 						}
 					}
 
