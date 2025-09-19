@@ -55,13 +55,15 @@
     
     <!-- ===== MESSAGE FRAGMENTS ===== -->
     <!-- Success message -->
-    <div th:fragment="success-message(message)" class="alert alert-success" th:if="${message}">
+    <div th:fragment="success-message(message)" class="alert alert-success">
+    <!--<div th:fragment="success-message(message)" class="alert alert-success" th:if="${message}">-->
         <i class="fas fa-check-circle"></i>
         <span th:text="${message}">Success message</span>
     </div>
     
     <!-- Error message -->
     <div th:fragment="error-message(message)" class="alert alert-error" th:if="${message}">
+    <!--<div th:fragment="error-message(message)" class="alert alert-error" th:if="${message}">-->
         <i class="fas fa-exclamation-triangle"></i>
         <span th:text="${message}">Error message</span>
     </div>
