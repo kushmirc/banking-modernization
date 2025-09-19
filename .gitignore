@@ -20,3 +20,4 @@ out/
 *.swp
 *.swo
 *~
+/docs/mentoring-protocol.md

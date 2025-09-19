@@ -1,0 +1,102 @@
+// Jenkinsfile
+// Pipeline for deploying the modern banking system
+// This integrates with GitHub Actions CI and handles the deployment (CD) part
+
+pipeline {
+    agent any
+    
+    parameters {
+        choice(
+            name: 'ENVIRONMENT',
+            choices: ['dev', 'prod'],
+            description: 'Deployment environment'
+        )
+        booleanParam(
+            name: 'RUN_TESTS',
+            defaultValue: true,
+            description: 'Run smoke tests after deployment'
+        )
+    }
+    
+    environment {
+        GITHUB_REPO = 'kushmirchandani/banking-modernization'
+        EC2_HOST = 'your-ec2-ip'  // Replace with actual IP
+        APP_PORT = '8081'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out code from GitHub...'
+                git branch: 'main', url: "https://github.com/${GITHUB_REPO}.git"
+            }
+        }
+        
+        stage('Download Artifacts') {
+            steps {
+                echo 'Downloading artifacts from GitHub Actions...'
+                script {
+                    // In a real setup, you'd download from GitHub Actions artifacts
+                    // For now, we'll build locally
+                    sh '''
+                        cd modern-system
+                        ./mvnw clean package -DskipTests
+                    '''
+                }
+            }
+        }
+        
+        stage('Deploy to EC2') {
+            steps {
+                echo "Deploying to ${params.ENVIRONMENT} environment..."
+                
+                // Copy JAR and scripts to EC2
+                sh """
+                    scp modern-system/target/banking-modern-*.jar ubuntu@${EC2_HOST}:/tmp/
+                    scp migration-infrastructure/deployment-scripts/modern/deploy-modern.sh ubuntu@${EC2_HOST}:/tmp/
+                """
+                
+                // Run deployment script on EC2
+                sh """
+                    ssh ubuntu@${EC2_HOST} 'chmod +x /tmp/deploy-modern.sh && /tmp/deploy-modern.sh ${params.ENVIRONMENT}'
+                """
+            }
+        }
+        
+        stage('Smoke Tests') {
+            when {
+                expression { params.RUN_TESTS == true }
+            }
+            steps {
+                echo 'Running smoke tests...'
+                script {
+                    // Simple smoke test - check if app is responding
+                    def response = sh(
+                        script: "curl -s -o /dev/null -w '%{http_code}' http://${EC2_HOST}:${APP_PORT}/actuator/health",
+                        returnStdout: true
+                    ).trim()
+                    
+                    if (response == '200') {
+                        echo '✓ Health check passed'
+                    } else {
+                        error '✗ Health check failed'
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Deployment successful!'
+            // Could add Slack notification here
+        }
+        failure {
+            echo 'Deployment failed!'
+            // Could trigger rollback or send alerts
+        }
+        always {
+            echo "Deployment finished at: ${new Date()}"
+        }
+    }
+}
