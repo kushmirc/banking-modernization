@@ -21,7 +21,7 @@ pipeline {
     environment {
         GITHUB_REPO = 'kushmirchandani/banking-modernization'
         EC2_HOST = 'your-ec2-ip'  // Replace with actual IP
-        APP_PORT = '8081'
+        APP_PORT = '8080'
     }
     
     stages {
