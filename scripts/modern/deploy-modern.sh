@@ -13,11 +13,11 @@
 set -e  # Exit on error
 
 # Basic Configuration
-APP_NAME="banking-modern"
-APP_DIR="/opt/banking-modern"
+APP_NAME="modern-system"
+APP_DIR="/opt/banking-modernization"
 BACKUP_DIR="/opt/backups/banking-modern"
 JAR_NAME="banking-modern-0.0.1-SNAPSHOT.jar"
-APP_PORT="8080"
+APP_PORT="8083"
 ENVIRONMENT=${1:-dev}
 
 # Database settings (in production, use environment variables or secrets)
