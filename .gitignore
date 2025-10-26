@@ -21,3 +21,6 @@ out/
 *.swo
 *~
 /docs/mentoring-protocol.md
+
+# Training and practice area (personal use only)
+sandbox/

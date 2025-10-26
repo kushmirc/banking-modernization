@@ -15,16 +15,17 @@ set -e  # Exit on error
 # Basic Configuration
 APP_NAME="modern-system"
 APP_DIR="/opt/banking-modernization"
-BACKUP_DIR="/opt/backups/banking-modern"
+BACKUP_DIR="$APP_DIR/modern-system/backups"
+LOG_DIR="$APP_DIR/modern-system/logs"
 JAR_NAME="banking-modern-0.0.1-SNAPSHOT.jar"
 APP_PORT="8083"
 ENVIRONMENT=${1:-dev}
 
 # Database settings (in production, use environment variables or secrets)
 DB_HOST="localhost"
-DB_NAME="banking_db"
-DB_USER="postgres"
-DB_PASSWORD="postgres"  # Should be externalized in real deployment
+DB_NAME="banking_system"
+DB_USER="banking_user"
+DB_PASSWORD="Passw0rd!"  # Should be externalized in real deployment
 
 echo "========================================"
 echo "Deploying Modern Banking System"
@@ -48,6 +49,11 @@ if [ ! -d "$APP_DIR" ]; then
     sudo chown $USER:$USER "$APP_DIR"
 fi
 
+if [ ! -d "$LOG_DIR" ]; then
+    echo "Creating logs directory..."
+    sudo mkdir -p "$LOG_DIR"
+fi
+
 if [ ! -d "$BACKUP_DIR" ]; then
     echo "Creating backup directory..."
     sudo mkdir -p "$BACKUP_DIR"
@@ -62,8 +68,12 @@ if [ -n "$WORKSPACE" ]; then
     # Jenkins environment - JAR built by GitHub Actions and downloaded
     JAR_SOURCE="$WORKSPACE/modern-system/target/$JAR_NAME"
     echo "Using JAR from Jenkins workspace: $JAR_SOURCE"
+elif [ -f "/opt/banking-modernization/modern-system/target/$JAR_NAME" ]; then
+    # JAR already exists, use it
+    echo "Using existing JAR from target directory..."
+    JAR_SOURCE="/opt/banking-modernization/modern-system/target/$JAR_NAME"
 else
-    # Local/manual deployment - build it
+    # Build from source (only if mvnw exists)
     echo "Building from source..."
     cd /opt/banking-modernization/modern-system
     ./mvnw clean package -DskipTests
@@ -76,10 +86,10 @@ if [ ! -f "$JAR_SOURCE" ]; then
 fi
 
 # 3. Backup Current Version
-if [ -f "$APP_DIR/$JAR_NAME" ]; then
+if [ -f "$APP_DIR/modern-system/$JAR_NAME" ]; then
     echo "Backing up current version..."
     BACKUP_NAME="${JAR_NAME}.$(date +%Y%m%d_%H%M%S)"
-    cp "$APP_DIR/$JAR_NAME" "$BACKUP_DIR/$BACKUP_NAME"
+    cp "$APP_DIR/modern-system/$JAR_NAME" "$BACKUP_DIR/$BACKUP_NAME"
     echo "Backup saved as: $BACKUP_NAME"
 fi
 
@@ -97,23 +107,25 @@ fi
 
 # 5. Deploy New Version
 echo "Deploying new version..."
-cp "$JAR_SOURCE" "$APP_DIR/$JAR_NAME"
-chmod +x "$APP_DIR/$JAR_NAME"
+cp "$JAR_SOURCE" "$APP_DIR/modern-system/$JAR_NAME"
+chmod +x "$APP_DIR/modern-system/$JAR_NAME"
 
 # 6. Start Application
 echo "Starting application..."
 
 cd "$APP_DIR"
-nohup java -jar "$JAR_NAME" \
+nohup java -Xmx200m -jar "$APP_DIR/modern-system/$JAR_NAME" \
     --spring.profiles.active="$ENVIRONMENT" \
     --server.port="$APP_PORT" \
     --spring.datasource.url="jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}" \
     --spring.datasource.username="$DB_USER" \
     --spring.datasource.password="$DB_PASSWORD" \
-    > /var/log/banking-modern.log 2>&1 &
+    > "$LOG_DIR/app.log" 2>&1 &
 
 APP_PID=$!
+echo $APP_PID > "$APP_DIR/modern-system/app.pid"
 echo "Application started with PID: $APP_PID"
+
 
 # 7. Health Check
 echo "Waiting for application to start..."
@@ -143,7 +155,7 @@ if [ $ATTEMPT -gt $MAX_ATTEMPTS ]; then
     
     LATEST_BACKUP=$(ls -t "$BACKUP_DIR"/*.jar 2>/dev/null | head -1)
     if [ -n "$LATEST_BACKUP" ]; then
-        cp "$LATEST_BACKUP" "$APP_DIR/$JAR_NAME"
+        cp "$LATEST_BACKUP" "$APP_DIR/modern-system/$JAR_NAME"
         echo "Restored from backup: $(basename $LATEST_BACKUP)"
         echo "Please start the application manually"
     fi
