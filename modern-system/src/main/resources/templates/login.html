@@ -6,110 +6,160 @@
     <link href="/css/login.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Include navigation fragment (no active item since login is a button, not a nav link) -->
-    <div th:replace="~{fragments/common :: nav('')}"></div>
-    
-    <div class="login-container">
-        <div class="login-box">
-            <div class="login-header">
-                <div class="bank-logo">🏦</div>
-                <div class="bank-name">Chicago Bank</div>
-                <div class="bank-tagline">Secure • Trusted • Modern</div>
-            </div>
-            
-            <div class="login-form">
-                <h2 class="form-title">Welcome Back</h2>
-                <p class="form-subtitle">Sign in to access your banking dashboard</p>
-                
-                <!-- Success/Error Messages using fragments -->
-                <div th:if="${param.logout}"  th:replace="~{fragments/common :: success-message('You have been successfully logged out.')}"></div>
-                <!--<div th:replace="~{fragments/common :: success-message(${param.logout} ? 'You have been successfully logged out.' : '')}"></div>-->
-                <div th:if="${param.error}" th:replace="~{fragments/common :: error-message('Invalid username or password. Please try again.')}"></div>
-                <!--<div th:replace="~{fragments/common :: error-message(${param.error} ? 'Invalid username or password. Please try again.' : '')}"></div>-->
-                <form th:action="@{/login}" method="post" id="loginForm">
-                    <!-- Role Selection -->
-                    <div class="form-group">
-                        <label class="form-label">Login As</label>
-                        <div class="role-selector">
-                            <div class="role-option active" data-role="customer">
-                                <i class="fas fa-user"></i><br>Customer
+    <!-- Navigation -->
+    <nav th:replace="~{fragments/common :: nav('')}">
+        <!-- Navigation will be replaced by fragment -->
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Login Form Section -->
+        <section class="login-form-section">
+            <div class="container">
+                <div class="login-wrapper">
+                    <!-- Success/Error Messages -->
+                    <div th:if="${param.logout}" class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        <span>You have been successfully logged out.</span>
+                    </div>
+                    <div th:if="${param.error}" class="alert alert-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Invalid username or password. Please try again.</span>
+                    </div>
+
+                    <div class="login-header">
+                        <div class="bank-logo">🏦</div>
+                        <h2>Sign In to Your Account</h2>
+                        <p>Enter your credentials to access your banking services</p>
+                    </div>
+
+                    <form th:action="@{/login}" method="post" id="loginForm" class="login-form">
+                        <!-- Role Selection -->
+                        <div class="form-group">
+                            <label class="form-label">Select Your Role</label>
+                            <div class="role-selector">
+                                <div class="role-option active" data-role="customer">
+                                    <i class="fas fa-user"></i>
+                                    <span>Customer</span>
+                                </div>
+                                <div class="role-option" data-role="banker">
+                                    <i class="fas fa-briefcase"></i>
+                                    <span>Banker</span>
+                                </div>
+                                <div class="role-option" data-role="admin">
+                                    <i class="fas fa-crown"></i>
+                                    <span>Admin</span>
+                                </div>
                             </div>
-                            <div class="role-option" data-role="banker">
-                                <i class="fas fa-briefcase"></i><br>Banker
-                            </div>
-                            <div class="role-option" data-role="admin">
-                                <i class="fas fa-crown"></i><br>Admin
+                            <input type="hidden" name="role" value="customer" id="selectedRole">
+                        </div>
+
+                        <!-- Username Field -->
+                        <div class="form-group">
+                            <label for="username" class="form-label">Username</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user input-icon"></i>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    class="form-input"
+                                    placeholder="Enter your username"
+                                    required
+                                    autocomplete="username"
+                                    th:value="${param.username}"
+                                >
                             </div>
                         </div>
-                        <input type="hidden" name="role" value="customer" id="selectedRole">
-                    </div>
-                    
-                    <!-- Username Field -->
-                    <div class="form-group">
-                        <label for="username" class="form-label">Username</label>
-                        <div style="position: relative;">
-                            <i class="fas fa-user input-icon"></i>
-                            <input 
-                                type="text" 
-                                id="username" 
-                                name="username" 
-                                class="form-input"
-                                placeholder="Enter your username"
-                                required
-                                autocomplete="username"
-                                th:value="${param.username}"
-                            >
+
+                        <!-- Password Field -->
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="form-input"
+                                    placeholder="Enter your password"
+                                    required
+                                    autocomplete="current-password"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Remember Me & Forgot Password -->
+                        <div class="form-options">
+                            <label class="remember-me">
+                                <input type="checkbox" name="remember-me">
+                                <span>Remember me</span>
+                            </label>
+                            <a href="#" class="forgot-password">Forgot password?</a>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-login" id="loginButton">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span class="btn-text">Sign In Securely</span>
+                                <span class="btn-spinner" style="display: none;">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Security Notice -->
+                    <div class="security-notice">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <strong>Your Security is Our Priority</strong>
+                            <p>This connection is protected with 256-bit SSL encryption. We never store your password in plain text.</p>
                         </div>
                     </div>
-                    
-                    <!-- Password Field -->
-                    <div class="form-group">
-                        <label for="password" class="form-label">Password</label>
-                        <div style="position: relative;">
-                            <i class="fas fa-lock input-icon"></i>
-                            <input 
-                                type="password" 
-                                id="password" 
-                                name="password" 
-                                class="form-input"
-                                placeholder="Enter your password"
-                                required
-                                autocomplete="current-password"
-                            >
-                        </div>
-                    </div>
-                    
-                    <!-- Submit Button -->
-                    <button type="submit" class="login-btn" id="loginButton">
-                        <span class="btn-text">
-                            <i class="fas fa-sign-in-alt"></i>
-                            Sign In Securely
-                        </span>
-                        <span class="btn-spinner" style="display: none;"></span>
-                    </button>
-                </form>
-                
-                <div class="form-footer">
-                    <a href="#" class="forgot-password">
-                        <i class="fas fa-key"></i>
-                        Forgot your password?
-                    </a>
                 </div>
-                
-                <div class="security-notice">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>Your connection is secured with 256-bit SSL encryption</span>
+            </div>
+        </section>
+
+        <!-- Additional Info Section -->
+        <section class="info-section">
+            <div class="container">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3>Secure Banking</h3>
+                        <p>Your data is protected with bank-grade encryption and multi-factor authentication.</p>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>Access Anywhere</h3>
+                        <p>Manage your finances on any device, anytime, with our responsive banking platform.</p>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>24/7 Support</h3>
+                        <p>Our dedicated support team is always ready to assist you with any banking needs.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- Include footer fragment -->
-    <footer th:replace="~{fragments/common :: footer}"></footer>
-    
-    <!-- Include common scripts -->
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/common :: footer}">
+        <!-- Footer will be replaced by fragment -->
+    </footer>
+
+    <!-- Scripts -->
     <div th:replace="~{fragments/common :: scripts}"></div>
-    
+
     <!-- Page-specific JavaScript -->
     <script>
         // Role selection functionality
@@ -123,31 +173,33 @@
                 document.getElementById('selectedRole').value = this.dataset.role;
             });
         });
-        
+
         // Form submission with loading state
-        document.getElementById('loginForm').addEventListener('submit', function() {
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             const button = document.getElementById('loginButton');
-            const spinner = button.querySelector('.btn-spinner');
             const text = button.querySelector('.btn-text');
-            
+            const spinner = button.querySelector('.btn-spinner');
+
             button.classList.add('loading');
+            button.disabled = true;
             text.style.display = 'none';
-            spinner.style.display = 'block';
+            spinner.style.display = 'inline-flex';
         });
-        
+
         // Enhanced form validation
         const inputs = document.querySelectorAll('.form-input');
         inputs.forEach(input => {
             input.addEventListener('blur', function() {
                 if (this.value.trim() === '') {
-                    this.style.borderColor = '#fc8181';
+                    this.parentElement.classList.add('error');
                 } else {
-                    this.style.borderColor = '#68d391';
+                    this.parentElement.classList.remove('error');
+                    this.parentElement.classList.add('success');
                 }
             });
-            
+
             input.addEventListener('focus', function() {
-                this.style.borderColor = '#667eea';
+                this.parentElement.classList.remove('error', 'success');
             });
         });
     </script>
