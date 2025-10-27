@@ -26,7 +26,9 @@ pipeline {
         JAR_NAME = 'banking-modern-0.0.1-SNAPSHOT.jar'
         REMOTE_DIR = '/opt/banking-modernization'
     }
-        
+
+    stages {
+
         stage('Build Application') {  // Renamed from 'Download Artifacts'
             steps {
                 echo 'Building application locally...'
