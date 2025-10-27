@@ -20,7 +20,7 @@ pipeline {
     
     environment {
         GITHUB_REPO = 'kushmirc/banking-modernization'
-        EC2_HOST = '13.223.22.205'  // Replace with actual IP
+        EC2_HOST = '13.223.22.205'
         APP_PORT = '8083'
         EC2_USER = 'ubuntu'
         JAR_NAME = 'banking-modern-0.0.1-SNAPSHOT.jar'
@@ -48,17 +48,17 @@ pipeline {
             steps {
                 echo "Deploying to ${params.ENVIRONMENT} environment..."
 
-                // This wrapper provides SSH key authentication
-                sshagent(['ec2-ssh-key']) {
+                // Using withCredentials instead of sshagent (works without SSH Agent plugin)
+                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
                     sh """
                         # Copy JAR to EC2 tmp (using specific JAR name)
-                        scp modern-system/target/${JAR_NAME} ${EC2_USER}@${EC2_HOST}:/tmp/
+                        scp -i \$SSH_KEY -o StrictHostKeyChecking=no modern-system/target/${JAR_NAME} \$SSH_USER@${EC2_HOST}:/tmp/
 
                         # Copy deployment script
-                        scp scripts/modern/deploy-modern.sh ${EC2_USER}@${EC2_HOST}:/tmp/
+                        scp -i \$SSH_KEY -o StrictHostKeyChecking=no scripts/modern/deploy-modern.sh \$SSH_USER@${EC2_HOST}:/tmp/
 
                         # Move files and run deployment (matching manual process)
-                        ssh ${EC2_USER}@${EC2_HOST} '
+                        ssh -i \$SSH_KEY -o StrictHostKeyChecking=no \$SSH_USER@${EC2_HOST} '
                             sudo cp /tmp/${JAR_NAME} ${REMOTE_DIR}/modern-system/target/
                             sudo cp /tmp/deploy-modern.sh ${REMOTE_DIR}/scripts/
                             chmod +x ${REMOTE_DIR}/scripts/deploy-modern.sh
