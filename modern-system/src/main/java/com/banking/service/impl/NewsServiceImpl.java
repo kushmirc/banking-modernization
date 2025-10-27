@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -22,7 +24,8 @@ public class NewsServiceImpl implements NewsService {
         //Path bankRatePath = Paths.get("src/main/resources/static/BankRate.txt");
 
         try{
-            BufferedReader reader = new BufferedReader(new FileReader("/Users/kushmirchandani/IdeaProjects/banking-modernization/modern-system/src/main/resources/static/BankRate.txt"));
+            InputStream is = getClass().getResourceAsStream("/static/BankRate.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
             String line;
             while((line = reader.readLine()) != null){
