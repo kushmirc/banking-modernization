@@ -19,47 +19,51 @@ pipeline {
     }
     
     environment {
-        GITHUB_REPO = 'kushmirchandani/banking-modernization'
-        EC2_HOST = 'your-ec2-ip'  // Replace with actual IP
-        APP_PORT = '8080'
+        GITHUB_REPO = 'kushmirc/banking-modernization'
+        EC2_HOST = '13.223.22.205'  // Replace with actual IP
+        APP_PORT = '8083'
+        EC2_USER = 'ubuntu'
+        JAR_NAME = 'banking-modern-0.0.1-SNAPSHOT.jar'
+        REMOTE_DIR = '/opt/banking-modernization'
     }
-    
-    stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out code from GitHub...'
-                git branch: 'main', url: "https://github.com/${GITHUB_REPO}.git"
-            }
-        }
         
-        stage('Download Artifacts') {
+        stage('Build Application') {  // Renamed from 'Download Artifacts'
             steps {
-                echo 'Downloading artifacts from GitHub Actions...'
-                script {
-                    // In a real setup, you'd download from GitHub Actions artifacts
-                    // For now, we'll build locally
-                    sh '''
-                        cd modern-system
-                        ./mvnw clean package -DskipTests
-                    '''
-                }
+                echo 'Building application locally...'
+                sh '''
+                    cd modern-system
+                    # Clean previous builds
+                    rm -rf target/
+                    # Build fresh JAR
+                    ./mvnw clean package -DskipTests
+                    # Verify JAR was created
+                    ls -la target/*.jar
+                '''
             }
         }
         
         stage('Deploy to EC2') {
             steps {
                 echo "Deploying to ${params.ENVIRONMENT} environment..."
-                
-                // Copy JAR and scripts to EC2
-                sh """
-                    scp modern-system/target/banking-modern-*.jar ubuntu@${EC2_HOST}:/tmp/
-                    scp migration-infrastructure/deployment-scripts/modern/deploy-modern.sh ubuntu@${EC2_HOST}:/tmp/
-                """
-                
-                // Run deployment script on EC2
-                sh """
-                    ssh ubuntu@${EC2_HOST} 'chmod +x /tmp/deploy-modern.sh && /tmp/deploy-modern.sh ${params.ENVIRONMENT}'
-                """
+
+                // This wrapper provides SSH key authentication
+                sshagent(['ec2-ssh-key']) {
+                    sh """
+                        # Copy JAR to EC2 tmp (using specific JAR name)
+                        scp modern-system/target/${JAR_NAME} ${EC2_USER}@${EC2_HOST}:/tmp/
+
+                        # Copy deployment script
+                        scp scripts/modern/deploy-modern.sh ${EC2_USER}@${EC2_HOST}:/tmp/
+
+                        # Move files and run deployment (matching manual process)
+                        ssh ${EC2_USER}@${EC2_HOST} '
+                            sudo cp /tmp/${JAR_NAME} ${REMOTE_DIR}/modern-system/target/
+                            sudo cp /tmp/deploy-modern.sh ${REMOTE_DIR}/scripts/
+                            chmod +x ${REMOTE_DIR}/scripts/deploy-modern.sh
+                            cd ${REMOTE_DIR}/scripts
+                            ./deploy-modern.sh ${params.ENVIRONMENT}'
+                        """
+                }
             }
         }
         
