@@ -200,7 +200,7 @@
     margin-top: 1rem;
 }
 
-.btn {
+.login-btn {
     padding: 0.875rem 2rem;
     border-radius: 8px;
     font-size: 1rem;
@@ -216,25 +216,25 @@
     justify-content: center;
 }
 
-.btn-primary {
+.login-btn-primary {
     background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
     color: white;
     width: 100%;
 }
 
-.btn-primary:hover:not(:disabled) {
+.login-btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
 }
 
-.btn-primary:disabled,
-.btn-primary.loading {
+.login-btn-primary:disabled,
+.login-btn-primary.loading {
     opacity: 0.7;
     cursor: not-allowed;
     transform: none;
 }
 
-.btn-spinner {
+.login-btn-spinner {
     display: inline-flex;
     align-items: center;
 }

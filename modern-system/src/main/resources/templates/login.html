@@ -100,10 +100,10 @@
 
                         <!-- Submit Button -->
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-primary btn-login" id="loginButton">
+                            <button type="submit" class="login-btn login-btn-primary" id="loginButton">
                                 <i class="fas fa-sign-in-alt"></i>
-                                <span class="btn-text">Sign In Securely</span>
-                                <span class="btn-spinner" style="display: none;">
+                                <span class="login-btn-text">Sign In Securely</span>
+                                <span class="login-btn-spinner" style="display: none;">
                                     <i class="fas fa-spinner fa-spin"></i>
                                 </span>
                             </button>
@@ -177,8 +177,8 @@
         // Form submission with loading state
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             const button = document.getElementById('loginButton');
-            const text = button.querySelector('.btn-text');
-            const spinner = button.querySelector('.btn-spinner');
+            const text = button.querySelector('.login-btn-text');
+            const spinner = button.querySelector('.login-btn-spinner');
 
             button.classList.add('loading');
             button.disabled = true;
