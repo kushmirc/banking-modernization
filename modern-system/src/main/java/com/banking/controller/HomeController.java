@@ -24,6 +24,11 @@ public class HomeController {
         return "about";
     }
 
+    @GetMapping("/news")
+    public String news() {
+        return "news";
+    }
+
     @GetMapping("/contact")
     public String contact() {
         return "contact";
@@ -38,7 +43,7 @@ public class HomeController {
             @RequestParam String message,
             RedirectAttributes redirectAttributes) {
         
-        // TODO: In a real implementation, this would:
+        // TODO: For extended implementation, this would:
         // 1. Validate the form data
         // 2. Save the message to database
         // 3. Send email notification to staff

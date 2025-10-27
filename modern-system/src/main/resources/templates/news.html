@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragments/common :: head('News')}"></th:block>
+    <!-- Page-specific CSS -->
+    <link href="/css/news.css" rel="stylesheet">
+</head>
+<body class="news-page">
+    <header>
+        <!-- Include navigation fragment with 'home' marked as active -->
+        <th:block th:replace="~{fragments/common :: nav('news')}"></th:block>
+    </header>
+    
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+        <h1>News & Information</h1>
+        <p>Stay up to date with news and information from the industry</p>
+    </section>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <div class="card">
+            <h2></h2>
+            <p>
+
+            </p>
+        </div>
+
+    </div>
+    </main>
+    
+    <!-- Include footer fragment -->
+    <footer th:replace="~{fragments/common :: footer}"></footer>
+    
+    <!-- Include common scripts -->
+    <div th:replace="~{fragments/common :: scripts}"></div>
+</body>
+</html>
