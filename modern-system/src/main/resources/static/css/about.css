@@ -3,12 +3,10 @@
 
 /* Hero Section */
 .hero-section {
-    background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 4rem 2rem;
+    padding: 4rem 0;
     text-align: center;
-    position: relative;
-    overflow: hidden;
 }
 
 .hero-section::before {

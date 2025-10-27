@@ -1,16 +1,14 @@
 /* Contact Page Specific Styles */
 
 /* Contact Hero Section */
-.contact-hero {
+.hero-section {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 4rem 2rem;
+    padding: 4rem 0;
     text-align: center;
-    position: relative;
-    overflow: hidden;
 }
 
-.contact-hero::before {
+.hero-section::before {
     content: '';
     position: absolute;
     top: 0;
@@ -21,23 +19,23 @@
     opacity: 0.3;
 }
 
-.contact-hero .hero-content {
-    max-width: 600px;
+.hero-content {
+    max-width: 800px;
     margin: 0 auto;
     position: relative;
     z-index: 1;
 }
 
-.contact-hero h1 {
+.hero-content h1 {
     font-size: 3rem;
     margin-bottom: 1rem;
     font-weight: 700;
 }
 
-.contact-hero p {
+.hero-content p {
     font-size: 1.25rem;
     opacity: 0.95;
-    line-height: 1.6;
+    line-height: 1.8;
 }
 
 /* Contact Information Section */
@@ -206,27 +204,6 @@
     margin-top: 1rem;
 }
 
-.btn {
-    padding: 0.875rem 2rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
-    text-align: center;
-    justify-content: center;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
 .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
@@ -330,11 +307,11 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .contact-hero h1 {
+    .hero-content h1 {
         font-size: 2rem;
     }
     
-    .contact-hero p {
+    .hero-content p {
         font-size: 1.1rem;
     }
     
