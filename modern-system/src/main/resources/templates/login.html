@@ -176,6 +176,14 @@
 
         // Form submission with loading state
         document.getElementById('loginForm').addEventListener('submit', function(e) {
+            // rebuild the username to include the role
+            let username = document.getElementById("username").value;
+            let role = document.getElementById("selectedRole").value;
+            let compositeUser = role + ':' + username;
+
+            document.getElementById("username").value = compositeUser;
+
+            // show loading state
             const button = document.getElementById('loginButton');
             const text = button.querySelector('.login-btn-text');
             const spinner = button.querySelector('.login-btn-spinner');
@@ -184,6 +192,7 @@
             button.disabled = true;
             text.style.display = 'none';
             spinner.style.display = 'inline-flex';
+
         });
 
         // Enhanced form validation
