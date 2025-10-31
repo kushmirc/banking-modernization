@@ -1,4 +1,4 @@
 package com.banking.model;
 
-public class administrator {
+public class Banker {
 }
