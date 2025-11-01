@@ -179,7 +179,7 @@
             // rebuild the username to include the role
             let username = document.getElementById("username").value;
             let role = document.getElementById("selectedRole").value;
-            let compositeUser = role + ':' + username;
+            let compositeUser = role.toUpperCase() + ':' + username;
 
             document.getElementById("username").value = compositeUser;
 
