@@ -52,7 +52,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     .authorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_BANKER")))
                     .build();
         } else if (userType.equals("CUSTOMER")) {
-            Customer user = customerRepository.findByActno(userid)
+            Customer user = customerRepository.findByUserid(userid)
                     .orElseThrow(() -> new UsernameNotFoundException("Account not found: " + userid));
 
             return org.springframework.security.core.userdetails.User.builder()
