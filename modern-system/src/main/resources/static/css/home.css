@@ -34,28 +34,29 @@ body.home-page {
     opacity: 0.9;
 }
 
-/* Color Showcase Grid */
-.color-showcase {
+/* Trust Grid */
+.trust-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
 }
 
-.color-swatch {
-    text-align: center;
+.trust-item {
+    padding: 0.5rem;
 }
 
-.color-box {
-    width: 100%;
-    height: 80px;
-    border-radius: var(--radius-md);
+.trust-item h3 {
+    color: var(--primary-solid);
     margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
 }
 
-.color-label {
-    font-size: var(--font-size-sm);
+.trust-item p {
     color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
 }
 
 /* Responsive adjustments */
@@ -66,5 +67,14 @@ body.home-page {
     
     .hero p {
         font-size: 1rem;
+    }
+    
+    .trust-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .trust-item {
+        text-align: center;
     }
 }
