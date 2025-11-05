@@ -35,7 +35,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             .formLogin(form -> form
                     .loginPage("/login")
                     .loginProcessingUrl("/login")
-                    .defaultSuccessUrl("/", true)
+                    .defaultSuccessUrl("/dashboard", true)
                     .failureUrl("/login?error")
                     .permitAll()
             )

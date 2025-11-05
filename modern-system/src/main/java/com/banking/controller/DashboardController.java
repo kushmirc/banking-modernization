@@ -12,7 +12,7 @@ import java.util.Collection;
 
 @Controller
 @RequestMapping("/dashboard")
-@PreAuthorize("isAuthenticated()")
+//@PreAuthorize("isAuthenticated()")
 public class DashboardController {
 
     @GetMapping("")
@@ -24,24 +24,26 @@ public class DashboardController {
         String role = "";
         for(GrantedAuthority authority : authorities){
             role = authority.getAuthority();
-            break;
+            //break;
         }
 
         return switch (role){
             case "ROLE_ADMINISTRATOR" -> {
+                model.addAttribute("fullName", "Test Name"); // Temporary
                 yield  "dashboard/admin-dashboard";
             }
             case "ROLE_BANKER" -> {
+                model.addAttribute("fullName", "Test Name"); // Temporary
                 yield  "dashboard/banker-dashboard";
             }
             case "ROLE_CUSTOMER" -> {
+                model.addAttribute("fullName", "Test Name"); // Temporary
+                //model.addAttribute("accountNumber", "TEMP123");  // Temporary
+                //model.addAttribute("balance", 0.00);  // Temporary
                 yield  "dashboard/customer-dashboard";
             }
-            default -> "home";
+            default -> "redirect:/login";
         };
-
-
-
 
     }
 }

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/common :: head}">
+<head th:replace="~{fragments/common :: head('Banker Dashboard')}">
   <title>Banker Dashboard - Chicago Bank</title>
 </head>
 <body>
 <!-- Use existing authenticated navigation fragment -->
-<div th:replace="~{fragments/nav-authenticated :: nav}"></div>
+<div th:replace="~{fragments/nav-authenticated :: nav('profile', ${fullName})}"></div>
 
 <!-- Main Dashboard Content -->
 <div class="dashboard-container">
