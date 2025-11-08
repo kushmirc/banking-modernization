@@ -14,7 +14,9 @@
             <a href="/profile" th:classappend="${activeItem == 'profile'} ? 'active' : ''">Profile</a>
             <div class="user-menu">
                 <span class="user-name" th:text="'Welcome, ' + ${username}">Welcome, User</span>
-                <a href="/logout" class="btn btn-secondary">Logout</a>
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-secondary">Logout</button>
+                </form>
             </div>
         </div>
     </div>
