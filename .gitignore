@@ -1,8 +1,5 @@
 CLAUDE.md
 
-# Conversation history - personal learning documentation
-docs/conversation-history/
-
 # macOS files
 .DS_Store
 **/.DS_Store
@@ -25,3 +22,16 @@ out/
 # Training and practice area (personal use only)
 sandbox/
 /legacy-system/analysis/
+/legacy-system/deployment-notes.md
+/scripts/legacy/mysql-to-postgres-migration/
+/scripts/legacy/database-setup.sh
+/scripts/legacy/javax-to-jakarta-migration.sh
+/scripts/legacy/README.md
+/scripts/legacy/resource-monitoring.sh
+/scripts/legacy/setup-ec2-environment.sh
+/scripts/modern/config/
+/scripts/modern/make-executable.sh
+/scripts/modern/README.md
+/legacy-system-original-mysql/deployment-notes.md
+/legacy-system-original-mysql/README.md
+/docs/
