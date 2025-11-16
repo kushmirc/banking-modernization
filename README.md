@@ -11,109 +11,230 @@
 
 **Incremental modernization of a legacy Java JSP/Servlets banking application to Spring Boot 3.x**
 
-## Project Overview
+## Overview
 
-This project demonstrates enterprise-level legacy system modernization using the Strangler Fig pattern to incrementally migrate a banking application from JSP/Servlets to Spring Boot 3.x. Rather than a risky "big bang" rewrite, this approach maintains business continuity while delivering continuous value through feature-by-feature migration.
+A legacy banking application modernization project that demonstrates working with unfamiliar codebases, configuration troubleshooting, and rebuilding enterprise systems with modern architecture. Starting from an abandoned GitHub repository using JSP/Servlets, this project involves deploying legacy code to AWS EC2, implementing CI/CD workflows with GitHub Actions and Jenkins, and building a Spring Boot replacement.
 
-### Why This Approach Matters
+## Motivation
 
-- **Zero business downtime** during modernization process  
-- **Immediate security improvements** addressing legacy servlet vulnerabilities and security gaps
-- **Risk mitigation** through feature flags and rollback capabilities
-- **Continuous value delivery** rather than waiting months/years for completion
+Having worked with legacy systems at DoD, this project focuses on working with existing code to demonstrate::
+- Codebase comprehension without original developers
+- Production deployment and troubleshooting across different environments
+- Database migration and resource optimization
+- Modern architecture implementation using Spring Boot patterns
 
-## Architecture & Migration Strategy
+This project applies experience from working with legacy systems at DoD.
 
-### Current Infrastructure
+---
 
+## Technical Journey
+
+### Phase 1: Legacy System Deployment
+
+**Starting Point**: Abandoned GitHub repository with JSP/Servlets, no build tools, manual dependency management
+
+**Setup Requirements**:
+- Apache Tomcat 8 installation and configuration
+- JDBC drivers and servlet API JAR dependencies
+- Shell script creation for compiling 20+ servlet classes
+- MySQL database initialization from SQL dump
+
+**Outcome**: Functional banking application with three user roles (Customer, Banker, Admin) running locally
+
+**Issue Encountered**:
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    AWS EC2 Instance                         │
-├─────────────────────────────────────────────────────────────┤
-│  ┌─────────────────┐    ┌─────────────────────────────────┐ │
-│  │   Nginx Proxy   │    │     Migration Controller        │ │
-│  │                 │    │   (Feature Flag Routing)        │ │
-│  └─────────┬───────┘    └─────────────┬───────────────────┘ │
-│            │                          │                     │
-│  ┌─────────▼───────┐    ┌─────────────▼───────────────────┐ │
-│  │ Legacy System   │    │    Modern System                │ │
-│  │ JSP/Servlets    │    │    Spring Boot 3.x              │ │
-│  │ Tomcat 10       │    │    Embedded Tomcat              │ │
-│  └─────────────────┘    └─────────────────────────────────┘ │
-├─────────────────────────────────────────────────────────────┤
-│                     Database Layer                          │
-│  ┌─────────────────┐              ┌─────────────────┐       │
-│  │     MySQL       │     ────►    │   PostgreSQL    │       │
-│  │  (Legacy Data)  │              │ (Modern Schema) │       │
-│  └─────────────────┘              └─────────────────┘       │
-└─────────────────────────────────────────────────────────────┘
-```
+Problem: BankRate.jsp failed with FileNotFoundException
+Cause: Hard-coded Windows file paths (C:/tomcat/apache-tomcat-7.0.34/...)
+instead of platform-independent resource loading
 
-### Migration Phases
+Resolution: Replaced hard-coded paths with application.getRealPath("/")
+for cross-platform file access
 
-#### Phase 1: Legacy System Analysis 
-- **Deployed legacy JSP/Servlets application** to production environment
-- **Operational analysis** through real-world usage and monitoring
-- **Business logic documentation** through black-box and code analysis
-- **Infrastructure challenges** identified and resolved
-
-#### Phase 2: Database Migration 
-- **MySQL to PostgreSQL migration** with zero-downtime strategy
-- **Schema modernization** while maintaining data compatibility
-- **Dual-write validation** to ensure data consistency
-- **Performance optimization** for banking transaction loads
-
-#### Phase 3: CI/CD Integration 
-- **Jenkins pipeline integration** for automated testing and deployment
-- **Feature flag infrastructure** for gradual traffic migration
-- **Rollback automation** for risk mitigation
-- **Monitoring and alerting** for migration health
-
-#### Phase 4: Feature-by-Feature Migration 
-- **Authentication system** (Spring Security + JWT)
-- **Account management** (Balance inquiry, transaction history)
-- **Fund transfers** (Internal and external bank transfers)
-- **Complaint system** (Customer service and resolution tracking)
-
-## Technical Implementation
-
-### Legacy System (Reference Baseline)
-- **Framework**: Traditional JSP/Servlets with manual MVC implementation
-- **Application Server**: Apache Tomcat 9
-- **Database**: MySQL 5.7 with banking transaction schema
-- **Architecture**: Servlet-based request handling with JSP views and manual routing
-
-### Modern System (Target Architecture)
-- **Framework**: Spring Boot 3.x with Spring Security
-- **Database**: PostgreSQL 15 with optimized schema design
-- **API Design**: RESTful services with comprehensive validation
-- **Security**: JWT authentication, SQL injection prevention, input sanitization
-- **Testing**: Comprehensive unit, integration, and migration verification tests
-
-### Key Technologies
-```yaml
-Backend:
-  - Java 17 (LTS)
-  - Spring Boot 3.x
-  - Spring Security 6
-  - Spring Data JPA
-  - PostgreSQL 15
-  - MongoDB (complaints system)
-
-Frontend:
-  - Thymeleaf templates
-  - Modern responsive CSS
-  - Vanilla JavaScript
-  - Bootstrap 5
-
-Infrastructure:
-  - AWS EC2
-  - Nginx (reverse proxy)
-  - Jenkins (CI/CD)
-  - Docker (containerization)
-  - Feature flags (gradual migration)
+Modernization: Spring Boot uses ResourceLoader and classpath resources
+(@Value("classpath:BankRate.txt")) eliminating hard-coded paths
 ```
 
+### Phase 2: AWS Production Deployment
+
+Deployment to EC2 t3.micro instance revealed several environment-specific issues:
+
+#### Database Case Sensitivity Issue
+```
+Environment Difference:
+- macOS MySQL: Case-insensitive → 'bns' and 'BNS' both work
+- Linux MySQL: Case-sensitive → requires exact 'BNS' match
+
+Resolution: Updated MySqlDataStoreUtilities.java connection string
+to use uppercase database name for Linux compatibility
+```
+
+#### Servlet API Version Conflict
+```
+Problem: Tomcat 10 uses jakarta.servlet.* packages
+         Legacy code uses javax.servlet.* packages
+Result: Application deployed successfully but all pages returned 404
+
+Resolution: Converted all javax.servlet imports
+to jakarta.servlet and recompiled servlet classes
+```
+
+### Phase 3: Database Migration & Optimization
+
+**Challenge**: MySQL consuming 380MB on t3.micro instance
+
+**Solution**:
+- Migrated from MySQL to PostgreSQL
+- Memory usage reduced from 380MB to 180MB (50% reduction)
+- Preserved original MySQL implementation as backup
+- Created PostgreSqlDataStoreUtilities.java with enhanced error handling
+- Updated all servlets to use PostgreSQL connections
+- Converted schema syntax (AUTO_INCREMENT → SERIAL, etc.)
+
+**Business Impact**: Deferred EC2 instance upgrade requirement, resulting in approximately $180-240 annual infrastructure cost savings
+
+### Phase 4: Spring Boot Modernization
+
+Building modern replacement with current enterprise Java standards:
+
+**Architectural Comparison**:
+```
+LEGACY SERVLET:
+- Single servlet handles multiple concerns:
+  * Session validation
+  * Database queries
+  * Business logic
+  * HTML generation
+
+MODERN SPRING BOOT:
+- Separation of concerns:
+  * Controller: HTTP handling
+  * Service: Business logic
+  * Repository: Database access
+  * Entity: Banking domain model classes
+  * Template: View rendering
+```
+
+**Current Implementation**:
+- Spring Security for role-based authentication (Customer/Banker/Admin)
+- Role-specific dashboards replacing legacy servlet pages
+- Reusable Thymeleaf fragments for consistent UI components
+- JPA/Hibernate for database abstraction
+- Repository pattern for clean data access layer
+
+---
+
+## Technology Stack
+
+**Legacy System**:
+- JSP/Servlets with manual HTTP handling
+- Apache Tomcat 10
+- PostgreSQL 15 (migrated from MySQL 5.7)
+- Direct JDBC for database operations
+
+**Modern System**:
+- Spring Boot 3.2
+- Spring Security 6 for authentication
+- Spring Data JPA for ORM
+- Thymeleaf templating engine
+- PostgreSQL 15
+
+**Infrastructure**:
+- AWS EC2 (t3.micro instance)
+- GitHub Actions for automated testing
+- Jenkins for controlled production deployments
+- Shell scripts for deployment automation
+
+---
+
+## Key Learnings
+
+**Environment Matters**: Code working locally may fail in production due to case sensitivity differences, file path handling, and API version conflicts. Testing across environments is essential.
+
+**Legacy Code Context**: Manual dependency management and JSP servlets were standards of that era, but are not always ideal in modern environments. Understanding historical context helps with problem-solving.
+
+**Database Migration Complexity**: Database schema conversion involves more than just syntax - JDBC driver configuration and SQL dialect differences require careful attention.
+
+**Framework Value Proposition**: Spring Boot eliminates boilerplate code. At the same time, understanding what it does 'under the hood' (from servlet experience) provides deeper comprehension of modern frameworks.
+
+---
+
+## Running the Applications
+
+### Legacy System (PostgreSQL)
+```bash
+# Database setup
+createdb banking_system
+psql banking_system < legacy-system/schema_postgresql.sql
+
+# Build and deploy
+cd scripts/legacy
+./build-legacy-war.sh
+./deploy-legacy-manual.sh
+
+# Access application
+open http://localhost:8082/banking
+```
+
+**Test Credentials**:
+- Customer: `Adi` / `yaji`
+- Banker: `banker` / `urvi`
+- Admin: `admin` / `admin`
+
+### Modern Spring Boot System
+```bash
+# Start application
+cd modern-system
+./mvnw spring-boot:run
+
+# Access application
+open http://localhost:8080
+```
+
+---
+
+## Project Structure
+
+```
+banking-modernization/
+├── legacy-system/              # Production legacy system
+│   ├── BankingSystem1/        # JSP/Servlet application
+│   ├── schema_postgresql.sql  # Database schema
+│
+├── modern-system/             # Spring Boot replacement
+│   └── src/main/java/com/banking/
+│       ├── controller/        # HTTP request handling
+│       ├── service/           # Business logic layer
+│       ├── repository/        # Data access layer
+│       ├── model/             # JPA entities
+|       ├── dto/               # Data Transfer Object 
+│       └── config/            # Spring configuration
+│
+└── scripts/                   # Deployment automation
+    ├── legacy/                # Legacy system scripts
+    └── modern/                # Modern system scripts
+```
+
+---
+
+## Roadmap
+
+**In Progress**:
+- Fund transfer functionality implementation
+- Customer complaint system with MongoDB
+- Transaction history with pagination
+- Comprehensive integration test suite
+
+**Future Enhancements**:
+- RESTful API layer for mobile applications
+- Enhanced security with JWT tokens
+- Performance monitoring and logging
+- Containerization with Docker
+
+---
+
+**Original Legacy Application**: [Banking-application by ayaji](https://github.com/ayaji/Banking-application)
+
+*This project is for educational and portfolio demonstration purposes.*
 
 
 
