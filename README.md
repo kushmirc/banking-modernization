@@ -9,7 +9,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue.svg)](https://www.postgresql.org/)
 
 
-**Incremental modernization of a legacy Java JSP/Servlets banking application to Spring Boot 3.x**
+**Incremental modernization of a legacy Java JSP/Servlets banking application to Spring Boot 3.2**
 
 ## Overview
 
@@ -17,13 +17,11 @@ A legacy banking application modernization project that demonstrates working wit
 
 ## Motivation
 
-Having worked with legacy systems at DoD, this project focuses on working with existing code to demonstrate::
+Having worked with legacy systems at DoD, this project focuses on working with existing code to demonstrate:
 - Codebase comprehension without original developers
 - Production deployment and troubleshooting across different environments
 - Database migration and resource optimization
 - Modern architecture implementation using Spring Boot patterns
-
-This project applies experience from working with legacy systems at DoD.
 
 ---
 
@@ -127,7 +125,7 @@ MODERN SPRING BOOT:
 
 **Legacy System**:
 - JSP/Servlets with manual HTTP handling
-- Apache Tomcat 10
+- Apache Tomcat 8, 10
 - PostgreSQL 15 (migrated from MySQL 5.7)
 - Direct JDBC for database operations
 
@@ -150,7 +148,7 @@ MODERN SPRING BOOT:
 
 **Environment Matters**: Code working locally may fail in production due to case sensitivity differences, file path handling, and API version conflicts. Testing across environments is essential.
 
-**Legacy Code Context**: Manual dependency management and JSP servlets were standards of that era, but are not always ideal in modern environments. Understanding historical context helps with problem-solving.
+**Legacy Code Context**: Manual dependency management and JSP servlets were earlier standards, but are not always ideal in modern environments. Understanding historical context helps with problem-solving.
 
 **Database Migration Complexity**: Database schema conversion involves more than just syntax - JDBC driver configuration and SQL dialect differences require careful attention.
 
@@ -196,7 +194,7 @@ open http://localhost:8080
 
 ```
 banking-modernization/
-├── legacy-system/              # Production legacy system
+├── legacy-system/             # Production legacy system
 │   ├── BankingSystem1/        # JSP/Servlet application
 │   ├── schema_postgresql.sql  # Database schema
 │
