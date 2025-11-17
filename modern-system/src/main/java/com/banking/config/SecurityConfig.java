@@ -29,7 +29,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             .authorizeHttpRequests(authz -> authz
                     // Allow public access to public pages, login, static resources
                     .requestMatchers("/", "/login", "/about", "/news", "/contact",
-                            "/css/**", "/js/**", "/images/**").permitAll()
+                            "/css/**", "/js/**", "/images/**", "/actuator/**").permitAll()
                     .anyRequest().authenticated()
             )
             .formLogin(form -> form
