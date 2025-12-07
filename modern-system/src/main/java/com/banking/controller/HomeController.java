@@ -1,10 +1,8 @@
 package com.banking.controller;
 
-import com.banking.dto.NewsDto;
+import com.banking.dto.NewsDTO;
 import com.banking.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +11,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
 
 
-import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -39,7 +36,7 @@ public class HomeController {
 
     @GetMapping("/news")
     public String news(Model model) {
-        List<NewsDto> newsDtos = newsService.getAllNews();
+        List<NewsDTO> newsDtos = newsService.getAllNews();
         model.addAttribute("newsDtos", newsDtos);
 
         return "news";

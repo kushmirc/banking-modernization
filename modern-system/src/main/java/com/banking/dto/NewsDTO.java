@@ -1,11 +1,11 @@
 package com.banking.dto;
 
-public class NewsDto {
+public class NewsDTO {
     private String title;
     private String desc;
     private String link;
 
-    public NewsDto(String title, String desc, String link) {
+    public NewsDTO(String title, String desc, String link) {
         this.title = title;
         this.desc = desc;
         this.link = link;
