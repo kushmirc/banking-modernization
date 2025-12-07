@@ -4,6 +4,9 @@ CLAUDE.md
 .DS_Store
 **/.DS_Store
 
+# Docker secrets (never commit!)
+.env
+
 # IntelliJ IDEA files (personal development environment)
 legacy-system/intellij-setup/
 .idea/
