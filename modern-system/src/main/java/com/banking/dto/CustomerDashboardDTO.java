@@ -3,15 +3,15 @@ package com.banking.dto;
 public class CustomerDashboardDTO {
     private String actno;
     private String firstName;
-    private double balance;
+    private String formattedBalance;
 
     public CustomerDashboardDTO(String actno,
                                 String firstName,
-                                double balance)
+                                String formattedBalance)
     {
         this.actno = actno;
         this.firstName = firstName;
-        this.balance = balance;
+        this.formattedBalance = formattedBalance;
     }
 
     public String getActno() {
@@ -30,11 +30,11 @@ public class CustomerDashboardDTO {
         this.firstName = firstName;
     }
 
-    public double getBalance() {
-        return balance;
+    public String getFormattedBalancealance() {
+        return formattedBalance;
     }
 
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public void setFormattedBalance(String balance) {
+        this.formattedBalance = balance;
     }
 }
