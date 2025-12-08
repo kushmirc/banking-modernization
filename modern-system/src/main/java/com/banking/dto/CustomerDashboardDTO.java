@@ -30,7 +30,7 @@ public class CustomerDashboardDTO {
         this.firstName = firstName;
     }
 
-    public String getFormattedBalancealance() {
+    public String getFormattedBalance() {
         return formattedBalance;
     }
 

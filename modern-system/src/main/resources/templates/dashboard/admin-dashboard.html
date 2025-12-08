@@ -5,7 +5,7 @@
 </head>
 <body>
 <!-- Use existing authenticated navigation fragment -->
-<div th:replace="~{fragments/nav-authenticated :: nav('profile', ${fullName})}"></div>
+<div th:replace="~{fragments/nav-authenticated :: nav-authenticated('profile', ${fullName})}"></div>
 
 <!-- Main Dashboard Content -->
 <div class="dashboard-container">
