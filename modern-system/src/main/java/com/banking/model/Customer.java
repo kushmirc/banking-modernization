@@ -10,22 +10,23 @@ import jakarta.persistence.Table;
 public class Customer {
 
     @Id
-    private String actno;
+    @Column(name = "actno")
+    private String accountNumber;
 
-    @Column(unique = false, nullable = false)
-    private String fname;
+    @Column(name = "fname", unique = false, nullable = false)
+    private String firstName;
 
-    @Column(unique = false, nullable = false)
-    private String lname;
+    @Column(name = "lname", unique = false, nullable = false)
+    private String lastName;
 
-    @Column(unique = false, nullable = true)
-    private String dob;
+    @Column(name = "dob", unique = false, nullable = true)
+    private String dateOfBirth;
 
-    @Column(unique = true, nullable = false)
-    private String userid;
+    @Column(name = "userid", unique = true, nullable = false)
+    private String userId;
 
-    @Column(unique = false, nullable = false)
-    private String pword;
+    @Column(name = "pword", unique = false, nullable = false)
+    private String password;
 
     @Column(unique = false, nullable = true)
     private String gender;
@@ -33,11 +34,11 @@ public class Customer {
     @Column(unique = false, nullable = false)
     private double balance;
 
-    @Column(unique = false, nullable = true)
-    private String addressline1;
+    @Column(name = "addressline1", unique = false, nullable = true)
+    private String addressLine1;
 
-    @Column(unique = false, nullable = true)
-    private String addressline2;
+    @Column(name = "addressline2", unique = false, nullable = true)
+    private String addressLine2;
 
     @Column(unique = false, nullable = true)
     private String city;
@@ -52,67 +53,67 @@ public class Customer {
     }
 
     public Customer(String actno, String fname, String lname, String dob, String userid, String pword, String gender, double balance, String addressline1, String addressline2, String city, String state, int zip) {
-        this.actno = actno;
-        this.fname = fname;
-        this.lname = lname;
-        this.dob = dob;
-        this.userid = userid;
-        this.pword = pword;
+        this.accountNumber = actno;
+        this.firstName = fname;
+        this.lastName = lname;
+        this.dateOfBirth = dob;
+        this.userId = userid;
+        this.password = pword;
         this.gender = gender;
         this.balance = balance;
-        this.addressline1 = addressline1;
-        this.addressline2 = addressline2;
+        this.addressLine1 = addressline1;
+        this.addressLine2 = addressline2;
         this.city = city;
         this.state = state;
         this.zip = zip;
     }
 
-    public String getActno() {
-        return actno;
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
-    public void setActno(String actno) {
-        this.actno = actno;
+    public void setAccountNumber(String actno) {
+        this.accountNumber = actno;
     }
 
-    public String getFname() {
-        return fname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFname(String fname) {
-        this.fname = fname;
+    public void setFirstName(String fname) {
+        this.firstName = fname;
     }
 
-    public String getLname() {
-        return lname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLname(String lname) {
-        this.lname = lname;
+    public void setLastName(String lname) {
+        this.lastName = lname;
     }
 
-    public String getDob() {
-        return dob;
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setDob(String dob) {
-        this.dob = dob;
+    public void setDateOfBirth(String dob) {
+        this.dateOfBirth = dob;
     }
 
-    public String getUserid() {
-        return userid;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public void setUserId(String userid) {
+        this.userId = userid;
     }
 
-    public String getPword() {
-        return pword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPword(String pword) {
-        this.pword = pword;
+    public void setPassword(String pword) {
+        this.password = pword;
     }
 
     public String getGender() {
@@ -131,20 +132,20 @@ public class Customer {
         this.balance = balance;
     }
 
-    public String getAddressline1() {
-        return addressline1;
+    public String getAddressLine1() {
+        return addressLine1;
     }
 
-    public void setAddressline1(String addressline1) {
-        this.addressline1 = addressline1;
+    public void setAddressLine1(String addressline1) {
+        this.addressLine1 = addressline1;
     }
 
-    public String getAddressline2() {
-        return addressline2;
+    public String getAddressLine2() {
+        return addressLine2;
     }
 
-    public void setAddressline2(String addressline2) {
-        this.addressline2 = addressline2;
+    public void setAddressLine2(String addressline2) {
+        this.addressLine2 = addressline2;
     }
 
     public String getCity() {

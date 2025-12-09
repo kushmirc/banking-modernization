@@ -1,17 +1,16 @@
 package com.banking.controller;
 
+import com.banking.dto.AdministratorDashboardDTO;
 import com.banking.dto.CustomerDashboardDTO;
 import com.banking.model.Banker;
 import com.banking.repository.BankerRepository;
 import com.banking.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -42,12 +41,12 @@ public class DashboardController {
         }
 
         return switch (role){
-            case "ROLE_ADMINISTRATOR" -> prepareCustomerDashboard(username, model);
+            case "ROLE_ADMINISTRATOR" -> prepareAdministratorDashboard(username, model);
             case "ROLE_BANKER" -> {
-                Banker banker = bankerRepository.findByUserid(username)
+                Banker banker = bankerRepository.findByUserId(username)
                                 .orElseThrow(() -> new UsernameNotFoundException("Banker not found"));
 
-                model.addAttribute("firstName", banker.getFname()); // Temporary
+                model.addAttribute("firstName", banker.getFirstName()); // Temporary
                 yield  "dashboard/banker-dashboard";
             }
             case "ROLE_CUSTOMER" -> prepareCustomerDashboard(username, model);
@@ -59,8 +58,16 @@ public class DashboardController {
         CustomerDashboardDTO customerDashboard = dashboardService.getCustomerDashboard(username);
 
         model.addAttribute("firstName", customerDashboard.getFirstName());
+        model.addAttribute("actno", customerDashboard.getActno());
+        model.addAttribute("formattedBalance", customerDashboard.getFormattedBalance());
         return "dashboard/customer-dashboard";
     }
 
+    private String prepareAdministratorDashboard(String username, Model model) {
+        AdministratorDashboardDTO administratorDashboard = dashboardService.getAdministratorDashboard(username);
+
+        model.addAttribute("firstName", administratorDashboard.getFirstName());
+        return "dashboard/admin-dashboard";
+    }
 
 }

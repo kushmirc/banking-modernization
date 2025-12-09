@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface BankerRepository extends JpaRepository<Banker, String> {
-    Optional<Banker> findByUserid(String userid);
-    boolean existsByUserid(String userid);
+    Optional<Banker> findByUserId(String userid);
+    boolean existsByUserId(String userid);
 }

@@ -3,60 +3,61 @@ package com.banking.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name= "administrator")
+@Table(name = "administrator")
 public class Administrator {
 
     @Id
-    private String userid;
+    @Column(name = "userid")
+    private String userId;
 
-    @Column(unique = false, nullable = false)
-    private String fname;
+    @Column(name = "fname", unique = false, nullable = false)
+    private String firstName;
 
-    @Column(unique = false, nullable = false)
-    private String lname;
+    @Column(name = "lname", unique = false, nullable = false)
+    private String lastName;
 
-    @Column(unique = false, nullable = false)
-    private String pword;
+    @Column(name = "pword", unique = false, nullable = false)
+    private String password;
 
     public Administrator() {
     }
 
     public Administrator(String userid, String fname, String lname, String pword) {
-        this.userid = userid;
-        this.fname = fname;
-        this.lname = lname;
-        this.pword = pword;
+        this.userId = userid;
+        this.firstName = fname;
+        this.lastName = lname;
+        this.password = pword;
     }
 
-    public String getUserid() {
-        return userid;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public void setUserId(String userid) {
+        this.userId = userid;
     }
 
-    public String getFname() {
-        return fname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFname(String fname) {
-        this.fname = fname;
+    public void setFirstName(String fname) {
+        this.firstName = fname;
     }
 
-    public String getLname() {
-        return lname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLname(String lname) {
-        this.lname = lname;
+    public void setLastName(String lname) {
+        this.lastName = lname;
     }
 
-    public String getPword() {
-        return pword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPword(String pword) {
-        this.pword = pword;
+    public void setPassword(String pword) {
+        this.password = pword;
     }
 }

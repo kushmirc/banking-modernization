@@ -11,7 +11,7 @@
 <div class="dashboard-container">
   <div class="dashboard-header">
     <h1>Customer Dashboard</h1>
-    <p class="subtitle">Welcome, <span th:text="${fullName}">Customer Name</span></p>
+    <p class="subtitle">Welcome, <span th:text="${firstName}">Customer Name</span></p>
   </div>
 
   <!-- Account Summary Card -->
@@ -23,11 +23,11 @@
       <div class="account-info">
         <div class="info-row">
           <span class="label">Account Number:</span>
-          <span class="value" th:text="${accountNumber}">XXXXXXXXXX</span>
+          <span class="value" th:text="${actno}">XXXXXXXXXX</span>
         </div>
         <div class="info-row highlight">
           <span class="label">Current Balance:</span>
-          <span class="value balance">$<span th:text="${#numbers.formatDecimal(balance, 0, 'COMMA', 2, 'POINT')}">0.00</span></span>
+          <span class="value balance" th:text="${formattedBalance}">0.00</span>
         </div>
       </div>
     </div>

@@ -34,30 +34,30 @@ public class CustomUserDetailsService implements UserDetailsService {
         String userid = userParts[1];
 
         if (userType.equals("ADMINISTRATOR")) {
-            Administrator user = administratorRepository.findByUserid(userid)
+            Administrator user = administratorRepository.findByUserId(userid)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userid));
 
             return org.springframework.security.core.userdetails.User.builder()
-                    .username(user.getUserid())
-                    .password(user.getPword())
+                    .username(user.getUserId())
+                    .password(user.getPassword())
                     .authorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMINISTRATOR")))
                     .build();
         } else if (userType.equals("BANKER")) {
-            Banker user = bankerRepository.findByUserid(userid)
+            Banker user = bankerRepository.findByUserId(userid)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userid));
 
             return org.springframework.security.core.userdetails.User.builder()
-                    .username(user.getUserid())
-                    .password(user.getPword())
+                    .username(user.getUserId())
+                    .password(user.getPassword())
                     .authorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_BANKER")))
                     .build();
         } else if (userType.equals("CUSTOMER")) {
-            Customer user = customerRepository.findByUserid(userid)
+            Customer user = customerRepository.findByUserId(userid)
                     .orElseThrow(() -> new UsernameNotFoundException("Account not found: " + userid));
 
             return org.springframework.security.core.userdetails.User.builder()
-                    .username(user.getUserid())
-                    .password(user.getPword())
+                    .username(user.getUserId())
+                    .password(user.getPassword())
                     .authorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_CUSTOMER")))
                     .build();
         }
