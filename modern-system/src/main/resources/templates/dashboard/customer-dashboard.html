@@ -68,45 +68,56 @@
     </div>
   </div>
 
-  <!-- Recent Activity Placeholder -->
+  <!-- Recent Activity -->
   <div class="card">
     <div class="card-header">
-      <h2><i class="fas fa-clock"></i> Recent Activity</h2>
+      <h2><i class="fas fa-clock"></i> Recent Transactions</h2>
     </div>
     <div class="card-body">
-
-      <table>
-        <thead>
-        <tr>
-          <th id="transactionIdHeader" >Transaction ID</th>
-          <th id="fromAccountNumberHeader" >From Acct</th>
-          <th id="toAccountNumberHeader" >To Acct</th>
-          <th id="transactionDateHeader" >Trans Date</th>
-          <th id="transactionDescriptionHeader" >Trans Description</th>
-          <th id="transactionStatusHeader" >Trans Status</th>
-          <th id="remarkHeader" >Remarks</th>
-          <th id="amountHeader" >Amount</th>
-          <th id="amountActionHeader" >Amt Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="transaction : ${transactionsFromAccount}">
-          <td id="transactionId" th:text="${transaction.transactionId}" ></td>
-          <td id="fromAccountNumber" th:text="${transaction.fromAccountNumber}"></td>
-          <td id="toAccountNumber" th:text="${transaction.toAccountNumber}"></td>
-          <td id="transactionDate" th:text="${transaction.transactionDate}"></td>
-          <td id="transactionDescription" th:text="${transaction.transactionDescription}"></td>
-          <td id="transactionStatus" th:text="${transaction.transactionStatus}"></td>
-          <td id="remark" th:text="${transaction.remark}"></td>
-          <td id="amount" th:text="${transaction.amount}"></td>
-          <td id="amountAction" th:text="${transaction.amountAction}"></td>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+      <div class="table-container">
+        <table>
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>To Account</th>
+            <th class="hide-mobile">Status</th>
+            <th class="amount">Amount</th>
+            <th class="status">Type</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="transaction : ${transactionsFromAccount}">
+            <td th:text="${transaction.transactionId}"></td>
+            <td th:text="${#temporals.format(transaction.transactionDate, 'MM/dd/yyyy')}"></td>
+            <td th:text="${transaction.transactionDescription}"></td>
+            <td th:text="${transaction.toAccountNumber}"></td>
+            <td class="hide-mobile">
+              <span class="status-badge"
+                    th:classappend="${transaction.transactionStatus == 'pass'} ? 'pass' :
+                                    (${transaction.transactionStatus == 'fail'} ? 'fail' : 'pending')"
+                    th:text="${transaction.transactionStatus}">
+              </span>
+            </td>
+            <td class="amount" th:text="${'$' + transaction.amount}"></td>
+            <td class="status">
+              <span th:text="${transaction.amountAction}"
+                    th:style="${transaction.amountAction == 'debit'} ? 'color: #e53e3e;' : 'color: #38a169;'">
+              </span>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(transactionsFromAccount)}">
+            <td colspan="7" class="table-empty">
+              <i class="fas fa-inbox" style="font-size: 2rem; color: #cbd5e0; margin-bottom: 0.5rem;"></i>
+              <p>No transactions found</p>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-</div>
 
 <!-- Use existing footer fragment if you have one -->
 <div th:replace="~{fragments/common :: footer}"></div>

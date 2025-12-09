@@ -210,3 +210,125 @@ body {
         padding: 0 1rem;
     }
 }
+
+/* ========================================
+   TABLE STYLES - Reusable across project
+   ======================================== */
+
+/* Base table container */
+.table-container {
+    overflow-x: auto; /* Allows horizontal scroll on small screens */
+    margin: 1rem 0;
+}
+
+/* Base table styles */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+/* Table header */
+thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+thead th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Table body */
+tbody tr {
+    border-bottom: 1px solid #e2e8f0;
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:last-child {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background-color: #f7fafc;
+}
+
+tbody td {
+    padding: 1rem;
+    color: #4a5568;
+    font-size: 0.9rem;
+}
+
+/* Alternate row coloring (optional) */
+tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+tbody tr:nth-child(even):hover {
+    background-color: #f0f4f8;
+}
+
+/* Empty state */
+.table-empty {
+    text-align: center;
+    padding: 3rem;
+    color: #718096;
+    font-style: italic;
+}
+
+/* Table cell modifiers */
+td.amount,
+th.amount {
+    text-align: right;
+    font-variant-numeric: tabular-nums; /* Aligns numbers nicely */
+}
+
+td.status,
+th.status {
+    text-align: center;
+}
+
+/* Status badges within tables */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-badge.pass {
+    background: #c6f6d5;
+    color: #22543d;
+}
+
+.status-badge.fail {
+    background: #fed7d7;
+    color: #742a2a;
+}
+
+.status-badge.pending {
+    background: #feebc8;
+    color: #7c2d12;
+}
+
+/* Responsive tables */
+@media (max-width: 768px) {
+    thead th,
+    tbody td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    /* Hide less important columns on mobile */
+    .hide-mobile {
+        display: none;
+    }
+}
