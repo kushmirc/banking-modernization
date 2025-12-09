@@ -60,6 +60,7 @@ public class DashboardController {
         model.addAttribute("firstName", customerDashboard.getFirstName());
         model.addAttribute("actno", customerDashboard.getActno());
         model.addAttribute("formattedBalance", customerDashboard.getFormattedBalance());
+        model.addAttribute("transactionsFromAccount", customerDashboard.getTransactionsFromAccount());
         return "dashboard/customer-dashboard";
     }
 

@@ -33,10 +33,10 @@ public class Transaction {
     @Column(unique = false, nullable = true)
     private String remark;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = false, nullable = false)
     private double amount;
 
-    @Column(name = "amountaction", unique = true, nullable = false)
+    @Column(name = "amountaction", unique = false, nullable = false)
     private String amountAction;
 
     public Transaction(int transactionId, String fromAccountNumber, String toAccountNumber, LocalDate transactionDate, String transactionDescription, String transactionStatus, String remark, double amount, String amountAction) {
