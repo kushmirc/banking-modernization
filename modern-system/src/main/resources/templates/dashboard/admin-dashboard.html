@@ -18,10 +18,10 @@
   <!-- Admin View: List of Complaints -->
   <div class="card">
     <div class="card-header">
-      <h2><i class="fas fa-exclamation-triangle"></i> System Complaints</h2>
+      <h2><i class="fas fa-exclamation-triangle"></i> <span id="complaintsCardTitle">Recent Complaints (Top 5)</span></h2>
     </div>
     <div class="card-body">
-      <div class="table-container">
+      <div class="table-container" id="complaintsTableContainer">
         <table>
           <thead>
           <tr>
@@ -34,7 +34,9 @@
             <th class="status">Closed</th>
           </tr>
           </thead>
-          <tbody>
+          
+          <!-- Recent Complaints Table Body (visible by default) -->
+          <tbody id="recentComplaintsBody">
           <tr th:each="complaint : ${recentComplaints}">
             <td th:text="${complaint.complaintNumber}"></td>
             <td th:text="${complaint.accountNumber}"></td>
@@ -61,6 +63,35 @@
             </td>
           </tr>
           </tbody>
+          
+          <!-- All Complaints Table Body (hidden by default) -->
+          <tbody id="allComplaintsBody" style="display: none;">
+          <tr th:each="complaint : ${allComplaints}">
+            <td th:text="${complaint.complaintNumber}"></td>
+            <td th:text="${complaint.accountNumber}"></td>
+            <td th:text="${#temporals.format(complaint.complaintDate, 'MM/dd/yyyy')}"></td>
+            <td th:text="${complaint.subject}"></td>
+            <td th:text="${complaint.description}"></td>
+            <td class="hide-mobile">
+              <span class="status-badge"
+                    th:classappend="${complaint.status == 'pass'} ? 'pass' :
+                                    (${complaint.status == 'fail'} ? 'fail' : 'pending')"
+                    th:text="${complaint.status}">
+              </span>
+            </td>
+            <td class="status">
+              <span th:text="${complaint.closed}"
+                    th:style="${complaint.closed == 'false'} ? 'color: #e53e3e;' : 'color: #38a169;'">
+              </span>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(allComplaints)}">
+            <td colspan="7" class="table-empty">
+              <i class="fas fa-inbox" style="font-size: 2rem; color: #cbd5e0; margin-bottom: 0.5rem;"></i>
+              <p>No complaints found</p>
+            </td>
+          </tr>
+          </tbody>
         </table>
       </div>
     </div>
@@ -73,10 +104,10 @@
     </div>
     <div class="card-body">
       <div class="menu-grid">
-        <a href="/complaints/all" class="menu-item">
+        <button class="menu-item" id="toggleComplaintsBtn" onclick="toggleComplaints()">
           <i class="fas fa-list"></i>
-          <span>View All Complaints</span>
-        </a>
+          <span id="toggleComplaintsText">View All Complaints</span>
+        </button>
         <a href="/complaints/manage" class="menu-item">
           <i class="fas fa-tasks"></i>
           <span>Manage Complaint Status</span>
@@ -96,5 +127,105 @@
 
 <!-- Use existing footer fragment if you have one -->
 <div th:replace="~{fragments/common :: footer}"></div>
+
+<!-- Custom Styles for Toggle Functionality -->
+<style>
+  /* Scrollable table container */
+  .table-container {
+    max-height: none; /* Default: no height restriction */
+    overflow-y: auto;
+    transition: max-height 0.3s ease;
+  }
+
+  .table-container.scrollable {
+    max-height: 400px; /* When showing all complaints */
+  }
+
+  /* Smooth table transitions */
+  .table-container tbody {
+    transition: opacity 0.2s ease;
+  }
+
+  /* Active button state (purple) */
+  .menu-item.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  }
+
+  .menu-item.active:hover {
+    background: linear-gradient(135deg, #5568d3 0%, #66398d 100%);
+  }
+
+  /* Ensure thead stays visible when scrolling */
+  .table-container.scrollable thead {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Make button behave like menu-item */
+  button.menu-item {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+  }
+</style>
+
+<!-- JavaScript Toggle Function -->
+<script>
+  let showingAllComplaints = false;
+
+  function toggleComplaints() {
+    const titleElement = document.getElementById('complaintsCardTitle');
+    const buttonElement = document.getElementById('toggleComplaintsBtn');
+    const buttonTextElement = document.getElementById('toggleComplaintsText');
+    const tableContainer = document.getElementById('complaintsTableContainer');
+    const recentBody = document.getElementById('recentComplaintsBody');
+    const allBody = document.getElementById('allComplaintsBody');
+    
+    showingAllComplaints = !showingAllComplaints;
+    
+    if (showingAllComplaints) {
+      // Switch to All Complaints view
+      titleElement.textContent = 'All Complaints';
+      buttonTextElement.textContent = 'View Recent Complaints';
+      buttonElement.classList.add('active');
+      tableContainer.classList.add('scrollable');
+      
+      // Fade out recent, fade in all
+      recentBody.style.opacity = '0';
+      setTimeout(() => {
+        recentBody.style.display = 'none';
+        allBody.style.display = '';
+        setTimeout(() => {
+          allBody.style.opacity = '1';
+        }, 10);
+      }, 200);
+      
+    } else {
+      // Switch back to Recent Complaints view
+      titleElement.textContent = 'Recent Complaints (Top 5)';
+      buttonTextElement.textContent = 'View All Complaints';
+      buttonElement.classList.remove('active');
+      tableContainer.classList.remove('scrollable');
+      
+      // Fade out all, fade in recent
+      allBody.style.opacity = '0';
+      setTimeout(() => {
+        allBody.style.display = 'none';
+        recentBody.style.display = '';
+        setTimeout(() => {
+          recentBody.style.opacity = '1';
+        }, 10);
+      }, 200);
+    }
+  }
+</script>
+
 </body>
 </html>
