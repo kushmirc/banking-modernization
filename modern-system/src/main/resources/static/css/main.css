@@ -304,17 +304,20 @@ th.status {
     font-weight: 600;
 }
 
-.status-badge.pass {
+.status-badge.pass,
+.status-badge.closed {
     background: #c6f6d5;
     color: #22543d;
 }
 
-.status-badge.fail {
+.status-badge.fail,
+.status-badge.open {
     background: #fed7d7;
     color: #742a2a;
 }
 
-.status-badge.pending {
+.status-badge.pending,
+.status-badge.ongoing {
     background: #feebc8;
     color: #7c2d12;
 }

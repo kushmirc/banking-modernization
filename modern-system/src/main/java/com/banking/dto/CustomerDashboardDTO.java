@@ -5,28 +5,28 @@ import com.banking.model.Transaction;
 import java.util.List;
 
 public class CustomerDashboardDTO {
-    private String actno;
+    private String accountNumber;
     private String firstName;
     private String formattedBalance;
     private List<Transaction> transactionsFromAccount;
 
-    public CustomerDashboardDTO(String actno,
+    public CustomerDashboardDTO(String accountNumber,
                                 String firstName,
                                 String formattedBalance,
                                 List<Transaction> transactionsFromAccount)
     {
-        this.actno = actno;
+        this.accountNumber = accountNumber;
         this.firstName = firstName;
         this.formattedBalance = formattedBalance;
         this.transactionsFromAccount = transactionsFromAccount;
     }
 
-    public String getActno() {
-        return actno;
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
-    public void setActno(String actno) {
-        this.actno = actno;
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     public String getFirstName() {

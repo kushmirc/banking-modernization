@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface ComplaintRepository extends JpaRepository<Complaint, Integer> {
     Optional<Complaint> findComplaintByComplaintId(int complaintId);
 
-    List<Complaint> findTop5OrderByComplaintDateDesc();
+    List<Complaint> findTop5ByOrderByComplaintDateDesc();
+
+    List<Complaint> findComplaintsByOrderByComplaintDateDesc();
 
 }

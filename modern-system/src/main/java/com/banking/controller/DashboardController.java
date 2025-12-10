@@ -58,7 +58,7 @@ public class DashboardController {
         CustomerDashboardDTO customerDashboard = dashboardService.getCustomerDashboard(username);
 
         model.addAttribute("firstName", customerDashboard.getFirstName());
-        model.addAttribute("actno", customerDashboard.getActno());
+        model.addAttribute("accountNumber", customerDashboard.getAccountNumber());
         model.addAttribute("formattedBalance", customerDashboard.getFormattedBalance());
         model.addAttribute("transactionsFromAccount", customerDashboard.getTransactionsFromAccount());
         return "dashboard/customer-dashboard";
@@ -68,6 +68,8 @@ public class DashboardController {
         AdministratorDashboardDTO administratorDashboard = dashboardService.getAdministratorDashboard(username);
 
         model.addAttribute("firstName", administratorDashboard.getFirstName());
+        model.addAttribute("recentComplaints", administratorDashboard.getRecentComplaints());
+        model.addAttribute("allComplaints", administratorDashboard.getAllComplaints());
         return "dashboard/admin-dashboard";
     }
 

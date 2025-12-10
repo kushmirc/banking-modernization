@@ -18,7 +18,7 @@ public class Complaint {
     @Column(name = "complaint_no", unique = true, nullable = false)
     private int complaintNumber;
 
-    @Column(name = "actno", unique = true, nullable = false)
+    @Column(name = "actno", nullable = false)
     private String accountNumber;
 
     @Column(name = "complaint_date")

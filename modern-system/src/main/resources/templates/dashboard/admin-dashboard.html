@@ -21,10 +21,48 @@
       <h2><i class="fas fa-exclamation-triangle"></i> System Complaints</h2>
     </div>
     <div class="card-body">
-      <p class="placeholder-text">
-        Complaint management table will be displayed here once we migrate that feature.
-        Administrators will be able to view and manage all system complaints.
-      </p>
+      <div class="table-container">
+        <table>
+          <thead>
+          <tr>
+            <th>Number</th>
+            <th>Account</th>
+            <th>Date</th>
+            <th>Subject</th>
+            <th>Description</th>
+            <th class="hide-mobile">Status</th>
+            <th class="status">Closed</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="complaint : ${recentComplaints}">
+            <td th:text="${complaint.complaintNumber}"></td>
+            <td th:text="${complaint.accountNumber}"></td>
+            <td th:text="${#temporals.format(complaint.complaintDate, 'MM/dd/yyyy')}"></td>
+            <td th:text="${complaint.subject}"></td>
+            <td th:text="${complaint.description}"></td>
+            <td class="hide-mobile">
+              <span class="status-badge"
+                    th:classappend="${complaint.status == 'pass'} ? 'pass' :
+                                    (${complaint.status == 'fail'} ? 'fail' : 'pending')"
+                    th:text="${complaint.status}">
+              </span>
+            </td>
+            <td class="status">
+              <span th:text="${complaint.closed}"
+                    th:style="${complaint.closed == 'false'} ? 'color: #e53e3e;' : 'color: #38a169;'">
+              </span>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(recentComplaints)}">
+            <td colspan="7" class="table-empty">
+              <i class="fas fa-inbox" style="font-size: 2rem; color: #cbd5e0; margin-bottom: 0.5rem;"></i>
+              <p>No complaints found</p>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
