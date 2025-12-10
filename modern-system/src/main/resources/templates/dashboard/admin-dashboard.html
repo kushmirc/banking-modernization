@@ -21,7 +21,9 @@
       <h2><i class="fas fa-exclamation-triangle"></i> <span id="complaintsCardTitle">Recent Complaints (Top 5)</span></h2>
     </div>
     <div class="card-body">
-      <div class="table-container" id="complaintsTableContainer">
+      
+      <!-- Recent Complaints Table (visible by default) -->
+      <div class="table-container" id="recentComplaintsTable">
         <table>
           <thead>
           <tr>
@@ -34,9 +36,7 @@
             <th class="status">Closed</th>
           </tr>
           </thead>
-          
-          <!-- Recent Complaints Table Body (visible by default) -->
-          <tbody id="recentComplaintsBody">
+          <tbody>
           <tr th:each="complaint : ${recentComplaints}">
             <td th:text="${complaint.complaintNumber}"></td>
             <td th:text="${complaint.accountNumber}"></td>
@@ -63,9 +63,24 @@
             </td>
           </tr>
           </tbody>
-          
-          <!-- All Complaints Table Body (hidden by default) -->
-          <tbody id="allComplaintsBody" style="display: none;">
+        </table>
+      </div>
+      
+      <!-- All Complaints Table (hidden by default) -->
+      <div class="table-container" id="allComplaintsTable" style="display: none;">
+        <table>
+          <thead>
+          <tr>
+            <th>Number</th>
+            <th>Account</th>
+            <th>Date</th>
+            <th>Subject</th>
+            <th>Description</th>
+            <th class="hide-mobile">Status</th>
+            <th class="status">Closed</th>
+          </tr>
+          </thead>
+          <tbody>
           <tr th:each="complaint : ${allComplaints}">
             <td th:text="${complaint.complaintNumber}"></td>
             <td th:text="${complaint.accountNumber}"></td>
@@ -94,6 +109,7 @@
           </tbody>
         </table>
       </div>
+      
     </div>
   </div>
 
@@ -130,22 +146,6 @@
 
 <!-- Custom Styles for Toggle Functionality -->
 <style>
-  /* Scrollable table container */
-  .table-container {
-    max-height: none; /* Default: no height restriction */
-    overflow-y: auto;
-    transition: max-height 0.3s ease;
-  }
-
-  .table-container.scrollable {
-    max-height: 400px; /* When showing all complaints */
-  }
-
-  /* Smooth table transitions */
-  .table-container tbody {
-    transition: opacity 0.2s ease;
-  }
-
   /* Active button state (purple) */
   .menu-item.active {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -158,13 +158,10 @@
     background: linear-gradient(135deg, #5568d3 0%, #66398d 100%);
   }
 
-  /* Ensure thead stays visible when scrolling */
-  .table-container.scrollable thead {
-    position: sticky;
-    top: 0;
-    background: white;
-    z-index: 10;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  /* Make icon and text white when active */
+  .menu-item.active i,
+  .menu-item.active span {
+    color: white;
   }
 
   /* Make button behave like menu-item */
@@ -184,9 +181,8 @@
     const titleElement = document.getElementById('complaintsCardTitle');
     const buttonElement = document.getElementById('toggleComplaintsBtn');
     const buttonTextElement = document.getElementById('toggleComplaintsText');
-    const tableContainer = document.getElementById('complaintsTableContainer');
-    const recentBody = document.getElementById('recentComplaintsBody');
-    const allBody = document.getElementById('allComplaintsBody');
+    const recentTable = document.getElementById('recentComplaintsTable');
+    const allTable = document.getElementById('allComplaintsTable');
     
     showingAllComplaints = !showingAllComplaints;
     
@@ -195,34 +191,18 @@
       titleElement.textContent = 'All Complaints';
       buttonTextElement.textContent = 'View Recent Complaints';
       buttonElement.classList.add('active');
-      tableContainer.classList.add('scrollable');
       
-      // Fade out recent, fade in all
-      recentBody.style.opacity = '0';
-      setTimeout(() => {
-        recentBody.style.display = 'none';
-        allBody.style.display = '';
-        setTimeout(() => {
-          allBody.style.opacity = '1';
-        }, 10);
-      }, 200);
+      recentTable.style.display = 'none';
+      allTable.style.display = 'block';
       
     } else {
       // Switch back to Recent Complaints view
       titleElement.textContent = 'Recent Complaints (Top 5)';
       buttonTextElement.textContent = 'View All Complaints';
       buttonElement.classList.remove('active');
-      tableContainer.classList.remove('scrollable');
       
-      // Fade out all, fade in recent
-      allBody.style.opacity = '0';
-      setTimeout(() => {
-        allBody.style.display = 'none';
-        recentBody.style.display = '';
-        setTimeout(() => {
-          recentBody.style.opacity = '1';
-        }, 10);
-      }, 200);
+      allTable.style.display = 'none';
+      recentTable.style.display = 'block';
     }
   }
 </script>
