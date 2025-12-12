@@ -41,16 +41,17 @@ public class DashboardController {
         }
 
         return switch (role){
-            case "ROLE_ADMINISTRATOR" -> prepareAdministratorDashboard(username, model);
+            case "ROLE_CUSTOMER" -> prepareCustomerDashboard(username, model);
+            default -> "redirect:/login";
+
             case "ROLE_BANKER" -> {
                 Banker banker = bankerRepository.findByUserId(username)
                                 .orElseThrow(() -> new UsernameNotFoundException("Banker not found"));
-
-                model.addAttribute("firstName", banker.getFirstName()); // Temporary
+                model.addAttribute("firstName", banker.getFirstName());
                 yield  "dashboard/banker-dashboard";
             }
-            case "ROLE_CUSTOMER" -> prepareCustomerDashboard(username, model);
-            default -> "redirect:/login";
+
+            case "ROLE_ADMINISTRATOR" -> prepareAdministratorDashboard(username, model);
         };
     }
 

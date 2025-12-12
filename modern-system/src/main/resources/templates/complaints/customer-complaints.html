@@ -31,13 +31,9 @@
     </div>
     <div class="card-body">
       <div class="menu-grid">
-        <button class="menu-item" id="toggleComplaintsBtn" onclick="toggleComplaints()">
-          <i class="fas fa-list"></i>
-          <span id="toggleComplaintsText">View All Complaints</span>
-        </button>
-        <a href="/complaints/manage" class="menu-item">
-          <i class="fas fa-tasks"></i>
-          <span>Manage Complaint Status</span>
+        <a href="/complaints/new" class="menu-item">
+          <i class="fas fa-comment-alt"></i>
+          <span>Register a Complaint</span>
         </a>
       </div>
     </div>
@@ -46,69 +42,6 @@
 
 <!-- Use existing footer fragment if you have one -->
 <div th:replace="~{fragments/common :: footer}"></div>
-
-<!-- Custom Styles for Toggle Functionality -->
-<style>
-  /* Active button state (purple) */
-  .menu-item.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-  }
-
-  .menu-item.active:hover {
-    background: linear-gradient(135deg, #5568d3 0%, #66398d 100%);
-  }
-
-  /* Make icon and text white when active */
-  .menu-item.active i,
-  .menu-item.active span {
-    color: white;
-  }
-
-  /* Make button behave like menu-item */
-  button.menu-item {
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: inherit;
-  }
-</style>
-
-<!-- JavaScript Toggle Function -->
-<script>
-  let showingAllComplaints = false;
-
-  function toggleComplaints() {
-    const titleElement = document.getElementById('complaintsCardTitle');
-    const buttonElement = document.getElementById('toggleComplaintsBtn');
-    const buttonTextElement = document.getElementById('toggleComplaintsText');
-    const recentTable = document.getElementById('recentComplaintsTable');
-    const allTable = document.getElementById('allComplaintsTable');
-    
-    showingAllComplaints = !showingAllComplaints;
-    
-    if (showingAllComplaints) {
-      // Switch to All Complaints view
-      titleElement.textContent = 'All Complaints';
-      buttonTextElement.textContent = 'View Recent Complaints';
-      buttonElement.classList.add('active');
-      
-      recentTable.style.display = 'none';
-      allTable.style.display = 'block';
-      
-    } else {
-      // Switch back to Recent Complaints view
-      titleElement.textContent = 'Recent Complaints (Top 5)';
-      buttonTextElement.textContent = 'View All Complaints';
-      buttonElement.classList.remove('active');
-      
-      allTable.style.display = 'none';
-      recentTable.style.display = 'block';
-    }
-  }
-</script>
 
 </body>
 </html>
