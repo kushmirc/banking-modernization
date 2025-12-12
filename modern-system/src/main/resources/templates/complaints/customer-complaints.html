@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/common :: head('Admin Dashboard')}">
-  <title>Admin Dashboard - Chicago Bank</title>
+<head th:replace="~{fragments/common :: head('Customer Complaints')}">
+  <title>Customer Complaints - Chicago Bank</title>
 </head>
 <body>
 <!-- Use existing authenticated navigation fragment -->
@@ -10,66 +10,24 @@
 <!-- Main Dashboard Content -->
 <div class="dashboard-container">
   <div class="dashboard-header">
-    <h1>Administrator Dashboard</h1>
-    <p class="subtitle">Welcome, <span th:text="${fullName}">Admin Name</span></p>
-    <span class="role-badge admin">Administrator</span>
+    <h1>Customer Complaints Center</h1>
   </div>
 
-  <!-- Admin View: List of Complaints -->
+  <!-- Customer View: List of Complaints -->
   <div class="card">
     <div class="card-header">
-      <h2><i class="fas fa-exclamation-triangle"></i> <span id="complaintsCardTitle">All Complaints</span></h2>
+      <h2><i class="fas fa-exclamation-triangle"></i> <span id="complaintsCardTitle">Customer Complaints</span></h2>
     </div>
     <div class="card-body">
-      
-      <!-- Recent Complaints Table (visible by default) -->
-      <div class="table-container" id="recentComplaintsTable">
-        <table>
-          <thead>
-          <tr>
-            <th>Number</th>
-            <th>Account</th>
-            <th>Date</th>
-            <th>Subject</th>
-            <th>Description</th>
-            <th class="hide-mobile">Status</th>
-            <th class="status">Closed</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th:each="complaint : ${recentComplaints}">
-            <td th:text="${complaint.complaintNumber}"></td>
-            <td th:text="${complaint.accountNumber}"></td>
-            <td th:text="${#temporals.format(complaint.complaintDate, 'MM/dd/yyyy')}"></td>
-            <td th:text="${complaint.subject}"></td>
-            <td th:text="${complaint.description}"></td>
-            <td class="hide-mobile">
-              <span class="status-badge"
-                    th:classappend="${complaint.status == 'pass'} ? 'pass' :
-                                    (${complaint.status == 'fail'} ? 'fail' : 'pending')"
-                    th:text="${complaint.status}">
-              </span>
-            </td>
-            <td class="status">
-              <span th:text="${complaint.closed}"
-                    th:style="${complaint.closed == 'false'} ? 'color: #e53e3e;' : 'color: #38a169;'">
-              </span>
-            </td>
-          </tr>
-          <tr th:if="${#lists.isEmpty(recentComplaints)}">
-            <td colspan="7" class="table-empty">
-              <i class="fas fa-inbox" style="font-size: 2rem; color: #cbd5e0; margin-bottom: 0.5rem;"></i>
-              <p>No complaints found</p>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
+
+      <!-- Customer's Complaints Table From fragments-complaints.html-->
+      <div th:replace="~{complaints/fragments-complaints :: complaints-table('customer')}"></div>
+
 
   <!-- Quick Actions -->
   <div class="card menu-card">
     <div class="card-header">
-      <h2><i class="fas fa-tools"></i> Administrative Functions</h2>
+      <h2><i class="fas fa-tools"></i> Complaint Functions</h2>
     </div>
     <div class="card-body">
       <div class="menu-grid">
