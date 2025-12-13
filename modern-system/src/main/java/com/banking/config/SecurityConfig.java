@@ -1,6 +1,6 @@
 package com.banking.config;
 
-import com.banking.service.CustomUserDetailsService;
+import com.banking.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

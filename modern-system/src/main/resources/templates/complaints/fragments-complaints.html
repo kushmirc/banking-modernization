@@ -15,7 +15,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="complaint : ${recentComplaints}">
+        <tr th:each="complaint : ${complaints}">
             <td th:text="${complaint.complaintNumber}"></td>
             <td th:text="${complaint.accountNumber}"></td>
             <td th:text="${#temporals.format(complaint.complaintDate, 'MM/dd/yyyy')}"></td>
@@ -34,7 +34,7 @@
               </span>
             </td>
         </tr>
-        <tr th:if="${#lists.isEmpty(recentComplaints)}">
+        <tr th:if="${#lists.isEmpty(complaints)}">
             <td colspan="7" class="table-empty">
                 <i class="fas fa-inbox" style="font-size: 2rem; color: #cbd5e0; margin-bottom: 0.5rem;"></i>
                 <p>No complaints found</p>

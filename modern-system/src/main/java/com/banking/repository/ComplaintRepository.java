@@ -15,4 +15,6 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Integer> {
 
     List<Complaint> findComplaintsByOrderByComplaintDateDesc();
 
+    List<Complaint> findComplaintsByAccountNumberOrderByComplaintDateDesc(String accountNumber);
+
 }

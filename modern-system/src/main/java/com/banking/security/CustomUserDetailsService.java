@@ -1,4 +1,4 @@
-package com.banking.service;
+package com.banking.security;
 
 import com.banking.model.Administrator;
 import com.banking.model.Banker;

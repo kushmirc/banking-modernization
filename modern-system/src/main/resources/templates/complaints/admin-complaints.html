@@ -18,11 +18,12 @@
     <div class="card-header">
       <h2><i class="fas fa-exclamation-triangle"></i> <span id="complaintsCardTitle">All Complaints</span></h2>
     </div>
+
     <div class="card-body">
-      
       <!-- All Complaints Table From fragments-complaints.html-->
       <div th:replace="~{complaints/fragments-complaints :: complaints-table('admin')}"></div>
-
+    </div>
+  </div>
 
   <!-- Quick Actions -->
   <div class="card menu-card">
