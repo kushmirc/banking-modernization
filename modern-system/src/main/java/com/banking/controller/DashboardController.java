@@ -30,18 +30,18 @@ public class DashboardController {
 
     @GetMapping("")
     public String dashboard(Authentication authentication, Model model) {
-        BankingUserDetails user = (BankingUserDetails) authentication.getPrincipal();
-        String role = user.getRole();
+        BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
+        String role = userDetails.getRole();
 
         return switch (role){
-            case "ADMINISTRATOR" -> prepareAdministratorDashboard(user, model);
+            case "ADMINISTRATOR" -> prepareAdministratorDashboard(userDetails, model);
 
             case "BANKER" -> {
-                model.addAttribute("firstName", user.getFirstName());
+                model.addAttribute("firstName", userDetails.getFirstName());
                 yield  "dashboard/banker-dashboard";
             }
 
-            case "CUSTOMER" -> prepareCustomerDashboard(user, model);
+            case "CUSTOMER" -> prepareCustomerDashboard(userDetails, model);
 
             default -> "redirect:/login";
         };
@@ -66,7 +66,5 @@ public class DashboardController {
         model.addAttribute("transactionsFromAccount", customerDashboard.getTransactionsFromAccount());
         return "dashboard/customer-dashboard";
     }
-
-
 
 }

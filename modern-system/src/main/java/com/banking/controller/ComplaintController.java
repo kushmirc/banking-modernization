@@ -43,21 +43,22 @@ public class ComplaintController {
     @GetMapping("/customer")
     @PreAuthorize("hasRole('CUSTOMER')")
     public String customerComplaints(Authentication authentication, Model model) {
-        // Add list of complaints for the customer
-        BankingUserDetails user = (BankingUserDetails) authentication.getPrincipal();
-        model.addAttribute("complaints", complaintService.getCustomerComplaints(user.getUserId()));
-
         // Get the customer's first name
-        Customer customer = customerRepository.findByUserId(user.getUserId())
-                        .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
-        model.addAttribute("firstName", customer.getFirstName());
+        BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
+        model.addAttribute("firstName", userDetails.getFirstName());
+
+        // Add list of complaints for the customer
+        model.addAttribute("complaints", complaintService.getCustomerComplaints(userDetails.getUserId()));
+
 
         return "complaints/customer-complaints";
     }
 
     @GetMapping("/banker")
     @PreAuthorize("hasRole('BANKER')")
-    public String bankerComplaints(Model model) {
+    public String bankerComplaints(Authentication authentication, Model model) {
+        BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
+        model.addAttribute("firstName", userDetails.getFirstName());
         List<Complaint> complaints = complaintRepository.findComplaintsByOrderByComplaintDateDesc();
         model.addAttribute("complaints", complaints);
 
@@ -66,7 +67,10 @@ public class ComplaintController {
 
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public String adminComplaints(Model model){
+    public String adminComplaints(Authentication authentication, Model model){
+        BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
+        model.addAttribute("firstName", userDetails.getFirstName());
+
         List<Complaint> complaints = complaintRepository.findComplaintsByOrderByComplaintDateDesc();
         model.addAttribute("complaints", complaints);
         return "complaints/admin-complaints";
