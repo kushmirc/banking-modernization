@@ -4,6 +4,7 @@ import com.banking.dto.AdministratorDashboardDTO;
 import com.banking.dto.CustomerDashboardDTO;
 import com.banking.model.Banker;
 import com.banking.repository.BankerRepository;
+import com.banking.security.BankingUserDetails;
 import com.banking.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -29,49 +30,43 @@ public class DashboardController {
 
     @GetMapping("")
     public String dashboard(Authentication authentication, Model model) {
-        String username = authentication.getName();
-
-        String role = "";
-        // get the roles (even though there will be only one in the list)
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        // get the role from the list
-        for(GrantedAuthority authority : authorities){
-            role = authority.getAuthority();
-            //break;
-        }
+        BankingUserDetails user = (BankingUserDetails) authentication.getPrincipal();
+        String role = user.getRole();
 
         return switch (role){
-            case "ROLE_CUSTOMER" -> prepareCustomerDashboard(username, model);
-            default -> "redirect:/login";
+            case "ADMINISTRATOR" -> prepareAdministratorDashboard(user, model);
 
-            case "ROLE_BANKER" -> {
-                Banker banker = bankerRepository.findByUserId(username)
-                                .orElseThrow(() -> new UsernameNotFoundException("Banker not found"));
-                model.addAttribute("firstName", banker.getFirstName());
+            case "BANKER" -> {
+                model.addAttribute("firstName", user.getFirstName());
                 yield  "dashboard/banker-dashboard";
             }
 
-            case "ROLE_ADMINISTRATOR" -> prepareAdministratorDashboard(username, model);
+            case "CUSTOMER" -> prepareCustomerDashboard(user, model);
+
+            default -> "redirect:/login";
         };
     }
 
-    private String prepareCustomerDashboard(String username, Model model) {
-        CustomerDashboardDTO customerDashboard = dashboardService.getCustomerDashboard(username);
+    private String prepareAdministratorDashboard(BankingUserDetails user, Model model) {
+        AdministratorDashboardDTO administratorDashboard = dashboardService.getAdministratorDashboard(user.getUserId());
 
-        model.addAttribute("firstName", customerDashboard.getFirstName());
+        model.addAttribute("firstName", user.getFirstName());
+        model.addAttribute("recentComplaints", administratorDashboard.getRecentComplaints());
+        model.addAttribute("allComplaints", administratorDashboard.getAllComplaints());
+        return "dashboard/admin-dashboard";
+    }
+
+    private String prepareCustomerDashboard(BankingUserDetails user, Model model) {
+
+        CustomerDashboardDTO customerDashboard = dashboardService.getCustomerDashboard(user.getUserId());
+
+        model.addAttribute("firstName", user.getFirstName());
         model.addAttribute("accountNumber", customerDashboard.getAccountNumber());
         model.addAttribute("formattedBalance", customerDashboard.getFormattedBalance());
         model.addAttribute("transactionsFromAccount", customerDashboard.getTransactionsFromAccount());
         return "dashboard/customer-dashboard";
     }
 
-    private String prepareAdministratorDashboard(String username, Model model) {
-        AdministratorDashboardDTO administratorDashboard = dashboardService.getAdministratorDashboard(username);
 
-        model.addAttribute("firstName", administratorDashboard.getFirstName());
-        model.addAttribute("recentComplaints", administratorDashboard.getRecentComplaints());
-        model.addAttribute("allComplaints", administratorDashboard.getAllComplaints());
-        return "dashboard/admin-dashboard";
-    }
 
 }

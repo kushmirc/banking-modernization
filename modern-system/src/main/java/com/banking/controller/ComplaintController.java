@@ -7,6 +7,7 @@ import com.banking.repository.AdministratorRepository;
 import com.banking.repository.BankerRepository;
 import com.banking.repository.ComplaintRepository;
 import com.banking.repository.CustomerRepository;
+import com.banking.security.BankingUserDetails;
 import com.banking.service.ComplaintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,14 +41,14 @@ public class ComplaintController {
 
 
     @GetMapping("/customer")
-    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public String customerComplaints(Authentication authentication, Model model) {
         // Add list of complaints for the customer
-        String userId = authentication.getName();
-        model.addAttribute("complaints", complaintService.getCustomerComplaints(userId));
+        BankingUserDetails user = (BankingUserDetails) authentication.getPrincipal();
+        model.addAttribute("complaints", complaintService.getCustomerComplaints(user.getUserId()));
 
         // Get the customer's first name
-        Customer customer = customerRepository.findByUserId(userId)
+        Customer customer = customerRepository.findByUserId(user.getUserId())
                         .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
         model.addAttribute("firstName", customer.getFirstName());
 
@@ -55,7 +56,7 @@ public class ComplaintController {
     }
 
     @GetMapping("/banker")
-    @PreAuthorize("hasRole('ROLE_BANKER')")
+    @PreAuthorize("hasRole('BANKER')")
     public String bankerComplaints(Model model) {
         List<Complaint> complaints = complaintRepository.findComplaintsByOrderByComplaintDateDesc();
         model.addAttribute("complaints", complaints);
@@ -64,7 +65,7 @@ public class ComplaintController {
     }
 
     @GetMapping("/admin")
-    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public String adminComplaints(Model model){
         List<Complaint> complaints = complaintRepository.findComplaintsByOrderByComplaintDateDesc();
         model.addAttribute("complaints", complaints);

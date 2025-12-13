@@ -21,8 +21,6 @@ public class ComplaintService {
     @Autowired
     ComplaintRepository complaintRepository;
 
-    Authentication authentication;
-
     public List<Complaint> getCustomerComplaints(String userId) {
         // Get the customer with the userId of the user
         Customer customer = customerRepository.findByUserId(userId)

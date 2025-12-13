@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private CustomerRepository customerRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public BankingUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String[] userParts = username.split(":");
         String userType = userParts[0];
         String userid = userParts[1];
@@ -37,29 +37,55 @@ public class CustomUserDetailsService implements UserDetailsService {
             Administrator user = administratorRepository.findByUserId(userid)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userid));
 
-            return org.springframework.security.core.userdetails.User.builder()
+            return new BankingUserDetails(
+                    user.getUserId(),
+                    user.getPassword(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    "ADMINISTRATOR"
+            );
+
+            /*return org.springframework.security.core.userdetails.User.builder()
                     .username(user.getUserId())
                     .password(user.getPassword())
                     .authorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMINISTRATOR")))
-                    .build();
+                    .build();*/
+
         } else if (userType.equals("BANKER")) {
             Banker user = bankerRepository.findByUserId(userid)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userid));
 
-            return org.springframework.security.core.userdetails.User.builder()
+            return new BankingUserDetails(
+                    user.getUserId(),
+                    user.getPassword(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    "BANKER"
+            );
+
+            /*return org.springframework.security.core.userdetails.User.builder()
                     .username(user.getUserId())
                     .password(user.getPassword())
                     .authorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_BANKER")))
-                    .build();
+                    .build();*/
+
         } else if (userType.equals("CUSTOMER")) {
             Customer user = customerRepository.findByUserId(userid)
                     .orElseThrow(() -> new UsernameNotFoundException("Account not found: " + userid));
 
-            return org.springframework.security.core.userdetails.User.builder()
+            return new BankingUserDetails(
+                    user.getUserId(),
+                    user.getPassword(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    "CUSTOMER"
+            );
+
+            /*return org.springframework.security.core.userdetails.User.builder()
                     .username(user.getUserId())
                     .password(user.getPassword())
                     .authorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_CUSTOMER")))
-                    .build();
+                    .build();*/
         }
         return null;
     }
