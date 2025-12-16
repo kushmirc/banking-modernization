@@ -1,7 +1,7 @@
 <!-- Thymeleaf Fragment File - No HTML/BODY wrapper needed -->
 
-<!-- All Complaints Table (visible by default) -->
-<div th:fragment="complaints-table(role)" class="table-container" id="complaintsTable">
+<!-- All Complaints Table -->
+<div th:fragment="complaints-table(role, complaints)" class="table-container" id="complaintsTable">
     <table>
         <thead>
         <tr>
@@ -11,27 +11,62 @@
             <th>Subject</th>
             <th>Description</th>
             <th class="hide-mobile">Status</th>
-            <th class="status">Closed</th>
+            <th>Closed</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="complaint : ${complaints}">
+        <tr th:each="complaint : ${complaints}" th:data-complaint-id="${complaint.complaintId}">
             <td th:text="${complaint.complaintNumber}"></td>
             <td th:text="${complaint.accountNumber}"></td>
             <td th:text="${#temporals.format(complaint.complaintDate, 'MM/dd/yyyy')}"></td>
             <td th:text="${complaint.subject}"></td>
             <td th:text="${complaint.description}"></td>
+
+            <!-- Status Column -->
             <td class="hide-mobile">
-              <span class="status-badge"
-                    th:classappend="${complaint.status == 'pass'} ? 'pass' :
-                                    (${complaint.status == 'fail'} ? 'fail' : 'pending')"
-                    th:text="${complaint.status}">
-              </span>
+                <!-- Static text (visible in view mode) -->
+                <span class="status-text">
+                    <span class="status-badge status-text-value"
+                          th:classappend="${complaint.status == 'Closed'} ? 'pass' :
+                                          (${complaint.status == 'Open'} ? 'pending' : 'ongoing')"
+                          th:text="${complaint.status}">
+                    </span>
+                </span>
+
+                <!-- Dropdown (visible in edit mode, admin only) -->
+                <select th:if="${role == 'admin'}"
+                        class="status-dropdown status-dropdown-field"
+                        th:data-complaint-id="${complaint.complaintId}"
+                        th:onchange="'handleStatusChange(this, ' + ${complaint.complaintId} + ')'">
+                    <option value="Open" th:selected="${complaint.status == 'Open'}">Open</option>
+                    <option value="Ongoing" th:selected="${complaint.status == 'Ongoing'}">Ongoing</option>
+                    <option value="Closed" th:selected="${complaint.status == 'Closed'}">Closed</option>
+                </select>
             </td>
-            <td class="status">
-              <span th:text="${complaint.closed}"
-                    th:style="${complaint.closed == 'false'} ? 'color: #e53e3e;' : 'color: #38a169;'">
-              </span>
+
+            <!-- Closed Column -->
+            <td>
+                <!-- Static text (visible in view mode) -->
+                <span class="status-text">
+                    <span class="closed-text-value"
+                          th:text="${complaint.closed}"
+                          th:style="${complaint.closed == 'False'} ? 'color: #e53e3e;' : 'color: #38a169;'">
+                    </span>
+                </span>
+
+                <!-- Dropdown (visible in edit mode, admin only) -->
+                <select th:if="${role == 'admin'}"
+                        class="status-dropdown closed-dropdown-field"
+                        th:data-complaint-id="${complaint.complaintId}"
+                        th:onchange="'handleClosedChange(this, ' + ${complaint.complaintId} + ')'">
+                    <option value="False" th:selected="${complaint.closed == 'False'}">False</option>
+                    <option value="True" th:selected="${complaint.closed == 'True'}">True</option>
+                </select>
+
+                <!-- Auto-set message (shown when Status→Closed auto-sets this field) -->
+                <div th:if="${role == 'admin'}" class="auto-set-msg">
+                    <i class="fas fa-check"></i> Auto-set to True
+                </div>
             </td>
         </tr>
         <tr th:if="${#lists.isEmpty(complaints)}">

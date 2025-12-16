@@ -4,8 +4,11 @@
   <title>Admin Complaints - Chicago Bank</title>
 </head>
 <body>
-<!-- Use existing authenticated navigation fragment -->
+<!-- Navigation -->
 <div th:replace="~{fragments/nav-authenticated :: nav-authenticated('profile', ${firstName})}"></div>
+
+<!-- Toast Container (for notifications) -->
+<div id="toastContainer" class="toast-container"></div>
 
 <!-- Main Dashboard Content -->
 <div class="dashboard-container">
@@ -15,14 +18,33 @@
 
   <!-- Admin View: List of Complaints -->
   <div class="card">
-    <div class="card-header">
-      <h2><i class="fas fa-exclamation-triangle"></i> <span id="complaintsCardTitle">All Complaints</span></h2>
+    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <h2 style="margin: 0;"><i class="fas fa-exclamation-triangle"></i> All Complaints</h2>
+
+      <!-- Edit Mode Controls -->
+      <div class="edit-controls">
+        <!-- View Mode: Show "Enter Edit Mode" button -->
+        <button type="button" id="btnEnterEdit" class="btn-edit-mode" onclick="enterEditMode()">
+          <i class="fas fa-edit"></i> Edit Status
+        </button>
+
+        <!-- Edit Mode: Show "Cancel" and "Save All" buttons (hidden by default) -->
+        <div id="editModeButtons" style="display: none; gap: 0.5rem;">
+          <button type="button" class="btn-cancel" onclick="cancelEditMode()">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+          <button type="button" class="btn-save" onclick="saveAllChanges()">
+            <i class="fas fa-save"></i> Save All Changes
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="card-body">
-      <!-- All Complaints Table From fragments-complaints.html-->
-      <div th:replace="~{complaints/fragments-complaints :: complaints-table('admin')}"></div>
+      <!-- Complaints Table -->
+      <div th:replace="~{complaints/fragments-complaints :: complaints-table('admin', ${complaints})}"></div>
     </div>
+  </div>
 
   <!-- Quick Actions -->
   <div class="card menu-card">
@@ -31,19 +53,429 @@
     </div>
     <div class="card-body">
       <div class="menu-grid">
-        <a href="/complaints/admin-complaints" class="menu-item">
-          <i class="fas fa-tasks"></i>
-          <span>Manage Complaint Status</span>
+        <a href="/complaints/admin" class="menu-item">
+          <i class="fas fa-sync"></i>
+          <span>Refresh Complaints</span>
         </a>
       </div>
     </div>
   </div>
-    <a href="/dashboard"><- Return to dashboard</a>
-  </div>
+
+  <a href="/dashboard" class="back-link">&larr; Return to dashboard</a>
 </div>
 
-<!-- Use existing footer fragment if you have one -->
+<!-- Footer -->
 <div th:replace="~{fragments/common :: footer}"></div>
+
+<!-- Inline Styles for Edit Mode and Toasts -->
+<style>
+  /* Edit Mode Button Styles */
+  .edit-controls {
+    display: flex;
+    align-items: center;
+  }
+
+  #editModeButtons {
+    display: flex;
+  }
+
+  .btn-edit-mode, .btn-save, .btn-cancel {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .btn-edit-mode {
+    background: #667eea;
+    color: white;
+  }
+
+  .btn-edit-mode:hover {
+    background: #5a67d8;
+  }
+
+  .btn-save {
+    background: #38a169;
+    color: white;
+  }
+
+  .btn-save:hover {
+    background: #2f855a;
+  }
+
+  .btn-cancel {
+    background: #e2e8f0;
+    color: #4a5568;
+  }
+
+  .btn-cancel:hover {
+    background: #cbd5e0;
+  }
+
+  /* Dropdown Styles (hidden by default, shown in edit mode) */
+  .status-dropdown {
+    display: none;
+    padding: 0.4rem 0.6rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    background: white;
+    cursor: pointer;
+    min-width: 100px;
+  }
+
+  .status-dropdown:focus {
+    outline: none;
+    border-color: #667eea;
+  }
+
+  .status-dropdown.modified {
+    border-color: #ed8936;
+    background: #fffaf0;
+  }
+
+  /* Auto-set message */
+  .auto-set-msg {
+    font-size: 0.75rem;
+    color: #38a169;
+    margin-top: 0.25rem;
+    display: none;
+  }
+
+  .auto-set-msg.visible {
+    display: block;
+  }
+
+  /* Toast Notification Styles */
+  .toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .toast {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: slideIn 0.3s ease;
+    max-width: 350px;
+  }
+
+  .toast.success {
+    background: #38a169;
+  }
+
+  .toast.error {
+    background: #e53e3e;
+  }
+
+  .toast.info {
+    background: #667eea;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideOut {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  /* Edit mode indicator on table */
+  .table-container.edit-mode {
+    border: 2px solid #667eea;
+    border-radius: 8px;
+  }
+
+  .table-container.edit-mode table {
+    background: #f7fafc;
+  }
+
+  /* Back link styling */
+  .back-link {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #667eea;
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<!-- JavaScript for Edit Mode Functionality -->
+<script th:inline="javascript">
+  // ============================================================
+  // State Management
+  // ============================================================
+  let isEditMode = false;
+  let originalValues = {};  // Store original values for cancel/revert
+  let modifiedRows = new Set();  // Track which complaint IDs have changes
+
+  // ============================================================
+  // Toast Notification System
+  // ============================================================
+  function showToast(message, type = 'info', duration = 4000) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+
+    // Icon based on type
+    const icons = {
+      success: 'fa-check-circle',
+      error: 'fa-exclamation-circle',
+      info: 'fa-info-circle'
+    };
+
+    toast.innerHTML = `
+            <i class="fas ${icons[type] || icons.info}"></i>
+            <span>${message}</span>
+        `;
+
+    container.appendChild(toast);
+
+    // Auto-remove after duration
+    setTimeout(() => {
+      toast.style.animation = 'slideOut 0.3s ease forwards';
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+  }
+
+  // ============================================================
+  // Edit Mode Toggle Functions
+  // ============================================================
+  function enterEditMode() {
+    isEditMode = true;
+    modifiedRows.clear();
+
+    // Store original values for all rows
+    document.querySelectorAll('tr[data-complaint-id]').forEach(row => {
+      const complaintId = row.dataset.complaintId;
+      originalValues[complaintId] = {
+        status: row.querySelector('.status-dropdown-field').value,
+        closed: row.querySelector('.closed-dropdown-field').value
+      };
+    });
+
+    // Show/hide appropriate buttons
+    document.getElementById('btnEnterEdit').style.display = 'none';
+    document.getElementById('editModeButtons').style.display = 'flex';
+
+    // Show dropdowns, hide static text
+    document.querySelectorAll('.status-text').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.status-dropdown').forEach(el => el.style.display = 'inline-block');
+
+    // Add visual indicator to table
+    document.getElementById('complaintsTable').classList.add('edit-mode');
+
+    showToast('Edit mode enabled. Make your changes and click Save All.', 'info');
+  }
+
+  function cancelEditMode() {
+    // Revert all dropdowns to original values
+    document.querySelectorAll('tr[data-complaint-id]').forEach(row => {
+      const complaintId = row.dataset.complaintId;
+      const original = originalValues[complaintId];
+      if (original) {
+        row.querySelector('.status-dropdown-field').value = original.status;
+        row.querySelector('.closed-dropdown-field').value = original.closed;
+
+        // Update the static text to match
+        row.querySelector('.status-text-value').textContent = original.status;
+        row.querySelector('.closed-text-value').textContent = original.closed;
+      }
+
+      // Remove modified styling
+      row.querySelectorAll('.status-dropdown').forEach(dd => dd.classList.remove('modified'));
+      row.querySelector('.auto-set-msg')?.classList.remove('visible');
+    });
+
+    exitEditMode();
+    showToast('Changes cancelled.', 'info');
+  }
+
+  function exitEditMode() {
+    isEditMode = false;
+    modifiedRows.clear();
+
+    // Show/hide appropriate buttons
+    document.getElementById('btnEnterEdit').style.display = 'inline-flex';
+    document.getElementById('editModeButtons').style.display = 'none';
+
+    // Hide dropdowns, show static text
+    document.querySelectorAll('.status-dropdown').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.status-text').forEach(el => el.style.display = 'inline');
+
+    // Remove visual indicator from table
+    document.getElementById('complaintsTable').classList.remove('edit-mode');
+
+    // Clear all auto-set messages
+    document.querySelectorAll('.auto-set-msg').forEach(el => el.classList.remove('visible'));
+  }
+
+  // ============================================================
+  // Change Handling with Business Rule Validation
+  // ============================================================
+  function handleStatusChange(selectElement, complaintId) {
+    const row = selectElement.closest('tr');
+    const closedDropdown = row.querySelector('.closed-dropdown-field');
+    const autoSetMsg = row.querySelector('.auto-set-msg');
+    const newStatus = selectElement.value;
+
+    // Business Rule: If Status is "Closed", auto-set Closed to "True"
+    if (newStatus === 'Closed') {
+      closedDropdown.value = 'True';
+      closedDropdown.classList.add('modified');
+      autoSetMsg.classList.add('visible');
+    } else {
+      // If Status is Open or Ongoing, Closed must be False
+      closedDropdown.value = 'False';
+      autoSetMsg.classList.remove('visible');
+    }
+
+    markAsModified(complaintId, row);
+  }
+
+  function handleClosedChange(selectElement, complaintId) {
+    const row = selectElement.closest('tr');
+    const statusDropdown = row.querySelector('.status-dropdown-field');
+    const newClosed = selectElement.value;
+    const currentStatus = statusDropdown.value;
+
+    // Business Rule Validation
+    if (newClosed === 'True' && currentStatus !== 'Closed') {
+      showToast('Closed can only be "True" when Status is "Closed"', 'error');
+      selectElement.value = 'False';  // Revert
+      return;
+    }
+
+    if (newClosed === 'False' && currentStatus === 'Closed') {
+      showToast('Closed must be "True" when Status is "Closed"', 'error');
+      selectElement.value = 'True';  // Revert
+      return;
+    }
+
+    markAsModified(complaintId, row);
+  }
+
+  function markAsModified(complaintId, row) {
+    const original = originalValues[complaintId];
+    const currentStatus = row.querySelector('.status-dropdown-field').value;
+    const currentClosed = row.querySelector('.closed-dropdown-field').value;
+
+    // Check if actually different from original
+    if (currentStatus !== original.status || currentClosed !== original.closed) {
+      modifiedRows.add(complaintId);
+      row.querySelectorAll('.status-dropdown').forEach(dd => dd.classList.add('modified'));
+    } else {
+      modifiedRows.delete(complaintId);
+      row.querySelectorAll('.status-dropdown').forEach(dd => dd.classList.remove('modified'));
+    }
+  }
+
+  // ============================================================
+  // Save All Changes
+  // ============================================================
+  async function saveAllChanges() {
+    if (modifiedRows.size === 0) {
+      showToast('No changes to save.', 'info');
+      return;
+    }
+
+    const updates = [];
+
+    // Collect all changes
+    modifiedRows.forEach(complaintId => {
+      const row = document.querySelector(`tr[data-complaint-id="${complaintId}"]`);
+      updates.push({
+        complaintId: parseInt(complaintId),
+        status: row.querySelector('.status-dropdown-field').value,
+        closed: row.querySelector('.closed-dropdown-field').value
+      });
+    });
+
+    // Send updates to backend (one at a time for simplicity)
+    let successCount = 0;
+    let errorCount = 0;
+
+    for (const update of updates) {
+      try {
+        const response = await fetch(`/api/complaints/${update.complaintId}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            status: update.status,
+            closed: update.closed
+          })
+        });
+
+        if (response.ok) {
+          successCount++;
+          // Update the static text to reflect the saved value
+          const row = document.querySelector(`tr[data-complaint-id="${update.complaintId}"]`);
+          row.querySelector('.status-text-value').textContent = update.status;
+          row.querySelector('.closed-text-value').textContent = update.closed;
+
+          // Update original values so cancel works correctly
+          originalValues[update.complaintId] = {
+            status: update.status,
+            closed: update.closed
+          };
+        } else {
+          errorCount++;
+          const errorData = await response.json();
+          console.error(`Failed to update complaint ${update.complaintId}:`, errorData);
+        }
+      } catch (error) {
+        errorCount++;
+        console.error(`Error updating complaint ${update.complaintId}:`, error);
+      }
+    }
+
+    // Show result toast
+    if (errorCount === 0) {
+      showToast(`${successCount} complaint(s) updated successfully!`, 'success');
+      exitEditMode();
+    } else if (successCount > 0) {
+      showToast(`${successCount} updated, ${errorCount} failed. Check console for details.`, 'error');
+    } else {
+      showToast('Failed to save changes. Please try again.', 'error');
+    }
+  }
+</script>
 
 </body>
 </html>

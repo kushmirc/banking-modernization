@@ -21,8 +21,9 @@
 
     <div class="card-body">
       <!-- All Complaints Table From fragments-complaints.html-->
-      <div th:replace="~{complaints/fragments-complaints :: complaints-table('banker')}"></div>
+      <div th:replace="~{complaints/fragments-complaints :: complaints-table('banker', ${complaints})}"></div>
     </div>
+  </div>
 
   <!-- Quick Actions -->
   <div class="card menu-card">
@@ -38,8 +39,7 @@
       </div>
     </div>
   </div>
-  <a href="/dashboard"><- Return to dashboard</a>
-  </div>
+  <a href="/dashboard">&larr; Return to dashboard</a>
 </div>
 
 <!-- Use existing footer fragment if you have one -->
