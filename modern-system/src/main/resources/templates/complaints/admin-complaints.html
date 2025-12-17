@@ -431,7 +431,7 @@
 
     for (const update of updates) {
       try {
-        const response = await fetch(`/api/complaints/${update.complaintId}/status`, {
+        const response = await fetch(`/complaints/${update.complaintId}/status`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

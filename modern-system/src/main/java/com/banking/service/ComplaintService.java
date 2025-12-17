@@ -31,4 +31,10 @@ public class ComplaintService {
 
         return complaintRepository.findComplaintsByAccountNumberOrderByComplaintDateDesc(accountNumber);
     }
+
+    public Complaint updateComplaintStatus(){
+
+
+        return null;
+    }
 }

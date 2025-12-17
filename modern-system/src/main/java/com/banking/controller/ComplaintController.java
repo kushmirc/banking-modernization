@@ -1,5 +1,6 @@
 package com.banking.controller;
 
+import com.banking.dto.ComplaintStatusUpdateDTO;
 import com.banking.model.Banker;
 import com.banking.model.Complaint;
 import com.banking.model.Customer;
@@ -10,13 +11,13 @@ import com.banking.repository.CustomerRepository;
 import com.banking.security.BankingUserDetails;
 import com.banking.service.ComplaintService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -77,9 +78,23 @@ public class ComplaintController {
 
     }
 
+    // Register a new complaint
     @GetMapping("/new")
     public String newComplaint(Model model) {
         return "complaints/new";
+    }
+
+
+    // Modify a complaint (Administrator)
+    @PutMapping("{complaintId}/status")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @ResponseBody
+    public ResponseEntity<?> updateComplaintStatus(
+            @PathVariable Integer complaintId,
+            @RequestBody ComplaintStatusUpdateDTO request) {
+
+
+        return null;
     }
 
 }
