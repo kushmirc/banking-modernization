@@ -10,6 +10,7 @@ import com.banking.repository.ComplaintRepository;
 import com.banking.repository.CustomerRepository;
 import com.banking.security.BankingUserDetails;
 import com.banking.service.ComplaintService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -93,8 +94,18 @@ public class ComplaintController {
             @PathVariable Integer complaintId,
             @RequestBody ComplaintStatusUpdateDTO request) {
 
+        try {
+            Complaint updatedComplaint = complaintService.updateComplaintStatus(
+                    complaintId,
+                    request.getStatus(),
+                    request.getClosed());
+            return ResponseEntity.ok(updatedComplaint);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
 
-        return null;
     }
 
 }
