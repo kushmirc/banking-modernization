@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/common :: head('Customer Complaints')}">
+  <title>Customer Complaints - Chicago Bank</title>
+</head>
+<body>
+<!-- Use existing authenticated navigation fragment -->
+<div th:replace="~{fragments/nav-authenticated :: nav-authenticated('profile', ${firstName})}"></div>
+
+<!-- Main Dashboard Content -->
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Register a New Complaint</h1>
+  </div>
+
+  <!-- Customer View: List of Complaints -->
+  <div class="card">
+    <div class="card-header">
+      <h2>
+        <span id="complaintsCardTitle">Enter Complaint Information</span></h2>
+    </div>
+
+
+    <a href="/dashboard">&larr; Return to dashboard</a>
+  </div>
+</div>
+
+<!-- Use existing footer fragment if you have one -->
+<div th:replace="~{fragments/common :: footer}"></div>
+
+</body>
+</html>

@@ -82,7 +82,7 @@ public class ComplaintController {
     // Register a new complaint
     @GetMapping("/new")
     public String newComplaint(Model model) {
-        return "complaints/new";
+        return "complaints/new-complaint";
     }
 
 
