@@ -7,6 +7,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title th:text="${title} + ' - Chicago Bank'">Chicago Bank</title>
         
+        <!-- CSRF Token for AJAX requests -->
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+        
         <!-- Favicon -->
         <link rel="icon" type="image/x-icon" href="/favicon.ico">
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">

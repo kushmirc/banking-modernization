@@ -429,12 +429,17 @@
     let successCount = 0;
     let errorCount = 0;
 
+    // Get CSRF token from meta tags
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
     for (const update of updates) {
       try {
         const response = await fetch(`/complaints/${update.complaintId}/status`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken  // Include CSRF token
           },
           body: JSON.stringify({
             status: update.status,
