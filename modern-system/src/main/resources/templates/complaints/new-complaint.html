@@ -23,7 +23,10 @@
       <!-- Success/Error Messages -->
       <div th:if="${successMessage}" class="alert alert-success">
         <i class="fas fa-check-circle"></i>
-        <span th:text="${successMessage}">Success</span>
+        <span>
+          <span th:text="${successMessage}">Success</span>
+          <span th:if="${complaintNumber}"> You can track its status in <a th:href="@{/complaints/customer}" style="color: inherit; font-weight: 600;">View Complaints</a>.</span>
+        </span>
       </div>
       <div th:if="${errorMessage}" class="alert alert-error">
         <i class="fas fa-exclamation-triangle"></i>
