@@ -1,42 +1,6 @@
 /* Contact Page Specific Styles */
 
-/* Contact Hero Section */
-.hero-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 4rem 0;
-    text-align: center;
-}
-
-.hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-    opacity: 0.3;
-}
-
-.hero-content {
-    max-width: 800px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-}
-
-.hero-content h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    font-weight: 700;
-}
-
-.hero-content p {
-    font-size: 1.25rem;
-    opacity: 0.95;
-    line-height: 1.8;
-}
+/* Hero section styles now in main.css */
 
 /* Contact Information Section */
 .contact-info-section {
@@ -153,55 +117,10 @@
     gap: 1.5rem;
 }
 
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    color: #2d3748;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    padding: 0.875rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.2s ease;
-    background: #fafafa;
-    font-family: inherit;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #667eea;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 120px;
-}
+/* Form styles now come from main.css */
 
 .form-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 1rem;
+    justify-content: center;  /* Contact page centers its buttons */
 }
 
 .btn-primary:hover {
@@ -229,28 +148,7 @@
     color: white;
 }
 
-/* Success/Error Messages */
-.alert {
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-weight: 500;
-}
-
-.alert-success {
-    background: #c6f6d5;
-    color: #276749;
-    border-left: 4px solid #68d391;
-}
-
-.alert-error {
-    background: #fed7d7;
-    color: #9b2c2c;
-    border-left: 4px solid #fc8181;
-}
+/* Alert styles now come from main.css */
 
 /* Quick Contact Section */
 .quick-contact-section {
@@ -307,13 +205,7 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .hero-content h1 {
-        font-size: 2rem;
-    }
-    
-    .hero-content p {
-        font-size: 1.1rem;
-    }
+    /* .hero-content responsive styles now in main.css */
     
     .contact-grid {
         grid-template-columns: 1fr;
@@ -329,15 +221,7 @@
         margin: 0 1rem;
     }
     
-    .form-row {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .form-actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
+    /* form-row and form-actions responsive styles now in main.css */
     
     .quick-contact-grid {
         grid-template-columns: 1fr;

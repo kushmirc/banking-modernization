@@ -150,6 +150,43 @@
     color: #2d3748;
 }
 
+/* Menu Item as Button - for toggle functionality */
+button.menu-item {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+/* Active Menu Item State */
+.menu-item.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.menu-item.active:hover {
+    background: linear-gradient(135deg, #5568d3 0%, #66398d 100%);
+}
+
+.menu-item.active i,
+.menu-item.active span {
+    color: white;
+}
+
+/* Back Link - for returning to dashboard */
+.back-link {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #667eea;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
 /* Stats Row - For Banker/Admin dashboards */
 .stats-row {
     display: grid;

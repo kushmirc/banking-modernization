@@ -125,24 +125,6 @@
     background: var(--bg-white);
 }
 
-/* Form styles */
-.form-input {
-    width: 100%;
-    padding: var(--space-sm) var(--space-md);
-    border: 2px solid var(--border-light);
-    border-radius: var(--radius-md);
-    font-size: var(--font-size-base);
-    transition: var(--transition-base);
-    background: var(--bg-gray);
-}
-
-.form-input:focus {
-    outline: none;
-    border-color: var(--border-focus);
-    background: var(--bg-white);
-    box-shadow: var(--shadow-focus);
-}
-
 /* Typography */
 .text-primary { color: var(--text-primary); }
 .text-secondary { color: var(--text-secondary); }

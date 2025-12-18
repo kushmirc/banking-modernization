@@ -148,34 +148,7 @@
 <!-- Use existing footer fragment if you have one -->
 <div th:replace="~{fragments/common :: footer}"></div>
 
-<!-- Custom Styles for Toggle Functionality -->
-<style>
-  /* Active button state (purple) */
-  .menu-item.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-  }
-
-  .menu-item.active:hover {
-    background: linear-gradient(135deg, #5568d3 0%, #66398d 100%);
-  }
-
-  /* Make icon and text white when active */
-  .menu-item.active i,
-  .menu-item.active span {
-    color: white;
-  }
-
-  /* Make button behave like menu-item */
-  button.menu-item {
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: inherit;
-  }
-</style>
+<!-- Styles for menu-item.active now in dashboard-styles.css -->
 
 <!-- JavaScript Toggle Function -->
 <script>

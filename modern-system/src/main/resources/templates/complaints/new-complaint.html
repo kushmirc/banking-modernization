@@ -1,31 +1,100 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/common :: head('Customer Complaints')}">
-  <title>Customer Complaints - Chicago Bank</title>
+<head th:replace="~{fragments/common :: head('Register Complaint')}">
+  <title>Register Complaint - Chicago Bank</title>
 </head>
 <body>
-<!-- Use existing authenticated navigation fragment -->
+<!-- Navigation -->
 <div th:replace="~{fragments/nav-authenticated :: nav-authenticated('profile', ${firstName})}"></div>
 
-<!-- Main Dashboard Content -->
+<!-- Main Content -->
 <div class="dashboard-container">
   <div class="dashboard-header">
     <h1>Register a New Complaint</h1>
   </div>
 
-  <!-- Customer View: List of Complaints -->
+  <!-- Complaint Form Card -->
   <div class="card">
     <div class="card-header">
-      <h2>
-        <span id="complaintsCardTitle">Enter Complaint Information</span></h2>
+      <h2><i class="fas fa-comment-alt"></i> Complaint Information</h2>
     </div>
+    <div class="card-body">
+      
+      <!-- Success/Error Messages -->
+      <div th:if="${successMessage}" class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${successMessage}">Success</span>
+      </div>
+      <div th:if="${errorMessage}" class="alert alert-error">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span th:text="${errorMessage}">Error</span>
+      </div>
 
+      <form th:action="@{/complaints/new}" method="post" id="complaintForm">
+        
+        <!-- Account Number - Read-only for customers, editable for banker/admin -->
+        <div class="form-group">
+          <label class="form-label">Account Number</label>
+          <input type="text" 
+                 name="accountNumber" 
+                 class="form-input"
+                 th:value="${accountNumber}"
+                 th:readonly="${isCustomer}"
+                 required>
+          <small th:if="${isCustomer}" style="color: var(--text-muted); font-size: 0.85rem;">
+            Your account number is automatically filled
+          </small>
+        </div>
 
-    <a href="/dashboard">&larr; Return to dashboard</a>
+        <!-- Date -->
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" 
+                 name="complaintDate" 
+                 class="form-input"
+                 th:value="${#temporals.format(today, 'yyyy-MM-dd')}"
+                 required>
+        </div>
+
+        <!-- Subject -->
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <input type="text" 
+                 name="subject" 
+                 class="form-input"
+                 placeholder="Brief summary of your complaint"
+                 maxlength="40"
+                 required>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea name="description" 
+                    class="form-input"
+                    placeholder="Please describe your issue in detail"
+                    rows="4"
+                    maxlength="40"
+                    required></textarea>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Register Complaint
+          </button>
+          <button type="reset" class="btn btn-secondary">
+            <i class="fas fa-eraser"></i> Clear Form
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
+
+  <a href="/dashboard" class="back-link">&larr; Return to dashboard</a>
 </div>
 
-<!-- Use existing footer fragment if you have one -->
+<!-- Footer -->
 <div th:replace="~{fragments/common :: footer}"></div>
 
 </body>

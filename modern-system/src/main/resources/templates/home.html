@@ -5,7 +5,7 @@
     <!-- Page-specific CSS -->
     <link href="/css/home.css" rel="stylesheet">
 </head>
-<body class="home-page">
+<body class="page-light">
     <header>
         <!-- Include navigation fragment with 'home' marked as active -->
         <th:block th:replace="~{fragments/common :: nav('home')}"></th:block>
@@ -13,10 +13,12 @@
     
     <main>
         <!-- Hero Section -->
-        <section class="hero">
-        <h1>Welcome to Chicago Bank</h1>
-        <p>Modern Banking for the Digital Age</p>
-    </section>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Welcome to Chicago Bank</h1>
+                <p>Modern Banking for the Digital Age</p>
+            </div>
+        </section>
     
     <!-- Main Content -->
     <div class="container">

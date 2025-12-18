@@ -2,10 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:replace="~{fragments/common :: head('News')}"></th:block>
-    <!-- Page-specific CSS -->
-    <link href="/css/news.css" rel="stylesheet">
+    <!-- No page-specific CSS needed -->
 </head>
-<body class="news-page">
+<body class="page-light">
     <header>
         <!-- Include navigation fragment with 'home' marked as active -->
         <th:block th:replace="~{fragments/common :: nav('news')}"></th:block>
@@ -13,10 +12,12 @@
     
     <main>
         <!-- Hero Section -->
-        <section class="hero">
-        <h1>News & Information</h1>
-        <p>Stay up to date with news and information from the industry</p>
-    </section>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>News & Information</h1>
+                <p>Stay up to date with news and information from the industry</p>
+            </div>
+        </section>
     
     <!-- Main Content -->
     <div class="container">

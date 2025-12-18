@@ -9,10 +9,7 @@
     align-items: center;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
+/* .container now comes from main.css */
 
 .login-wrapper {
     max-width: 500px;
@@ -63,17 +60,7 @@
     gap: 1.5rem;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-label {
-    color: var(--text-primary);
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
-}
+/* Base form styles (form-group, form-label) now come from main.css */
 
 /* Role Selector */
 .role-selector {
@@ -119,45 +106,7 @@
     font-weight: 600;
 }
 
-/* Input Fields */
-.input-wrapper {
-    position: relative;
-}
-
-.form-input {
-    width: 100%;
-    padding: 0.875rem 0.875rem 0.875rem 2.75rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.2s ease;
-    background: #fafafa;
-    font-family: inherit;
-}
-
-.form-input:focus {
-    outline: none;
-    border-color: var(--primary-solid);
-    background: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.input-icon {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #a0aec0;
-    font-size: 1rem;
-}
-
-.input-wrapper.error .form-input {
-    border-color: #fc8181;
-}
-
-.input-wrapper.success .form-input {
-    border-color: #68d391;
-}
+/* Input styles (form-input, input-wrapper, input-icon) now come from main.css */
 
 /* Form Options */
 .form-options {
@@ -239,28 +188,7 @@
     align-items: center;
 }
 
-/* Alert Messages */
-.alert {
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-weight: 500;
-}
-
-.alert-success {
-    background: #c6f6d5;
-    color: #276749;
-    border-left: 4px solid #68d391;
-}
-
-.alert-error {
-    background: #fed7d7;
-    color: #9b2c2c;
-    border-left: 4px solid #fc8181;
-}
+/* Alert styles now come from main.css */
 
 /* Security Notice */
 .security-notice {

@@ -13,6 +13,12 @@ body {
     line-height: 1.6;
 }
 
+/* Light background pages (home, news, etc.) */
+body.page-light {
+    background: var(--bg-light);
+    min-height: 100vh;
+}
+
 /* Utility Classes */
 .container {
     max-width: 1200px;
@@ -103,81 +109,193 @@ body {
     line-height: 1.6;
 }
 
-/* Form Elements (shared styles) */
+/* ========================================
+   FORM STYLES - Unified Form System
+   ======================================== */
+
+/* Base form group - vertical layout */
 .form-group {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 1.5rem;
-    position: relative;
 }
 
-.form-label {
-    display: block;
+/* Form labels */
+.form-label,
+.form-group label {
     color: var(--text-primary);
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 0.5rem;
-    font-size: var(--font-size-sm);
+    font-size: 0.95rem;
 }
 
-.form-input-wrapper {
-    position: relative;
-}
-
-.form-input {
+/* Base inputs - simple version (no icons) */
+.form-input,
+.form-group input,
+.form-group select,
+.form-group textarea {
     width: 100%;
-    padding: 0.875rem 1rem 0.875rem 3rem;
+    padding: 0.875rem;
     border: 2px solid var(--border-light);
     border-radius: var(--radius-md);
     font-size: var(--font-size-base);
+    font-family: inherit;
     transition: var(--transition-base);
     background: var(--bg-gray);
 }
 
-.form-input:focus {
+.form-input:focus,
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
     outline: none;
     border-color: var(--border-focus);
     background: var(--bg-white);
     box-shadow: var(--shadow-focus);
 }
 
+/* Textarea specific */
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Input wrapper - for icon support */
+.input-wrapper {
+    position: relative;
+}
+
+/* When using icons, add left padding */
+.input-wrapper .form-input,
+.form-group.with-icon input {
+    padding-left: 2.75rem;
+}
+
+/* Icon positioning */
 .input-icon {
     position: absolute;
     left: 1rem;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-muted);
-    font-size: 1.1rem;
+    font-size: 1rem;
+    pointer-events: none;
 }
 
-/* Alert Messages */
-.error-message {
-    background: var(--error-bg);
-    color: var(--error-text);
-    padding: 0.75rem;
+/* Validation states */
+.input-wrapper.error .form-input,
+.form-group.error input {
+    border-color: var(--error);
+}
+
+.input-wrapper.success .form-input,
+.form-group.success input {
+    border-color: var(--success);
+}
+
+/* Form row - for side-by-side fields */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* Form actions - button container */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* ========================================
+   ALERT MESSAGES - Unified Alert System
+   ======================================== */
+
+/* Base alert styles */
+.alert {
+    padding: 1rem;
     border-radius: var(--radius-md);
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
     font-size: var(--font-size-sm);
-    border-left: 4px solid var(--error);
 }
 
-.success-message {
+.alert i {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+/* Success alert */
+.alert-success {
     background: var(--success-bg);
     color: var(--success-text);
-    padding: 0.75rem;
-    border-radius: var(--radius-md);
-    margin-bottom: 1rem;
-    font-size: var(--font-size-sm);
     border-left: 4px solid var(--success);
 }
 
-.info-message {
+/* Error alert */
+.alert-error {
+    background: var(--error-bg);
+    color: var(--error-text);
+    border-left: 4px solid var(--error);
+}
+
+/* Info alert */
+.alert-info {
     background: var(--info-bg);
     color: var(--info-text);
-    padding: 1rem;
-    border-radius: var(--radius-md);
-    margin-top: 1.5rem;
-    font-size: var(--font-size-xs);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    border-left: 4px solid var(--info);
+}
+
+/* Warning alert */
+.alert-warning {
+    background: #fefcbf;
+    color: #744210;
+    border-left: 4px solid #ecc94b;
+}
+
+/* ========================================
+   HERO SECTION - Page Header Banners
+   ======================================== */
+
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+    position: relative;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.hero-content p {
+    font-size: 1.25rem;
+    opacity: 0.95;
+    line-height: 1.8;
 }
 
 /* Loading States */
@@ -208,6 +326,23 @@ body {
     
     .nav-container {
         padding: 0 1rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-content p {
+        font-size: 1rem;
     }
 }
 
