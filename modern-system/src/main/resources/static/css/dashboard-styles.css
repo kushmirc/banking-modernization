@@ -261,6 +261,25 @@ button.menu-item {
     }
 }
 
+/* Scrollable Table Container - Shows ~10 rows with scroll */
+.table-container-scroll {
+    max-height: 480px;  /* Approximately 10 rows */
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+/* Make table header sticky within scrollable container */
+.table-container-scroll thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.table-container-scroll table {
+    margin-bottom: 0;
+}
+
 /* Ensure compatibility with existing styles */
 .dashboard-container .card {
     /* Override any conflicting styles from main CSS */
