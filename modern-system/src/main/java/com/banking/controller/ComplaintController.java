@@ -1,6 +1,7 @@
 package com.banking.controller;
 
 import com.banking.dto.ComplaintStatusUpdateDTO;
+import com.banking.dto.NewComplaintDTO;
 import com.banking.model.Banker;
 import com.banking.model.Complaint;
 import com.banking.model.Customer;
@@ -19,7 +20,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -79,13 +82,6 @@ public class ComplaintController {
 
     }
 
-    // Register a new complaint
-    @GetMapping("/new")
-    public String newComplaint(Model model) {
-        return "complaints/new-complaint";
-    }
-
-
     // Modify a complaint (Administrator)
     @PutMapping("{complaintId}/status")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -105,7 +101,33 @@ public class ComplaintController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+    }
 
+    // Register a new complaint
+    @GetMapping("/new")
+    public String newComplaint(Authentication authentication, Model model) {
+        BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
+        String accountNumber = "";
+        boolean isCustomer = false;
+
+        if(userDetails.getRole().equals("CUSTOMER")) {
+            Customer customer = customerRepository.findByUserId(userDetails.getUserId())
+                    .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
+            accountNumber = customer.getAccountNumber();
+            isCustomer = true;
+        }
+
+        model.addAttribute("accountNumber", accountNumber);
+        model.addAttribute("isCustomer", isCustomer);
+        return "complaints/new-complaint";
+    }
+
+    // Register a new complaint
+    @PostMapping("/new")
+    public String createComplaint(@ModelAttribute NewComplaintDTO newComplaintDTO,
+                                  RedirectAttributes redirectAttributes) {
+
+        return null;
     }
 
 }

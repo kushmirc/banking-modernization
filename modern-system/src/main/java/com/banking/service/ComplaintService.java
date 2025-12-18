@@ -21,6 +21,7 @@ public class ComplaintService {
     @Autowired
     ComplaintRepository complaintRepository;
 
+
     public List<Complaint> getCustomerComplaints(String userId) {
         // Get the customer with the userId of the user
         Customer customer = customerRepository.findByUserId(userId)
@@ -53,4 +54,6 @@ public class ComplaintService {
         if(status.equals("Open") && closed.equals("True"))
             throw new IllegalArgumentException("Closed must be 'False' when Status is 'Open'");
     }
+
+
 }
