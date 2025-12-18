@@ -127,7 +127,15 @@ public class ComplaintController {
     public String createComplaint(@ModelAttribute NewComplaintDTO newComplaintDTO,
                                   RedirectAttributes redirectAttributes) {
 
-        return null;
+        Complaint complaint = complaintService.createComplaint(newComplaintDTO);
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                                             "Complaint #"
+                                                     + complaint.getComplaintNumber()
+                                                     + " registered successfully!");
+        redirectAttributes.addFlashAttribute("complaintNumber", complaint.getComplaintNumber());
+
+        return "redirect:/complaints/new";
     }
 
 }

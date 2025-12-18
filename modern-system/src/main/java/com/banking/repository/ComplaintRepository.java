@@ -2,6 +2,7 @@ package com.banking.repository;
 
 import com.banking.model.Complaint;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Integer> {
 
     List<Complaint> findComplaintsByAccountNumberOrderByComplaintDateDesc(String accountNumber);
 
+    @Query("SELECT MAX(c.complaintNumber) FROM Complaint c")
+    Optional<Integer> findMaxComplaintNumber();
 }

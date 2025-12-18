@@ -1,5 +1,6 @@
 package com.banking.service;
 
+import com.banking.dto.NewComplaintDTO;
 import com.banking.model.Complaint;
 import com.banking.model.Customer;
 import com.banking.repository.ComplaintRepository;
@@ -56,4 +57,20 @@ public class ComplaintService {
     }
 
 
+    public Complaint createComplaint(NewComplaintDTO newComplaintDTO) {
+        // Generate next complaint number
+        int nextComplaintNumber = complaintRepository.findMaxComplaintNumber()
+                .orElse(1000) +1;
+
+        Complaint complaint = new Complaint();
+        complaint.setComplaintNumber(nextComplaintNumber);
+        complaint.setAccountNumber(newComplaintDTO.getAccountNumber());
+        complaint.setComplaintDate(newComplaintDTO.getComplaintDate());
+        complaint.setSubject(newComplaintDTO.getSubject());
+        complaint.setDescription(newComplaintDTO.getDescription());
+        complaint.setStatus("Open");
+        complaint.setClosed("False");
+
+        return complaintRepository.save(complaint);
+    }
 }
