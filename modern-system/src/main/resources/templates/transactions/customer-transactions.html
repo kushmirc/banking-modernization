@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/common :: head('Customer Dashboard')}">
+  <title>Customer Dashboard - Chicago Bank</title>
+</head>
+<body>
+<!-- Use existing authenticated navigation fragment -->
+<div th:replace="~{fragments/nav-authenticated :: nav-authenticated('profile', ${firstName})}"></div>
+
+<!-- Main Dashboard Content -->
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Customer Dashboard</h1>
+    <p class="subtitle">Welcome, <span th:text="${firstName}">Customer Name</span></p>
+  </div>
+
+  <!-- Account Summary Card -->
+  <div class="card account-summary">
+    <div class="card-header">
+      <h2><i class="fas fa-wallet"></i> Account Summary</h2>
+    </div>
+    <div class="card-body">
+      <div class="account-info">
+        <div class="info-row">
+          <span class="label">Account Number:</span>
+          <span class="value" th:text="${accountNumber}">XXXXXXXXXX</span>
+        </div>
+        <div class="info-row highlight">
+          <span class="label">Current Balance:</span>
+          <span class="value balance" th:text="${formattedBalance}">0.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions Menu (matching legacy features) -->
+  <div class="card menu-card">
+    <div class="card-header">
+      <h2><i class="fas fa-th"></i> Banking Services</h2>
+    </div>
+    <div class="card-body">
+      <div class="menu-grid">
+        <a href="/transfer/internal" class="menu-item">
+          <i class="fas fa-exchange-alt"></i>
+          <span>Funds Transfer Within Bank</span>
+        </a>
+        <a href="/transfer/external" class="menu-item">
+          <i class="fas fa-university"></i>
+          <span>Transfer to Other Bank</span>
+        </a>
+        <a href="/complaints/new" class="menu-item">
+          <i class="fas fa-comment-alt"></i>
+          <span>Register a Complaint</span>
+        </a>
+        <a href="/complaints/customer" class="menu-item">
+          <i class="fas fa-list-alt"></i>
+          <span>View Complaints Status</span>
+        </a>
+        <a href="/transactions" class="menu-item">
+          <i class="fas fa-history"></i>
+          <span>View Transactions</span>
+        </a>
+        <a href="/profile/credentials" class="menu-item">
+          <i class="fas fa-user-cog"></i>
+          <span>Change Credentials</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="card">
+    <div class="card-header">
+      <h2><i class="fas fa-clock"></i> Recent Transactions</h2>
+    </div>
+    <div class="card-body">
+      <div class="table-container">
+        <table>
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>To Account</th>
+            <th class="hide-mobile">Status</th>
+            <th class="amount">Amount</th>
+            <th class="status">Type</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="transaction : ${transactionsFromAccount}">
+            <td th:text="${transaction.transactionId}"></td>
+            <td th:text="${#temporals.format(transaction.transactionDate, 'MM/dd/yyyy')}"></td>
+            <td th:text="${transaction.transactionDescription}"></td>
+            <td th:text="${transaction.toAccountNumber}"></td>
+            <td class="hide-mobile">
+              <span class="status-badge"
+                    th:classappend="${transaction.transactionStatus == 'pass'} ? 'pass' :
+                                    (${transaction.transactionStatus == 'fail'} ? 'fail' : 'pending')"
+                    th:text="${transaction.transactionStatus}">
+              </span>
+            </td>
+            <td class="amount" th:text="${'$' + transaction.amount}"></td>
+            <td class="status">
+              <span th:text="${transaction.amountAction}"
+                    th:style="${transaction.amountAction == 'debit'} ? 'color: #e53e3e;' : 'color: #38a169;'">
+              </span>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(transactionsFromAccount)}">
+            <td colspan="7" class="table-empty">
+              <i class="fas fa-inbox" style="font-size: 2rem; color: #cbd5e0; margin-bottom: 0.5rem;"></i>
+              <p>No transactions found</p>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+<!-- Use existing footer fragment if you have one -->
+<div th:replace="~{fragments/common :: footer}"></div>
+</body>
+</html>
