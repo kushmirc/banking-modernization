@@ -31,6 +31,8 @@ public class TransactionController {
         BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
         model.addAttribute("firstName", userDetails.getFirstName());
 
+
+
         return "transactions/customer-transactions";
     }
 }
