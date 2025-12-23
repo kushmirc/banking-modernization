@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/common :: head('Customer Transactions')}">
-  <title>Customer Transactions - Chicago Bank</title>
+<head th:replace="~{fragments/common :: head('Banker Transactions')}">
+  <title>Banker Transactions - Chicago Bank</title>
 </head>
 <body>
 <!-- Use existing authenticated navigation fragment -->
@@ -10,13 +10,13 @@
 <!-- Main Title -->
 <div class="dashboard-container">
   <div class="dashboard-header">
-    <h1>Customer Transactions</h1>
+    <h1>Banker Transactions</h1>
   </div>
 
   <!-- Transactions Card -->
   <div class="card">
     <div class="card-header">
-      <h2><i class="fas fa-exchange-alt"></i> All Customer Transactions</h2>
+      <h2><i class="fas fa-exchange-alt"></i> All Transactions</h2>
     </div>
     <div class="card-body">
       <div class="table-container">
@@ -26,14 +26,16 @@
             <th>ID</th>
             <th>Date</th>
             <th>Description</th>
+            <th>From Account</th>
             <th>To Account</th>
             <th class="hide-mobile">Status</th>
+            <th>Remark</th>
             <th class="amount">Amount</th>
             <th class="status">Type</th>
           </tr>
           </thead>
           <tbody>
-          <tr th:each="transaction : ${transactionsFromAccount}">
+          <tr th:each="transaction : ${transactions}">
             <td th:text="${transaction.transactionId}"></td>
             <td th:text="${#temporals.format(transaction.transactionDate, 'MM/dd/yyyy')}"></td>
             <td th:text="${transaction.transactionDescription}"></td>
@@ -45,6 +47,7 @@
                     th:text="${transaction.transactionStatus}">
               </span>
             </td>
+            <td th:text="${transaction.remark}"></td>
             <td class="amount" th:text="${transaction.formattedAmount}"></td>
             <td class="status">
               <span th:text="${transaction.amountAction}"
@@ -52,7 +55,7 @@
               </span>
             </td>
           </tr>
-          <tr th:if="${#lists.isEmpty(transactionsFromAccount)}">
+          <tr th:if="${#lists.isEmpty(transactions)}">
             <td colspan="7" class="table-empty">
               <i class="fas fa-inbox" style="font-size: 2rem; color: #cbd5e0; margin-bottom: 0.5rem;"></i>
               <p>No transactions found</p>

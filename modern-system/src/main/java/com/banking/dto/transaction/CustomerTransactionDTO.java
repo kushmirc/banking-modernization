@@ -1,7 +1,5 @@
 package com.banking.dto.transaction;
 
-import jakarta.persistence.Column;
-
 import java.time.LocalDate;
 
 public class CustomerTransactionDTO {
@@ -15,7 +13,7 @@ public class CustomerTransactionDTO {
 
     private String transactionStatus;
 
-    private double amount;
+    private String formattedAmount;
 
     private String amountAction;
 
@@ -24,14 +22,14 @@ public class CustomerTransactionDTO {
                                   LocalDate transactionDate,
                                   String transactionDescription,
                                   String transactionStatus,
-                                  double amount,
+                                  String formattedAmount,
                                   String amountAction) {
         this.transactionId = transactionId;
         this.toAccountNumber = toAccountNumber;
         this.transactionDate = transactionDate;
         this.transactionDescription = transactionDescription;
         this.transactionStatus = transactionStatus;
-        this.amount = amount;
+        this.formattedAmount = formattedAmount;
         this.amountAction = amountAction;
     }
 
@@ -75,12 +73,12 @@ public class CustomerTransactionDTO {
         this.transactionStatus = transactionStatus;
     }
 
-    public double getAmount() {
-        return amount;
+    public String getFormattedAmount() {
+        return formattedAmount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setFormattedAmount(String formattedAmount) {
+        this.formattedAmount = formattedAmount;
     }
 
     public String getAmountAction() {
