@@ -1,4 +1,4 @@
-package com.banking.dto;
+package com.banking.dto.dashboard;
 
 import com.banking.model.Transaction;
 

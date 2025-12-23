@@ -1,4 +1,4 @@
-package com.banking.dto;
+package com.banking.dto.complaint;
 
 import java.time.LocalDate;
 

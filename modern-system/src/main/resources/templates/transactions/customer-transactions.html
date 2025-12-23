@@ -1,77 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/common :: head('Customer Dashboard')}">
-  <title>Customer Dashboard - Chicago Bank</title>
+<head th:replace="~{fragments/common :: head('Customer Transactions')}">
+  <title>Customer Transactions - Chicago Bank</title>
 </head>
 <body>
 <!-- Use existing authenticated navigation fragment -->
 <div th:replace="~{fragments/nav-authenticated :: nav-authenticated('profile', ${firstName})}"></div>
 
-<!-- Main Dashboard Content -->
+<!-- Main Title -->
 <div class="dashboard-container">
   <div class="dashboard-header">
-    <h1>Customer Dashboard</h1>
-    <p class="subtitle">Welcome, <span th:text="${firstName}">Customer Name</span></p>
+    <h1>Customer Transactions</h1>
   </div>
 
-  <!-- Account Summary Card -->
-  <div class="card account-summary">
-    <div class="card-header">
-      <h2><i class="fas fa-wallet"></i> Account Summary</h2>
-    </div>
-    <div class="card-body">
-      <div class="account-info">
-        <div class="info-row">
-          <span class="label">Account Number:</span>
-          <span class="value" th:text="${accountNumber}">XXXXXXXXXX</span>
-        </div>
-        <div class="info-row highlight">
-          <span class="label">Current Balance:</span>
-          <span class="value balance" th:text="${formattedBalance}">0.00</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Quick Actions Menu (matching legacy features) -->
-  <div class="card menu-card">
-    <div class="card-header">
-      <h2><i class="fas fa-th"></i> Banking Services</h2>
-    </div>
-    <div class="card-body">
-      <div class="menu-grid">
-        <a href="/transfer/internal" class="menu-item">
-          <i class="fas fa-exchange-alt"></i>
-          <span>Funds Transfer Within Bank</span>
-        </a>
-        <a href="/transfer/external" class="menu-item">
-          <i class="fas fa-university"></i>
-          <span>Transfer to Other Bank</span>
-        </a>
-        <a href="/complaints/new" class="menu-item">
-          <i class="fas fa-comment-alt"></i>
-          <span>Register a Complaint</span>
-        </a>
-        <a href="/complaints/customer" class="menu-item">
-          <i class="fas fa-list-alt"></i>
-          <span>View Complaints Status</span>
-        </a>
-        <a href="/transactions" class="menu-item">
-          <i class="fas fa-history"></i>
-          <span>View Transactions</span>
-        </a>
-        <a href="/profile/credentials" class="menu-item">
-          <i class="fas fa-user-cog"></i>
-          <span>Change Credentials</span>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Recent Activity -->
+  <!-- Transactions Card -->
   <div class="card">
     <div class="card-header">
-      <h2><i class="fas fa-clock"></i> Recent Transactions</h2>
+      <h2><i class="fas fa-exchange-alt"></i> All Transactions</h2>
     </div>
     <div class="card-body">
       <div class="table-container">
@@ -118,6 +63,9 @@
       </div>
     </div>
   </div>
+  <a href="/dashboard" class="back-link">&larr; Return to dashboard</a>
+</div>
+
 
 <!-- Use existing footer fragment if you have one -->
 <div th:replace="~{fragments/common :: footer}"></div>

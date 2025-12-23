@@ -1,8 +1,7 @@
 package com.banking.controller;
 
-import com.banking.dto.ComplaintStatusUpdateDTO;
-import com.banking.dto.NewComplaintDTO;
-import com.banking.model.Banker;
+import com.banking.dto.complaint.ComplaintStatusUpdateDTO;
+import com.banking.dto.complaint.NewComplaintDTO;
 import com.banking.model.Complaint;
 import com.banking.model.Customer;
 import com.banking.repository.AdministratorRepository;
@@ -22,7 +21,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Controller

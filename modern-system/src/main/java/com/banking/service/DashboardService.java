@@ -1,9 +1,8 @@
 package com.banking.service;
 
-import com.banking.dto.AdministratorDashboardDTO;
-import com.banking.dto.CustomerDashboardDTO;
+import com.banking.dto.dashboard.AdministratorDashboardDTO;
+import com.banking.dto.dashboard.CustomerDashboardDTO;
 import com.banking.model.Administrator;
-import com.banking.model.Complaint;
 import com.banking.model.Customer;
 import com.banking.model.Transaction;
 import com.banking.repository.AdministratorRepository;
