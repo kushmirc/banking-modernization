@@ -1,17 +1,15 @@
 package com.banking.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transaction")
 public class Transaction {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tranid", unique = true, nullable = false)
     private int transactionId;
 
@@ -22,7 +20,7 @@ public class Transaction {
     private String toAccountNumber;
 
     @Column(name = "trandate", unique = false, nullable = false)
-    private LocalDate transactionDate;
+    private LocalDateTime transactionDate;
 
     @Column(name = "trandesc", unique = false, nullable = true)
     private String transactionDescription;
@@ -39,7 +37,7 @@ public class Transaction {
     @Column(name = "amountaction", unique = false, nullable = false)
     private String amountAction;
 
-    public Transaction(int transactionId, String fromAccountNumber, String toAccountNumber, LocalDate transactionDate, String transactionDescription, String transactionStatus, String remark, double amount, String amountAction) {
+    public Transaction(int transactionId, String fromAccountNumber, String toAccountNumber, LocalDateTime transactionDate, String transactionDescription, String transactionStatus, String remark, double amount, String amountAction) {
         this.transactionId = transactionId;
         this.fromAccountNumber = fromAccountNumber;
         this.toAccountNumber = toAccountNumber;
@@ -79,11 +77,11 @@ public class Transaction {
         this.toAccountNumber = toAccountNumber;
     }
 
-    public LocalDate getTransactionDate() {
+    public LocalDateTime getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(LocalDate transactionDate) {
+    public void setTransactionDate(LocalDateTime transactionDate) {
         this.transactionDate = transactionDate;
     }
 

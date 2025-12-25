@@ -1,6 +1,6 @@
 package com.banking.dto.transaction;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class BankerTransactionDTO {
     private int transactionId;
@@ -9,7 +9,7 @@ public class BankerTransactionDTO {
 
     private String toAccountNumber;
 
-    private LocalDate transactionDate;
+    private LocalDateTime transactionDate;
 
     private String transactionDescription;
 
@@ -24,7 +24,7 @@ public class BankerTransactionDTO {
     public BankerTransactionDTO(int transactionId,
                                 String fromAccountNumber,
                                 String toAccountNumber,
-                                LocalDate transactionDate,
+                                LocalDateTime transactionDate,
                                 String transactionDescription,
                                 String transactionStatus,
                                 String remark,
@@ -65,11 +65,11 @@ public class BankerTransactionDTO {
         this.toAccountNumber = toAccountNumber;
     }
 
-    public LocalDate getTransactionDate() {
+    public LocalDateTime getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(LocalDate transactionDate) {
+    public void setTransactionDate(LocalDateTime transactionDate) {
         this.transactionDate = transactionDate;
     }
 

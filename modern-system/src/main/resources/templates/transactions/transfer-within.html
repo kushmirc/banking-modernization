@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/common :: head('Transfer Within')}">
+  <title>Transfer Within - Chicago Bank</title>
+</head>
+<body>
+<!-- Navigation -->
+<div th:replace="~{fragments/nav-authenticated :: nav-authenticated('profile', ${firstName})}"></div>
+
+<!-- Main Content -->
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Transfer Funds</h1>
+    <h2>To An Account Within Chicago Bank</h2>
+  </div>
+
+  <!-- Transfer Form Card -->
+  <div class="card">
+    <div class="card-header">
+      <h2><i class="fas fa-exchange-alt"></i>Transfer Information</h2>
+    </div>
+    <div class="card-body">
+      <div class="info-row highlight">
+        <span class="label">Current Balance:</span>
+        <span class="value balance" th:text="${formattedBalance}">0.00</span>
+      </div>
+      <br>
+      <br>
+
+      <!-- Success/Error Messages -->
+      <div th:if="${successMessage}" class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${successMessage}">Success</span>
+      </div>
+      <div th:if="${errorMessagePost}" class="alert alert-error">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span th:text="${errorMessagePost}">Error</span>
+      </div>
+      <div th:if="${errorMessageFunds}" class="alert alert-error">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span th:text="${errorMessageFunds}">Error</span>
+      </div>
+
+      <!-- Transfer Form -->
+      <form th:action="@{/transactions/transfer-within}" method="post">
+
+        <!-- Recipient Account Number -->
+        <div class="form-group">
+
+          <label class="form-label">Recipient Account Number</label>
+          <input type="text" 
+                 name="toAccountNumber"
+                 class="form-input"
+                 placeholder="Enter the account number"
+                 maxlength="40"
+                 required>
+        </div>
+
+        <!-- Amount to be Transferred -->
+        <div class="form-group">
+          <label class="form-label">Amount to be Transferred</label>
+          <input type="text"
+                 name="formattedAmount"
+                 class="form-input"
+                 placeholder="$0.00"
+                 maxlength="40"
+                 required>
+        </div>
+        <br>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Transfer
+          </button>
+          <button type="reset" class="btn btn-secondary">
+            <i class="fas fa-eraser"></i> Clear Form
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <a href="/dashboard" class="back-link">&larr; Return to dashboard</a>
+</div>
+
+<!-- Footer -->
+<div th:replace="~{fragments/common :: footer}"></div>
+
+</body>
+</html>
