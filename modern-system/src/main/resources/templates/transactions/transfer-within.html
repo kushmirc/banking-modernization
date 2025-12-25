@@ -31,6 +31,9 @@
       <div th:if="${successMessage}" class="alert alert-success">
         <i class="fas fa-check-circle"></i>
         <span th:text="${successMessage}">Success</span>
+        <span th:if="${transactionId}"> You can track transactions in
+          <a th:href="@{/transactions/customer}" style="color: inherit; font-weight: 600;">View Transactions</a>.</span>
+
       </div>
       <div th:if="${errorMessagePost}" class="alert alert-error">
         <i class="fas fa-exclamation-triangle"></i>
@@ -62,7 +65,7 @@
           <input type="text"
                  name="formattedAmount"
                  class="form-input"
-                 placeholder="$0.00"
+                 placeholder="$0"
                  maxlength="40"
                  required>
         </div>

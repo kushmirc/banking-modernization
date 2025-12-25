@@ -86,7 +86,7 @@ public class TransactionService {
         return formatCurrency(customer.getBalance());
     }
 
-    public void transferWithin(NewTransactionDTO transactionDTO, String userId) {
+    public Transaction transferWithin(NewTransactionDTO transactionDTO, String userId) {
         // Get the initiating customer object
         Customer customer = customerRepository.findByUserId(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
@@ -116,6 +116,8 @@ public class TransactionService {
         transaction2.setAmountAction("credit");
 
         transactionRepository.save(transaction2);
+
+        return transaction1;
     }
 
 }

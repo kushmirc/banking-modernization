@@ -3,6 +3,7 @@ package com.banking.controller;
 import com.banking.dto.transaction.BankerTransactionDTO;
 import com.banking.dto.transaction.CustomerTransactionDTO;
 import com.banking.dto.transaction.NewTransactionDTO;
+import com.banking.model.Transaction;
 import com.banking.repository.BankerRepository;
 import com.banking.repository.CustomerRepository;
 import com.banking.repository.TransactionRepository;
@@ -14,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -76,12 +78,17 @@ public class TransactionController {
     @PreAuthorize("hasRole('CUSTOMER')")
     public String processTransferWithin(Authentication authentication,
                                         Model model,
-                                        @ModelAttribute NewTransactionDTO transactionDTO) {
+                                        @ModelAttribute NewTransactionDTO transactionDTO,
+                                        RedirectAttributes redirectAttributes) {
         BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
+        Transaction transacction = transactionService
+                .transferWithin(transactionDTO, userDetails.getUserId());
 
-        transactionService.transferWithin(transactionDTO, userDetails.getUserId());
+        redirectAttributes.addFlashAttribute("successMessage",
+                                             "Transfer completed sucessfully!");
+        redirectAttributes.addFlashAttribute("transactionId", transacction.getTransactionId());
 
-        return "transactions/transfer-within";
+        return "redirect:/transactions/transfer-within";
     }
 
 }
