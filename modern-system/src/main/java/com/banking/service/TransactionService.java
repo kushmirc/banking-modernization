@@ -3,6 +3,7 @@ package com.banking.service;
 import com.banking.dto.transaction.BankerTransactionDTO;
 import com.banking.dto.transaction.CustomerTransactionDTO;
 import com.banking.dto.transaction.NewTransactionDTO;
+import com.banking.exception.InsufficientFundsException;
 import com.banking.model.Customer;
 import com.banking.model.Transaction;
 import com.banking.repository.CustomerRepository;
@@ -87,14 +88,6 @@ public class TransactionService {
         return formatCurrency(customer.getBalance());
     }
 
-    public boolean isOverdraft(NewTransactionDTO transactionDTO, String userId) {
-        Customer customer = customerRepository.findByUserId(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
-
-        double transferAmount = Double.parseDouble(transactionDTO.getFormattedAmount());
-
-        return transferAmount > customer.getBalance();
-    }
 
     @Transactional
     public Transaction transferWithin(NewTransactionDTO transactionDTO, String userId) {
@@ -104,6 +97,11 @@ public class TransactionService {
 
         // Get the transfer amount and convert to double type
         double transferAmount = Double.parseDouble(transactionDTO.getFormattedAmount());
+
+        // Throw exception if the transfer amount exceeds customer's balance
+        if(transferAmount > customer.getBalance()) {
+            throw new InsufficientFundsException("Transfer amount cannot exceed current balance.");
+        }
 
         // Deduct the transfer amount from the sender
         customer.setBalance(customer.getBalance() - transferAmount);
@@ -141,7 +139,6 @@ public class TransactionService {
         transaction2.setAmountAction("credit");
 
         transactionRepository.save(transaction2);
-
 
         return transaction1;
     }

@@ -3,6 +3,7 @@ package com.banking.controller;
 import com.banking.dto.transaction.BankerTransactionDTO;
 import com.banking.dto.transaction.CustomerTransactionDTO;
 import com.banking.dto.transaction.NewTransactionDTO;
+import com.banking.exception.InsufficientFundsException;
 import com.banking.model.Transaction;
 import com.banking.repository.BankerRepository;
 import com.banking.repository.CustomerRepository;
@@ -82,19 +83,16 @@ public class TransactionController {
                                         RedirectAttributes redirectAttributes) {
         BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
 
-        // Check for overdraft and return message if true
-        if(transactionService.isOverdraft(transactionDTO, userDetails.getUserId())) {
-            redirectAttributes.addFlashAttribute("errorMessageOverdraft",
-                                                 "Transfer amount cannot exceed current balance.");
-            return "redirect:/transactions/transfer-within";
+        try {
+            Transaction transaction = transactionService
+                    .transferWithin(transactionDTO, userDetails.getUserId());
+
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Transfer completed sucessfully!");
+            redirectAttributes.addFlashAttribute("transactionId", transaction.getTransactionId());
+        } catch (InsufficientFundsException e){
+            redirectAttributes.addFlashAttribute("errorMessageOverdraft", e.getMessage());
         }
-
-        Transaction transaction = transactionService
-                .transferWithin(transactionDTO, userDetails.getUserId());
-
-        redirectAttributes.addFlashAttribute("successMessage",
-                                             "Transfer completed sucessfully!");
-        redirectAttributes.addFlashAttribute("transactionId", transaction.getTransactionId());
 
         return "redirect:/transactions/transfer-within";
     }
