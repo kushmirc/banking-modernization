@@ -89,12 +89,12 @@ public class TransactionController {
             return "redirect:/transactions/transfer-within";
         }
 
-        Transaction transacction = transactionService
+        Transaction transaction = transactionService
                 .transferWithin(transactionDTO, userDetails.getUserId());
 
         redirectAttributes.addFlashAttribute("successMessage",
                                              "Transfer completed sucessfully!");
-        redirectAttributes.addFlashAttribute("transactionId", transacction.getTransactionId());
+        redirectAttributes.addFlashAttribute("transactionId", transaction.getTransactionId());
 
         return "redirect:/transactions/transfer-within";
     }

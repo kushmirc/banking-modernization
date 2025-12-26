@@ -7,6 +7,7 @@ import com.banking.model.Customer;
 import com.banking.model.Transaction;
 import com.banking.repository.CustomerRepository;
 import com.banking.repository.TransactionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -95,13 +96,18 @@ public class TransactionService {
         return transferAmount > customer.getBalance();
     }
 
+    @Transactional
     public Transaction transferWithin(NewTransactionDTO transactionDTO, String userId) {
         // Get the initiating customer object
         Customer customer = customerRepository.findByUserId(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
 
+        // Get the transfer amount and convert to double type
+        double transferAmount = Double.parseDouble(transactionDTO.getFormattedAmount());
+
         // Deduct the transfer amount from the sender
-        customer.setBalance(customer.getBalance() - Double.parseDouble(transactionDTO.getFormattedAmount()));
+        customer.setBalance(customer.getBalance() - transferAmount);
+        customerRepository.save(customer);
 
         // Instantiate first Transaction object, build field values, and save
         Transaction transaction1 = new Transaction();
@@ -111,15 +117,17 @@ public class TransactionService {
         transaction1.setTransactionDescription("Funds Transfer Within the Bank");
         transaction1.setTransactionStatus("pass");
         transaction1.setRemark("Funds transferred successfully");
-        transaction1.setAmount(Double.parseDouble(transactionDTO.getFormattedAmount()));
+        transaction1.setAmount(transferAmount);
         transaction1.setAmountAction("debit");
 
         transactionRepository.save(transaction1);
 
 
         // Add the transfer amount to the receiver
-        Customer receiver = customerRepository.findByAccountNumber(transactionDTO.getToAccountNumber());
-        receiver.setBalance(receiver.getBalance() + Double.parseDouble(transactionDTO.getFormattedAmount()));
+        Customer receiver = customerRepository.findByAccountNumber(transactionDTO.getToAccountNumber())
+                .orElseThrow(() -> new UsernameNotFoundException("Receiving customer not found."));
+        receiver.setBalance(receiver.getBalance() + transferAmount);
+        customerRepository.save(receiver);
 
         // Create second Transaction for the transfer (receiver's transaction)
         Transaction transaction2 = new Transaction();
@@ -129,7 +137,7 @@ public class TransactionService {
         transaction2.setTransactionDescription("Funds Transfer Within the Bank");
         transaction2.setTransactionStatus("pass");
         transaction2.setRemark("Funds transferred successfully");
-        transaction2.setAmount(Double.parseDouble(transactionDTO.getFormattedAmount()));
+        transaction2.setAmount(transferAmount);
         transaction2.setAmountAction("credit");
 
         transactionRepository.save(transaction2);
