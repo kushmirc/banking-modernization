@@ -81,6 +81,14 @@ public class TransactionController {
                                         @ModelAttribute NewTransactionDTO transactionDTO,
                                         RedirectAttributes redirectAttributes) {
         BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
+
+        // Check for overdraft and return message if true
+        if(transactionService.isOverdraft(transactionDTO, userDetails.getUserId())) {
+            redirectAttributes.addFlashAttribute("errorMessageOverdraft",
+                                                 "Transfer amount cannot exceed current balance.");
+            return "redirect:/transactions/transfer-within";
+        }
+
         Transaction transacction = transactionService
                 .transferWithin(transactionDTO, userDetails.getUserId());
 

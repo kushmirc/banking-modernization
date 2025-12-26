@@ -35,13 +35,9 @@
           <a th:href="@{/transactions/customer}" style="color: inherit; font-weight: 600;">View Transactions</a>.</span>
 
       </div>
-      <div th:if="${errorMessagePost}" class="alert alert-error">
+      <div th:if="${errorMessageOverdraft}" class="alert alert-error">
         <i class="fas fa-exclamation-triangle"></i>
-        <span th:text="${errorMessagePost}">Error</span>
-      </div>
-      <div th:if="${errorMessageFunds}" class="alert alert-error">
-        <i class="fas fa-exclamation-triangle"></i>
-        <span th:text="${errorMessageFunds}">Error</span>
+        <span th:text="${errorMessageOverdraft}">Error</span>
       </div>
 
       <!-- Transfer Form -->

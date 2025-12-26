@@ -86,6 +86,15 @@ public class TransactionService {
         return formatCurrency(customer.getBalance());
     }
 
+    public boolean isOverdraft(NewTransactionDTO transactionDTO, String userId) {
+        Customer customer = customerRepository.findByUserId(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
+
+        double transferAmount = Double.parseDouble(transactionDTO.getFormattedAmount());
+
+        return transferAmount > customer.getBalance();
+    }
+
     public Transaction transferWithin(NewTransactionDTO transactionDTO, String userId) {
         // Get the initiating customer object
         Customer customer = customerRepository.findByUserId(userId)
