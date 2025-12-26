@@ -100,6 +100,9 @@ public class TransactionService {
         Customer customer = customerRepository.findByUserId(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
 
+        // Deduct the transfer amount from the sender
+        customer.setBalance(customer.getBalance() - Double.parseDouble(transactionDTO.getFormattedAmount()));
+
         // Instantiate first Transaction object, build field values, and save
         Transaction transaction1 = new Transaction();
         transaction1.setFromAccountNumber(customer.getAccountNumber());
@@ -113,6 +116,11 @@ public class TransactionService {
 
         transactionRepository.save(transaction1);
 
+
+        // Add the transfer amount to the receiver
+        Customer receiver = customerRepository.findByAccountNumber(transactionDTO.getToAccountNumber());
+        receiver.setBalance(receiver.getBalance() + Double.parseDouble(transactionDTO.getFormattedAmount()));
+
         // Create second Transaction for the transfer (receiver's transaction)
         Transaction transaction2 = new Transaction();
         transaction2.setFromAccountNumber(transactionDTO.getToAccountNumber());
@@ -125,6 +133,7 @@ public class TransactionService {
         transaction2.setAmountAction("credit");
 
         transactionRepository.save(transaction2);
+
 
         return transaction1;
     }
