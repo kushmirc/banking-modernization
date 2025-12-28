@@ -33,7 +33,10 @@
         <span th:text="${successMessage}">Success</span>
         <span th:if="${transactionId}"> You can track transactions in
           <a th:href="@{/transactions/customer}" style="color: inherit; font-weight: 600;">View Transactions</a>.</span>
-
+      </div>
+      <div th:if="${fieldErrorMessages}" class="alert alert-error">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span th:text="${fieldErrorMessages}">Error</span>
       </div>
       <div th:if="${errorMessageOverdraft}" class="alert alert-error">
         <i class="fas fa-exclamation-triangle"></i>

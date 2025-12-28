@@ -10,11 +10,14 @@ import com.banking.repository.CustomerRepository;
 import com.banking.repository.TransactionRepository;
 import com.banking.security.BankingUserDetails;
 import com.banking.service.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -79,9 +82,21 @@ public class TransactionController {
     @PreAuthorize("hasRole('CUSTOMER')")
     public String processTransferWithin(Authentication authentication,
                                         Model model,
-                                        @ModelAttribute NewTransactionDTO transactionDTO,
+                                        @Valid @ModelAttribute NewTransactionDTO transactionDTO,
+                                        BindingResult bindingResult,
                                         RedirectAttributes redirectAttributes) {
         BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
+
+        // Check for validation errors
+        if (bindingResult.hasErrors()) {
+            // Collect error messages
+            StringBuilder fieldErrorMessages = new StringBuilder();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                fieldErrorMessages.append(error.getDefaultMessage()).append(" ");
+            }
+            redirectAttributes.addFlashAttribute("fieldErrorMessages", fieldErrorMessages.toString());
+            return "redirect:/transactions/transfer-within";
+        }
 
         try {
             Transaction transaction = transactionService

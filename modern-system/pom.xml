@@ -73,6 +73,12 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!-- Bean Validation (JSR-380) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
         <!-- Optional: For better metrics visualization -->
         <!--<dependency>
             <groupId>io.micrometer</groupId>
