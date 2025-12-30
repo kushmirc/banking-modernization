@@ -65,54 +65,6 @@ public class TransactionController {
         return"transactions/banker-transactions";
     }
 
-    /*@GetMapping("/transfer-within")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public String showTransferWithinForm(Authentication authentication, Model model) {
-        BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
-
-        model.addAttribute("firstName", userDetails.getFirstName());
-
-        model.addAttribute("formattedBalance",
-                transactionService.getFormattedBalance(userDetails.getUserId()));
-
-        return "transactions/transfer-within";
-    }
-
-    @PostMapping("/transfer-within")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public String processTransferWithin(Authentication authentication,
-                                        Model model,
-                                        @Valid @ModelAttribute NewTransactionDTO transactionDTO,
-                                        BindingResult bindingResult,
-                                        RedirectAttributes redirectAttributes) {
-        BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
-
-        // Check for validation errors
-        if (bindingResult.hasErrors()) {
-            // Collect error messages
-            StringBuilder fieldErrorMessages = new StringBuilder();
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                fieldErrorMessages.append(error.getDefaultMessage()).append(" ");
-            }
-            redirectAttributes.addFlashAttribute("fieldErrorMessages", fieldErrorMessages.toString());
-            return "redirect:/transactions/transfer-within";
-        }
-
-        try {
-            Transaction transaction = transactionService
-                    .transferWithin(transactionDTO, userDetails.getUserId());
-
-            redirectAttributes.addFlashAttribute("successMessage",
-                    "Transfer completed sucessfully!");
-            redirectAttributes.addFlashAttribute("transactionId", transaction.getTransactionId());
-        } catch (InsufficientFundsException e){
-            redirectAttributes.addFlashAttribute("errorMessageOverdraft", e.getMessage());
-        }
-
-        return "redirect:/transactions/transfer-within";
-    }
-*/
-
     @GetMapping("/transfer-{type}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public String showTransferForm(Authentication authentication,
@@ -161,6 +113,11 @@ public class TransactionController {
             }
             redirectAttributes.addFlashAttribute("fieldErrorMessages", fieldErrorMessages.toString());
             return "redirect:/transactions/transfer-" + type;
+        }
+
+        // Validate type
+        if (!type.equals("within") && !type.equals("external")) {
+            return "redirect:/dashboard";
         }
 
         try {
