@@ -143,4 +143,35 @@ public class TransactionService {
         return transaction1;
     }
 
+    @Transactional
+    public Transaction transferExternal(NewTransactionDTO transactionDTO, String userId) {
+        // Get the initiating customer object
+        Customer customer = customerRepository.findByUserId(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
+
+        // Get the transfer amount and convert to double type
+        double transferAmount = Double.parseDouble(transactionDTO.getFormattedAmount());
+
+        // Throw exception if the transfer amount exceeds customer's balance
+        if(transferAmount > customer.getBalance()) {
+            throw new InsufficientFundsException("Transfer amount cannot exceed current balance.");
+        }
+
+        // Deduct the transfer amount from the sender
+        customer.setBalance(customer.getBalance() - transferAmount);
+        customerRepository.save(customer);
+
+        // Instantiate first Transaction object, build field values, and save
+        Transaction transaction1 = new Transaction();
+        transaction1.setFromAccountNumber(customer.getAccountNumber());
+        transaction1.setToAccountNumber(transactionDTO.getToAccountNumber());
+        transaction1.setTransactionDate(LocalDateTime.now());
+        transaction1.setTransactionDescription("Funds Transfer to Other Bank");
+        transaction1.setTransactionStatus("progressing");
+        transaction1.setRemark("Funds transfer requested successfully");
+        transaction1.setAmount(transferAmount);
+        transaction1.setAmountAction("debit");
+
+        return transactionRepository.save(transaction1);
+    }
 }
