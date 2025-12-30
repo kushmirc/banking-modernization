@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/common :: head('Transfer')}">
-  <title>Transfer Within - Chicago Bank</title>
+  <title>Transfer Funds - Chicago Bank</title>
 </head>
 <body>
 <!-- Navigation -->
@@ -11,7 +11,7 @@
 <div class="dashboard-container">
   <div class="dashboard-header">
     <h1>Transfer Funds</h1>
-    <h2>To An Account Within Chicago Bank</h2>
+    <h2 th:text="${headerText}"></h2>
   </div>
 
   <!-- Transfer Form Card -->
@@ -44,7 +44,8 @@
       </div>
 
       <!-- Transfer Form -->
-      <form th:action="@{/transactions/transfer-within}" method="post">
+      <form th:action="${transferType == 'within' ? 'transfer-within' : 'transfer-external'}"
+            method="post">
 
         <!-- Recipient Account Number -->
         <div class="form-group">

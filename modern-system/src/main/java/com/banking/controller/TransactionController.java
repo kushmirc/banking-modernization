@@ -125,6 +125,14 @@ public class TransactionController {
         model.addAttribute("formattedBalance",
                 transactionService.getFormattedBalance(userDetails.getUserId()));
 
+        if (type.equals("within")) {
+            model.addAttribute("headerText", "Transfer to an Account Within Chicago Bank");
+            model.addAttribute("transferType", "within");
+        } else if (type.equals("external")) {
+            model.addAttribute("headerText", "Transfer to an Account Outside Chicago Bank");
+            model.addAttribute("transferType", "external");
+        }
+
         return "transactions/transfer";
     }
 
