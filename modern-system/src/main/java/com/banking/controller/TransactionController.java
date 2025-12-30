@@ -115,9 +115,14 @@ public class TransactionController {
 
     @GetMapping("/transfer-{type}")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public String showTransferWithinForm(Authentication authentication,
-                                         Model model,
-                                         @PathVariable String type) {
+    public String showTransferForm(Authentication authentication,
+                                   Model model,
+                                   @PathVariable String type) {
+        // Validate type
+        if (!type.equals("within") && !type.equals("external")) {
+            return "redirect:/dashboard";
+        }
+
         BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
 
         model.addAttribute("firstName", userDetails.getFirstName());
@@ -139,12 +144,12 @@ public class TransactionController {
 
     @PostMapping("/transfer-{type}")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public String processTransferWithin(Authentication authentication,
-                                        Model model,
-                                        @PathVariable String type,
-                                        @Valid @ModelAttribute NewTransactionDTO transactionDTO,
-                                        BindingResult bindingResult,
-                                        RedirectAttributes redirectAttributes) {
+    public String processTransfer(Authentication authentication,
+                                  Model model,
+                                  @PathVariable String type,
+                                  @Valid @ModelAttribute NewTransactionDTO transactionDTO,
+                                  BindingResult bindingResult,
+                                  RedirectAttributes redirectAttributes) {
         BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
 
         // Check for validation errors
@@ -159,15 +164,16 @@ public class TransactionController {
         }
 
         try {
-            Transaction transaction = new Transaction();
+            Transaction transaction;
             if (type.equals("within")) {
                 transaction = transactionService.transferWithin(transactionDTO, userDetails.getUserId());
-            } else if (type.equals("external")) {
+                redirectAttributes.addFlashAttribute("successMessage",
+                        "Transfer completed successfully!");
+            } else {
                 transaction = transactionService.transferExternal(transactionDTO, userDetails.getUserId());
+                redirectAttributes.addFlashAttribute("successMessage",
+                        "Transfer request submitted! Awaiting approval");
             }
-
-            redirectAttributes.addFlashAttribute("successMessage",
-                    "Transfer completed sucessfully!");
             redirectAttributes.addFlashAttribute("transactionId", transaction.getTransactionId());
         } catch (InsufficientFundsException e){
             redirectAttributes.addFlashAttribute("errorMessageOverdraft", e.getMessage());

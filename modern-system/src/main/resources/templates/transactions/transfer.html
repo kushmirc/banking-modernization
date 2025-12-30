@@ -44,7 +44,7 @@
       </div>
 
       <!-- Transfer Form -->
-      <form th:action="${transferType == 'within' ? 'transfer-within' : 'transfer-external'}"
+      <form th:action="@{'/transactions/transfer-' + ${transferType}}"
             method="post">
 
         <!-- Recipient Account Number -->
