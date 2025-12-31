@@ -161,17 +161,68 @@ public class TransactionService {
         customer.setBalance(customer.getBalance() - transferAmount);
         customerRepository.save(customer);
 
-        // Instantiate first Transaction object, build field values, and save
-        Transaction transaction1 = new Transaction();
-        transaction1.setFromAccountNumber(customer.getAccountNumber());
-        transaction1.setToAccountNumber(transactionDTO.getToAccountNumber());
-        transaction1.setTransactionDate(LocalDateTime.now());
-        transaction1.setTransactionDescription("Funds Transfer to Other Bank");
-        transaction1.setTransactionStatus("progressing");
-        transaction1.setRemark("Funds transfer requested successfully");
-        transaction1.setAmount(transferAmount);
-        transaction1.setAmountAction("debit");
+        // Instantiate the transaction object, build field values, and save
+        Transaction transaction = new Transaction();
+        transaction.setFromAccountNumber(customer.getAccountNumber());
+        transaction.setToAccountNumber(transactionDTO.getToAccountNumber());
+        transaction.setTransactionDate(LocalDateTime.now());
+        transaction.setTransactionDescription("Funds Transfer to Other Bank");
+        transaction.setTransactionStatus("progressing");
+        transaction.setRemark("Funds transfer requested successfully");
+        transaction.setAmount(transferAmount);
+        transaction.setAmountAction("debit");
 
-        return transactionRepository.save(transaction1);
+        return transactionRepository.save(transaction);
+    }
+
+
+    @Transactional
+    public Transaction addCustomerTransaction(NewTransactionDTO transactionDTO) {
+        // Get the customer object
+        Customer customer = customerRepository.findByAccountNumber(transactionDTO.getToAccountNumber())
+                .orElseThrow(() -> new UsernameNotFoundException("Customer not found."));
+
+        double transactionAmount = Double.parseDouble(transactionDTO.getFormattedAmount());
+
+        // Handle Debit vs. Credit transactions
+        if (transactionDTO.getAmountAction().equals("Debit")) {
+            // Check for insufficient funds
+            if (transactionAmount > customer.getBalance()) {
+                throw new InsufficientFundsException("Debit amount can't exceed current balance.");
+            }
+            // Debit the customer's balance
+            customer.setBalance(customer.getBalance() - transactionAmount);
+            customerRepository.save(customer);
+
+            // Record the transaction
+            Transaction transaction = new Transaction();
+            transaction.setFromAccountNumber(transactionDTO.getToAccountNumber());
+            transaction.setToAccountNumber(transactionDTO.getToAccountNumber());
+            transaction.setTransactionDate(LocalDateTime.now());
+            transaction.setTransactionDescription("Add Customer Transaction");
+            transaction.setTransactionStatus("pass");
+            transaction.setRemark("okay");
+            transaction.setAmount(transactionAmount);
+            transaction.setAmountAction(transactionDTO.getAmountAction());
+
+            return transactionRepository.save(transaction);
+        } else {
+            // Credit the customer's balance
+            customer.setBalance(customer.getBalance() + transactionAmount);
+            customerRepository.save(customer);
+
+            // Record the transaction
+            Transaction transaction = new Transaction();
+            transaction.setFromAccountNumber(transactionDTO.getToAccountNumber());
+            transaction.setToAccountNumber(transactionDTO.getToAccountNumber());
+            transaction.setTransactionDate(LocalDateTime.now());
+            transaction.setTransactionDescription("Add Customer Transaction");
+            transaction.setTransactionStatus("pass");
+            transaction.setRemark("okay");
+            transaction.setAmount(transactionAmount);
+            transaction.setAmountAction(transactionDTO.getAmountAction());
+
+            return transactionRepository.save(transaction);
+        }
     }
 }

@@ -141,6 +141,8 @@ public class TransactionController {
             redirectAttributes.addFlashAttribute("transactionId", transaction.getTransactionId());
         } catch (InsufficientFundsException e){
             redirectAttributes.addFlashAttribute("errorMessageOverdraft", e.getMessage());
+        } catch (UsernameNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessageUser", e.getMessage());
         }
 
         return "redirect:/transactions/transfer-" + type;
@@ -182,6 +184,41 @@ public class TransactionController {
         return "transactions/add-transaction";
     }
 
+    @PostMapping("/add")
+    @PreAuthorize("hasRole('BANKER')")
+    public String processAddTransaction(Authentication authentication,
+                                        @Valid @ModelAttribute NewTransactionDTO transactionDTO,
+                                        BindingResult bindingResult,
+                                        RedirectAttributes redirectAttributes) {
+        // Check for validation errors
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("fieldErrorMessages",
+                    collectFieldErrorMessages(bindingResult));
+            return "redirect:/transactions/add";
+        }
+
+        // Check for Transaction Type error
+        if (!transactionDTO.getAmountAction().equals("Debit") &&
+                !transactionDTO.getAmountAction().equals("Credit")) {
+            redirectAttributes.addFlashAttribute("errorMessageType",
+                    "Please select 'Debit' or 'Credit");
+            return "redirect:/transactions/add";
+        }
+
+        // Process the transaction
+        try {
+            Transaction transaction;
+            transaction = transactionService.addCustomerTransaction(transactionDTO);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Transaction completed successfully!");
+            redirectAttributes.addFlashAttribute("transactionId",
+                    transaction.getTransactionId());
+        } catch (InsufficientFundsException e) {
+            redirectAttributes.addFlashAttribute("errorMessageOverdraft", e.getMessage());
+        }
+
+        return "redirect:/transactions/add";
+    }
 
 }
 
