@@ -3,6 +3,7 @@ package com.banking.service;
 import com.banking.dto.transaction.BankerTransactionDTO;
 import com.banking.dto.transaction.CustomerTransactionDTO;
 import com.banking.dto.transaction.NewTransactionDTO;
+import com.banking.exception.AccountNotFoundException;
 import com.banking.exception.InsufficientFundsException;
 import com.banking.model.Customer;
 import com.banking.model.Transaction;
@@ -123,7 +124,7 @@ public class TransactionService {
 
         // Add the transfer amount to the receiver
         Customer receiver = customerRepository.findByAccountNumber(transactionDTO.getToAccountNumber())
-                .orElseThrow(() -> new UsernameNotFoundException("Receiving customer not found."));
+                .orElseThrow(() -> new AccountNotFoundException("Receiving customer account not found."));
         receiver.setBalance(receiver.getBalance() + transferAmount);
         customerRepository.save(receiver);
 
@@ -142,6 +143,7 @@ public class TransactionService {
 
         return transaction1;
     }
+
 
     @Transactional
     public Transaction transferExternal(NewTransactionDTO transactionDTO, String userId) {
@@ -180,7 +182,7 @@ public class TransactionService {
     public Transaction addCustomerTransaction(NewTransactionDTO transactionDTO) {
         // Get the customer object
         Customer customer = customerRepository.findByAccountNumber(transactionDTO.getToAccountNumber())
-                .orElseThrow(() -> new UsernameNotFoundException("Customer not found."));
+                .orElseThrow(() -> new AccountNotFoundException("Account not found."));
 
         double transactionAmount = Double.parseDouble(transactionDTO.getFormattedAmount());
 

@@ -3,6 +3,7 @@ package com.banking.controller;
 import com.banking.dto.transaction.BankerTransactionDTO;
 import com.banking.dto.transaction.CustomerTransactionDTO;
 import com.banking.dto.transaction.NewTransactionDTO;
+import com.banking.exception.AccountNotFoundException;
 import com.banking.exception.InsufficientFundsException;
 import com.banking.model.Customer;
 import com.banking.model.Transaction;
@@ -108,7 +109,6 @@ public class TransactionController {
     @PostMapping("/transfer-{type}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public String processTransfer(Authentication authentication,
-                                  Model model,
                                   @PathVariable String type,
                                   @Valid @ModelAttribute NewTransactionDTO transactionDTO,
                                   BindingResult bindingResult,
@@ -141,8 +141,9 @@ public class TransactionController {
             redirectAttributes.addFlashAttribute("transactionId", transaction.getTransactionId());
         } catch (InsufficientFundsException e){
             redirectAttributes.addFlashAttribute("errorMessageOverdraft", e.getMessage());
-        } catch (UsernameNotFoundException e) {
+        } catch (AccountNotFoundException e) {
             redirectAttributes.addFlashAttribute("errorMessageUser", e.getMessage());
+            redirectAttributes.addFlashAttribute("accountNumber", transactionDTO.getToAccountNumber());
         }
 
         return "redirect:/transactions/transfer-" + type;
@@ -185,10 +186,10 @@ public class TransactionController {
         return "transactions/add-transaction";
     }
 
+
     @PostMapping("/add")
     @PreAuthorize("hasRole('BANKER')")
-    public String processAddTransaction(Authentication authentication,
-                                        @Valid @ModelAttribute NewTransactionDTO transactionDTO,
+    public String processAddTransaction(@Valid @ModelAttribute NewTransactionDTO transactionDTO,
                                         BindingResult bindingResult,
                                         RedirectAttributes redirectAttributes) {
         // Check for validation errors
@@ -218,6 +219,8 @@ public class TransactionController {
                     transaction.getTransactionId());
         } catch (InsufficientFundsException e) {
             redirectAttributes.addFlashAttribute("errorMessageOverdraft", e.getMessage());
+        } catch (AccountNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessageUser", e.getMessage());
         }
 
         return "redirect:/transactions/add";
