@@ -4,6 +4,7 @@ import com.banking.dto.transaction.BankerTransactionDTO;
 import com.banking.dto.transaction.CustomerTransactionDTO;
 import com.banking.dto.transaction.NewTransactionDTO;
 import com.banking.exception.InsufficientFundsException;
+import com.banking.model.Customer;
 import com.banking.model.Transaction;
 import com.banking.repository.BankerRepository;
 import com.banking.repository.CustomerRepository;
@@ -14,6 +15,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/transactions")
@@ -65,6 +68,14 @@ public class TransactionController {
         return"transactions/banker-transactions";
     }
 
+    private String collectFieldErrorMessages(BindingResult bindingResult) {
+        StringBuilder messages = new StringBuilder();
+        for (FieldError error : bindingResult.getFieldErrors()) {
+            messages.append(error.getDefaultMessage()).append(" ");
+        }
+        return messages.toString().trim();
+    }
+
     @GetMapping("/transfer-{type}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public String showTransferForm(Authentication authentication,
@@ -106,12 +117,8 @@ public class TransactionController {
 
         // Check for validation errors
         if (bindingResult.hasErrors()) {
-            // Collect error messages
-            StringBuilder fieldErrorMessages = new StringBuilder();
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                fieldErrorMessages.append(error.getDefaultMessage()).append(" ");
-            }
-            redirectAttributes.addFlashAttribute("fieldErrorMessages", fieldErrorMessages.toString());
+            redirectAttributes.addFlashAttribute("fieldErrorMessages",
+                    collectFieldErrorMessages(bindingResult));
             return "redirect:/transactions/transfer-" + type;
         }
 
@@ -138,4 +145,44 @@ public class TransactionController {
 
         return "redirect:/transactions/transfer-" + type;
     }
+
+    @GetMapping("/add")
+    @PreAuthorize("hasRole('BANKER')")
+    public String addCustomerTransaction(Authentication authentication,
+                                         Model model) {
+        BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
+        model.addAttribute("firstName", userDetails.getFirstName());
+
+        return "transactions/add-transaction";
+    }
+
+    // Display the customer's balance on Check Balance button click
+    @GetMapping("/add/{accountNumber}")
+    @PreAuthorize("hasRole('BANKER')")
+    public String addCustomerTransaction(Authentication authentication,
+                                         Model model,
+                                         @PathVariable String accountNumber,
+                                         RedirectAttributes redirectAttributes) {
+        BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
+        model.addAttribute("firstName", userDetails.getFirstName());
+
+        // To Do: Add form validations (see Post for transfers)
+
+        Optional<Customer> customerOpt = customerRepository.findByAccountNumber(accountNumber);
+        if (customerOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("fieldErrorMessages",
+                    "Account number not found: " + accountNumber);
+            return "redirect:/transactions/add";
+        }
+
+        Customer customer = customerOpt.get();
+        model.addAttribute("formattedBalance",
+                transactionService.getFormattedBalance(customer.getUserId()));
+
+        return "transactions/add-transaction";
+    }
+
+
 }
+
+

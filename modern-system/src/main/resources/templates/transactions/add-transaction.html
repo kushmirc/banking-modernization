@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/common :: head('Add Transaction')}">
+  <title>Add Customer Transaction - Chicago Bank</title>
+</head>
+<body>
+<!-- Navigation -->
+<div th:replace="~{fragments/nav-authenticated :: nav-authenticated('profile', ${firstName})}"></div>
+
+<!-- Main Content -->
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Add Customer Transaction</h1>
+    <h2>Deposit (Credit) or Withdraw (Debit) Funds for a Customer</h2>
+  </div>
+
+  <!-- Transfer Form Card -->
+  <div class="card">
+    <div class="card-header">
+      <h2><i class="fas fa-wallet"></i>Transaction Information</h2>
+    </div>
+    <div class="card-body">
+      <div class="info-row highlight">
+        <span class="label">Customer's Current Balance:</span>
+        <span class="value balance" th:text="${formattedBalance}">--.--</span>
+      </div>
+      <br>
+      <br>
+
+      <!-- Success/Error Messages -->
+      <div th:if="${successMessage}" class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${successMessage}">Success</span>
+        <span th:if="${transactionId}"> You can track transactions in
+          <a th:href="@{/transactions/customer}" style="color: inherit; font-weight: 600;">View Transactions</a>.</span>
+      </div>
+      <div th:if="${fieldErrorMessages}" class="alert alert-error">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span th:text="${fieldErrorMessages}">Error</span>
+      </div>
+      <div th:if="${errorMessageOverdraft}" class="alert alert-error">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span th:text="${errorMessageOverdraft}">Error</span>
+      </div>
+
+      <!-- Transfer Form -->
+      <form th:action="@{'/transactions/add'}" method="post">
+
+        <!-- Recipient Account Number -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Customer Account Number</label>
+            <input type="text"
+                   name="toAccountNumber"
+                   id="toAccountNumber"
+                   class="form-input"
+                   placeholder="Enter the account number"
+                   maxlength="40"
+                   th:width="100"
+                   required>
+          </div>
+          <div class="form-group" style="display: flex; flex-direction: column">
+            <button type="button"
+                    class="btn btn-secondary"
+                    style="width: 120px; margin-top: auto"
+                    onclick="displayBalance()">
+              Check Balance</button>
+          </div>
+        </div>
+        <br>
+
+        <!-- Amount to be Transferred -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Amount to be Processed</label>
+            <input type="text"
+                   name="formattedAmount"
+                   class="form-input"
+                   placeholder="$0"
+                   maxlength="40"
+                   required>
+          </div>
+        </div>
+        <br>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Add Transaction
+          </button>
+          <button type="reset" class="btn btn-secondary">
+            <i class="fas fa-eraser"></i> Clear Form
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <a href="/dashboard" class="back-link">&larr; Return to dashboard</a>
+</div>
+
+<!-- Footer -->
+<div th:replace="~{fragments/common :: footer}"></div>
+
+
+<script th:inline="javascript">
+  function displayBalance() {
+    const accountInput = document.getElementById("toAccountNumber");
+    const toAccountNumber = accountInput.value.trim();
+
+    if (toAccountNumber) {
+      window.location.href = `/transactions/add/${toAccountNumber}`;
+    } else {
+      alert('Please enter an account number first');
+    }
+  }
+</script>
+</body>
+</html>
