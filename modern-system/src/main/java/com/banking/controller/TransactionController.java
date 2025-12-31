@@ -180,6 +180,7 @@ public class TransactionController {
         Customer customer = customerOpt.get();
         model.addAttribute("formattedBalance",
                 transactionService.getFormattedBalance(customer.getUserId()));
+        model.addAttribute("accountNumber", accountNumber);
 
         return "transactions/add-transaction";
     }
@@ -194,6 +195,8 @@ public class TransactionController {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("fieldErrorMessages",
                     collectFieldErrorMessages(bindingResult));
+            redirectAttributes.addFlashAttribute("accountNumber",
+                    transactionDTO.getToAccountNumber());
             return "redirect:/transactions/add";
         }
 
@@ -201,7 +204,7 @@ public class TransactionController {
         if (!transactionDTO.getAmountAction().equals("Debit") &&
                 !transactionDTO.getAmountAction().equals("Credit")) {
             redirectAttributes.addFlashAttribute("errorMessageType",
-                    "Please select 'Debit' or 'Credit");
+                    "Please select 'Debit' or 'Credit'");
             return "redirect:/transactions/add";
         }
 

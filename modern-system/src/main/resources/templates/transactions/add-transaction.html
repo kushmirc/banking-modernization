@@ -32,7 +32,7 @@
         <i class="fas fa-check-circle"></i>
         <span th:text="${successMessage}">Success</span>
         <span th:if="${transactionId}"> You can track transactions in
-          <a th:href="@{/transactions/customer}" style="color: inherit; font-weight: 600;">View Transactions</a>.</span>
+          <a th:href="@{/transactions/banker}" style="color: inherit; font-weight: 600;">View Transactions</a>.</span>
       </div>
       <div th:if="${fieldErrorMessages}" class="alert alert-error">
         <i class="fas fa-exclamation-triangle"></i>
@@ -59,6 +59,7 @@
           <div class="form-group">
             <label class="form-label">Customer Account Number</label>
             <input type="text"
+                   th:value="${accountNumber}"
                    name="toAccountNumber"
                    id="toAccountNumber"
                    class="form-input"

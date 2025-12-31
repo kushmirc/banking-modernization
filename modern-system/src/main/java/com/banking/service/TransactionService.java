@@ -192,37 +192,25 @@ public class TransactionService {
             }
             // Debit the customer's balance
             customer.setBalance(customer.getBalance() - transactionAmount);
-            customerRepository.save(customer);
-
-            // Record the transaction
-            Transaction transaction = new Transaction();
-            transaction.setFromAccountNumber(transactionDTO.getToAccountNumber());
-            transaction.setToAccountNumber(transactionDTO.getToAccountNumber());
-            transaction.setTransactionDate(LocalDateTime.now());
-            transaction.setTransactionDescription("Add Customer Transaction");
-            transaction.setTransactionStatus("pass");
-            transaction.setRemark("okay");
-            transaction.setAmount(transactionAmount);
-            transaction.setAmountAction(transactionDTO.getAmountAction());
-
-            return transactionRepository.save(transaction);
         } else {
             // Credit the customer's balance
             customer.setBalance(customer.getBalance() + transactionAmount);
-            customerRepository.save(customer);
-
-            // Record the transaction
-            Transaction transaction = new Transaction();
-            transaction.setFromAccountNumber(transactionDTO.getToAccountNumber());
-            transaction.setToAccountNumber(transactionDTO.getToAccountNumber());
-            transaction.setTransactionDate(LocalDateTime.now());
-            transaction.setTransactionDescription("Add Customer Transaction");
-            transaction.setTransactionStatus("pass");
-            transaction.setRemark("okay");
-            transaction.setAmount(transactionAmount);
-            transaction.setAmountAction(transactionDTO.getAmountAction());
-
-            return transactionRepository.save(transaction);
         }
+
+        // Save the customer (with new balance) to the database
+        customerRepository.save(customer);
+
+        // Record the transaction
+        Transaction transaction = new Transaction();
+        transaction.setFromAccountNumber(transactionDTO.getToAccountNumber());
+        transaction.setToAccountNumber(transactionDTO.getToAccountNumber());
+        transaction.setTransactionDate(LocalDateTime.now());
+        transaction.setTransactionDescription("Add Customer Transaction");
+        transaction.setTransactionStatus("pass");
+        transaction.setRemark("okay");
+        transaction.setAmount(transactionAmount);
+        transaction.setAmountAction(transactionDTO.getAmountAction());
+
+        return transactionRepository.save(transaction);
     }
 }
