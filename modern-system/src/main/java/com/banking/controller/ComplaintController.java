@@ -105,6 +105,7 @@ public class ComplaintController {
     @GetMapping("/new")
     public String newComplaint(Authentication authentication, Model model) {
         BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
+        model.addAttribute("firstName", userDetails.getFirstName());
         String accountNumber = "";
         boolean isCustomer = false;
 

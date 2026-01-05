@@ -169,8 +169,6 @@ public class TransactionController {
         BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
         model.addAttribute("firstName", userDetails.getFirstName());
 
-        // To Do: Add form validations (see Post for transfers)
-
         Optional<Customer> customerOpt = customerRepository.findByAccountNumber(accountNumber);
         if (customerOpt.isEmpty()) {
             redirectAttributes.addFlashAttribute("fieldErrorMessages",
@@ -225,6 +223,8 @@ public class TransactionController {
 
         return "redirect:/transactions/add";
     }
+
+
 
 }
 
