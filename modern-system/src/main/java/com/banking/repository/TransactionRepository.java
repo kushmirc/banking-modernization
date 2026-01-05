@@ -24,7 +24,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
 
     @Query("Select t " +
             "FROM Transaction t " +
-            "WHERE t.transactionDescription = ?1 and t.transactionStatus = ?2" +
+            "WHERE t.transactionDescription = ?1 and t.transactionStatus = ?2 " +
             "ORDER BY t.transactionDate DESC")
     List<Transaction> findExternalTransfersProgressing(String description, String status);
 }

@@ -15,8 +15,21 @@
 
   <!-- Transactions Card -->
   <div class="card">
-    <div class="card-header">
-      <h2><i class="fas fa-exchange-alt"></i> All Transactions</h2>
+    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <h2 style="margin: 0;"><i class="fas fa-search"></i>Reveiw External Transfers</h2>
+
+      <!-- Edit Mode Controls -->
+      <div class="edit-controls">
+        <!-- Edit Mode: "Cancel Changes" and "Save All" buttons-->
+        <div id="editButtons" style="gap: 0.5rem;">
+          <button type="button" class="btn-cancel" onclick="cancelChanges()">
+            <i class="fas fa-times"></i> Clear Changes
+          </button>
+          <button type="button" class="btn-save" onclick="saveAllChanges()">
+            <i class="fas fa-save"></i> Save All Changes
+          </button>
+        </div>
+      </div>
     </div>
     <div class="card-body">
       <div class="table-container">
@@ -42,11 +55,13 @@
             <td th:text="${transaction.fromAccountNumber}"></td>
             <td th:text="${transaction.toAccountNumber}"></td>
             <td class="hide-mobile">
-              <span class="status-badge"
-                    th:classappend="${transaction.transactionStatus == 'pass'} ? 'pass' :
-                                    (${transaction.transactionStatus == 'fail'} ? 'fail' : 'pending')"
-                    th:text="${transaction.transactionStatus}">
-              </span>
+              <select class="status-dropdown status-dropdown-field"
+                      th:data-transaction-id="${transaction.transactionId}"
+                      th:onchange="'handleStatusChange(this, ' + ${transaction.transactionId} + ')'">
+                <option value="progressing" th:selected="${transaction.status == 'Open'}">Open</option>
+                <option value="Ongoing" th:selected="${complaint.status == 'Ongoing'}">Ongoing</option>
+                <option value="Closed" th:selected="${complaint.status == 'Closed'}">Closed</option>
+              </select>
             </td>
             <td th:text="${transaction.remark}"></td>
             <td class="amount" th:text="${transaction.formattedAmount}"></td>
@@ -71,7 +86,191 @@
 </div>
 
 
-<!-- Use existing footer fragment if you have one -->
+<!-- Footer -->
 <div th:replace="~{fragments/common :: footer}"></div>
+
+<!-- Inline Styles for Edit Mode and Toasts -->
+<style>
+  /* Edit Mode Button Styles */
+  .edit-controls {
+    display: flex;
+    align-items: center;
+  }
+
+  #editModeButtons {
+    display: flex;
+  }
+
+  .btn-save, .btn-cancel {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+
+  .btn-save {
+    background: #38a169;
+    color: white;
+  }
+
+  .btn-save:hover {
+    background: #2f855a;
+  }
+
+  .btn-cancel {
+    background: #e2e8f0;
+    color: #4a5568;
+  }
+
+  .btn-cancel:hover {
+    background: #cbd5e0;
+  }
+
+  /* Dropdown Styles (hidden by default, shown in edit mode) */
+  .status-dropdown {
+    display: none;
+    padding: 0.4rem 0.6rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    background: white;
+    cursor: pointer;
+    min-width: 100px;
+  }
+
+  .status-dropdown:focus {
+    outline: none;
+    border-color: #667eea;
+  }
+
+  .status-dropdown.modified {
+    border-color: #ed8936;
+    background: #fffaf0;
+  }
+
+  /* Auto-set message */
+  .auto-set-msg {
+    font-size: 0.75rem;
+    color: #38a169;
+    margin-top: 0.25rem;
+    display: none;
+  }
+
+  .auto-set-msg.visible {
+    display: block;
+  }
+
+  /* Toast Notification Styles */
+  .toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .toast {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: slideIn 0.3s ease;
+    max-width: 350px;
+  }
+
+  .toast.success {
+    background: #38a169;
+  }
+
+  .toast.error {
+    background: #e53e3e;
+  }
+
+  .toast.info {
+    background: #667eea;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideOut {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+  /* .back-link styles now in dashboard-styles.css */
+</style>
+
+
+
+<!-- JavaScript for Edit Mode Functionality -->
+<script th:inline="javascript">
+  // ============================================================
+  // State Management
+  // ============================================================
+  let originalValues = {};  // Store original values for cancel/revert
+  let modifiedRows = new Set();  // Track which transaction IDs have changes
+
+  // ============================================================
+  // Toast Notification System
+  // ============================================================
+  function showToast(message, type = 'info', duration = 4000) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+
+    // Icon based on type
+    const icons = {
+      success: 'fa-check-circle',
+      error: 'fa-exclamation-circle',
+      info: 'fa-info-circle'
+    };
+
+    toast.innerHTML = `
+            <i class="fas ${icons[type] || icons.info}"></i>
+            <span>${message}</span>
+        `;
+
+    container.appendChild(toast);
+
+    // Auto-remove after duration
+    setTimeout(() => {
+      toast.style.animation = 'slideOut 0.3s ease forwards';
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+  }
+
+
+
+
+</script>
+
+
 </body>
 </html>
