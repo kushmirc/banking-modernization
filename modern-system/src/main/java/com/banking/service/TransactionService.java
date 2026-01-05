@@ -215,4 +215,26 @@ public class TransactionService {
 
         return transactionRepository.save(transaction);
     }
+
+    public List<BankerTransactionDTO> getExternalTransfersForReview() {
+        List<Transaction> transactions = transactionRepository
+                .findExternalTransfersProgressing("Funds Transfer to Other Bank", "progressing");
+
+        List<BankerTransactionDTO> bankerTransactionDTOS = new ArrayList<>();
+
+        for(Transaction transaction : transactions) {
+            bankerTransactionDTOS.add(new BankerTransactionDTO(
+                    transaction.getTransactionId(),
+                    transaction.getFromAccountNumber(),
+                    transaction.getToAccountNumber(),
+                    transaction.getTransactionDate(),
+                    transaction.getTransactionDescription(),
+                    transaction.getTransactionStatus(),
+                    transaction.getRemark(),
+                    formatCurrency(transaction.getAmount()),
+                    transaction.getAmountAction()
+            ));
+        }
+        return bankerTransactionDTOS;
+    }
 }

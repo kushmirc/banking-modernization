@@ -21,5 +21,11 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
 
     @Query("SELECT MAX(t.transactionId) FROM Transaction t")
     Optional<Integer> findMaxTransactionId();
+
+    @Query("Select t " +
+            "FROM Transaction t " +
+            "WHERE t.transactionDescription = ?1 and t.transactionStatus = ?2" +
+            "ORDER BY t.transactionDate DESC")
+    List<Transaction> findExternalTransfersProgressing(String description, String status);
 }
 

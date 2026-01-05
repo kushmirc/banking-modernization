@@ -225,6 +225,19 @@ public class TransactionController {
     }
 
 
+    @GetMapping("/review")
+    @PreAuthorize("hasRole('BANKER')")
+    public String reviewExternalTransfers(Authentication authentication, Model model) {
+        BankingUserDetails userDetails = (BankingUserDetails) authentication.getPrincipal();
+        model.addAttribute("firstName", userDetails.getFirstName());
+
+        List<BankerTransactionDTO> transactionDTOS = transactionService
+                .getExternalTransfersForReview();
+
+        model.addAttribute("transactions", transactionDTOS);
+        return "transactions/review-external-transfers";
+    }
+
 
 }
 

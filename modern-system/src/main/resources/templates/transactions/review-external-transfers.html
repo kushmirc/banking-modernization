@@ -39,6 +39,7 @@
             <td th:text="${transaction.transactionId}"></td>
             <td th:text="${#temporals.format(transaction.transactionDate, 'MM/dd/yyyy')}"></td>
             <td th:text="${transaction.transactionDescription}"></td>
+            <td th:text="${transaction.fromAccountNumber}"></td>
             <td th:text="${transaction.toAccountNumber}"></td>
             <td class="hide-mobile">
               <span class="status-badge"
