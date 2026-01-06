@@ -2,6 +2,7 @@ package com.banking.controller;
 
 import com.banking.dto.complaint.ComplaintStatusUpdateDTO;
 import com.banking.dto.complaint.NewComplaintDTO;
+import com.banking.exception.ResourceNotFoundException;
 import com.banking.model.Complaint;
 import com.banking.model.Customer;
 import com.banking.repository.AdministratorRepository;
@@ -96,7 +97,7 @@ public class ComplaintController {
             return ResponseEntity.ok(updatedComplaint);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (EntityNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }

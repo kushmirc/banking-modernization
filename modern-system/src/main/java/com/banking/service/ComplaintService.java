@@ -6,6 +6,7 @@ import com.banking.model.Customer;
 import com.banking.repository.ComplaintRepository;
 import com.banking.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.banking.exception.ResourceNotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class ComplaintService {
     public List<Complaint> getCustomerComplaints(String userId) {
         // Get the customer with the userId of the user
         Customer customer = customerRepository.findByUserId(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", userId));
 
         // Get the customer's account number
         String  accountNumber = customer.getAccountNumber();
@@ -35,7 +36,7 @@ public class ComplaintService {
     public Complaint updateComplaintStatus(Integer complaintId, String status, String closed){
         // Find the complaint
         Complaint complaint = complaintRepository.findById(complaintId)
-                .orElseThrow(() -> new UsernameNotFoundException("Complaint not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Complaint", complaintId));
 
         // Validate status/closed logical rule
         validateStatusClosedCombination(status, closed);

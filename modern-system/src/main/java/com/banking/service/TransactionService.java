@@ -5,6 +5,7 @@ import com.banking.dto.transaction.CustomerTransactionDTO;
 import com.banking.dto.transaction.NewTransactionDTO;
 import com.banking.exception.AccountNotFoundException;
 import com.banking.exception.InsufficientFundsException;
+import com.banking.exception.ResourceNotFoundException;
 import com.banking.model.Customer;
 import com.banking.model.Transaction;
 import com.banking.repository.CustomerRepository;
@@ -168,7 +169,7 @@ public class TransactionService {
         transaction.setFromAccountNumber(customer.getAccountNumber());
         transaction.setToAccountNumber(transactionDTO.getToAccountNumber());
         transaction.setTransactionDate(LocalDateTime.now());
-        transaction.setTransactionDescription("Funds Transfer to Other Bank");
+        transaction.setTransactionDescription("Funds Transfer to other Bank");
         transaction.setTransactionStatus("progressing");
         transaction.setRemark("Funds transfer requested successfully");
         transaction.setAmount(transferAmount);
@@ -218,7 +219,7 @@ public class TransactionService {
 
     public List<BankerTransactionDTO> getExternalTransfersForReview() {
         List<Transaction> transactions = transactionRepository
-                .findExternalTransfersProgressing("Funds Transfer to Other Bank", "progressing");
+                .findExternalTransfersProgressing("Funds Transfer to other Bank", "progressing");
 
         List<BankerTransactionDTO> bankerTransactionDTOS = new ArrayList<>();
 
@@ -237,4 +238,15 @@ public class TransactionService {
         }
         return bankerTransactionDTOS;
     }
+
+
+    public Transaction updateTransactionStatus(Integer transactionId, String status) {
+        Transaction transaction = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction", transactionId));
+
+         transaction.setTransactionStatus(status);
+
+        return transactionRepository.save(transaction);
+    }
+
 }

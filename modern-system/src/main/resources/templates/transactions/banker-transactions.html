@@ -44,7 +44,7 @@
             <td class="hide-mobile">
               <span class="status-badge"
                     th:classappend="${transaction.transactionStatus == 'pass'} ? 'pass' :
-                                    (${transaction.transactionStatus == 'fail'} ? 'fail' : 'progressing')"
+                                    (${transaction.transactionStatus == 'fail'} ? 'fail' : 'pending')"
                     th:text="${transaction.transactionStatus}">
               </span>
             </td>

@@ -7,6 +7,9 @@
 <!-- Use existing authenticated navigation fragment -->
 <div th:replace="~{fragments/nav-authenticated :: nav-authenticated('profile', ${firstName})}"></div>
 
+<!-- Toast Container (for notifications) -->
+<div id="toastContainer" class="toast-container"></div>
+
 <!-- Main Title -->
 <div class="dashboard-container">
   <div class="dashboard-header">
@@ -20,9 +23,14 @@
 
       <!-- Edit Mode Controls -->
       <div class="edit-controls">
+        <!-- View Mode: Show "Enter Edit Mode" button -->
+        <button type="button" id="btnEnterEdit" class="btn-edit-mode" onclick="enterEditMode()">
+          <i class="fas fa-edit"></i> Edit Status
+        </button>
+
         <!-- Edit Mode: "Cancel Changes" and "Save All" buttons-->
-        <div id="editButtons" style="gap: 0.5rem;">
-          <button type="button" class="btn-cancel" onclick="cancelChanges()">
+        <div id="editModeButtons" style="display: none; gap: 0.5rem;">
+          <button type="button" class="btn-cancel" onclick="cancelEditMode()">
             <i class="fas fa-times"></i> Clear Changes
           </button>
           <button type="button" class="btn-save" onclick="saveAllChanges()">
@@ -32,7 +40,7 @@
       </div>
     </div>
     <div class="card-body">
-      <div class="table-container">
+      <div class="table-container" id="transactionsTable">
         <table>
           <thead>
           <tr>
@@ -48,19 +56,30 @@
           </tr>
           </thead>
           <tbody>
-          <tr th:each="transaction : ${transactions}">
+          <tr th:each="transaction : ${transactions}" th:data-transaction-id="${transaction.transactionId}">
             <td th:text="${transaction.transactionId}"></td>
             <td th:text="${#temporals.format(transaction.transactionDate, 'MM/dd/yyyy')}"></td>
             <td th:text="${transaction.transactionDescription}"></td>
             <td th:text="${transaction.fromAccountNumber}"></td>
             <td th:text="${transaction.toAccountNumber}"></td>
+
+            <!-- Status Column -->
             <td class="hide-mobile">
+              <!-- Static text (visible in view mode) -->
+              <span class="status-text">
+                    <span class="status-badge status-text-value"
+                          th:classappend="${transaction.transactionStatus == 'pass'} ? 'pass' :
+                                          (${transaction.transactionStatus == 'fail'} ? 'fail' : 'pending')"
+                          th:text="${transaction.transactionStatus}">
+                    </span>
+                </span>
+              <!-- Dropdown (visible in edit mode -->
               <select class="status-dropdown status-dropdown-field"
                       th:data-transaction-id="${transaction.transactionId}"
                       th:onchange="'handleStatusChange(this, ' + ${transaction.transactionId} + ')'">
-                <option value="progressing" th:selected="${transaction.status == 'Open'}">Open</option>
-                <option value="Ongoing" th:selected="${complaint.status == 'Ongoing'}">Ongoing</option>
-                <option value="Closed" th:selected="${complaint.status == 'Closed'}">Closed</option>
+                <option value="progressing" th:selected="${transaction.transactionStatus == 'progressing'}">progressing</option>
+                <option value="pass" th:selected="${transaction.transactionStatus == 'pass'}">pass</option>
+                <option value="fail" th:selected="${transaction.transactionStatus == 'fail'}">fail</option>
               </select>
             </td>
             <td th:text="${transaction.remark}"></td>
@@ -101,7 +120,7 @@
     display: flex;
   }
 
-  .btn-save, .btn-cancel {
+  .btn-edit-mode, .btn-save, .btn-cancel {
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 6px;
@@ -114,6 +133,14 @@
     transition: all 0.2s ease;
   }
 
+  .btn-edit-mode {
+    background: #667eea;
+    color: white;
+  }
+
+  .btn-edit-mode:hover {
+    background: #5a67d8;
+  }
 
   .btn-save {
     background: #38a169;
@@ -224,6 +251,17 @@
       opacity: 0;
     }
   }
+
+  /* Edit mode indicator on table */
+  .table-container.edit-mode {
+    border: 2px solid #667eea;
+    border-radius: 8px;
+  }
+
+  .table-container.edit-mode table {
+    background: #f7fafc;
+  }
+
   /* .back-link styles now in dashboard-styles.css */
 </style>
 
@@ -234,6 +272,7 @@
   // ============================================================
   // State Management
   // ============================================================
+  let isEditMode = false;
   let originalValues = {};  // Store original values for cancel/revert
   let modifiedRows = new Set();  // Track which transaction IDs have changes
 
@@ -266,9 +305,181 @@
     }, duration);
   }
 
+  // ============================================================
+  // Edit Mode Toggle Functions
+  // ============================================================
+  function enterEditMode() {
+    isEditMode = true;
+    modifiedRows.clear();
+
+    // Store original values for all rows
+    document.querySelectorAll('tr[data-transaction-id]').forEach(row => {
+      const transactionId = row.dataset.transactionId;
+      originalValues[transactionId] = {
+        status: row.querySelector('.status-dropdown-field').value,
+      };
+    });
+
+    // Show/hide appropriate buttons
+    document.getElementById('btnEnterEdit').style.display = 'none';
+    document.getElementById('editModeButtons').style.display = 'flex';
+
+    // Show dropdowns, hide static text
+    document.querySelectorAll('.status-text').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.status-dropdown').forEach(el => el.style.display = 'inline-block');
+
+    // Add visual indicator to table
+    document.getElementById('transactionsTable').classList.add('edit-mode');
+
+    showToast('Edit mode enabled. Make your changes and click Save All.', 'info');
+  }
+
+  function cancelEditMode() {
+    // Revert all dropdowns to original values
+    document.querySelectorAll('tr[data-transaction-id]').forEach(row => {
+      const transactionId = row.dataset.transactionId;
+      const original = originalValues[transactionId];
+      if (original) {
+        row.querySelector('.status-dropdown-field').value = original.status;
+        // Update the static text to match
+        row.querySelector('.status-text-value').textContent = original.status;
+      }
+
+      // Remove modified styling
+      row.querySelectorAll('.status-dropdown').forEach(dd => dd.classList.remove('modified'));
+      row.querySelector('.auto-set-msg')?.classList.remove('visible');
+    });
+
+    exitEditMode();
+    showToast('Changes cancelled.', 'info');
+  }
+
+  function exitEditMode() {
+    isEditMode = false;
+    modifiedRows.clear();
+
+    // Show/hide appropriate buttons
+    document.getElementById('btnEnterEdit').style.display = 'inline-flex';
+    document.getElementById('editModeButtons').style.display = 'none';
+
+    // Hide dropdowns, show static text
+    document.querySelectorAll('.status-dropdown').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.status-text').forEach(el => el.style.display = 'inline');
+
+    // Remove visual indicator from table
+    document.getElementById('transactionsTable').classList.remove('edit-mode');
+
+    // Clear all auto-set messages
+    document.querySelectorAll('.auto-set-msg').forEach(el => el.classList.remove('visible'));
+  }
+
+  // ============================================================
+  // Change Handling with Business Rule Validation
+  // ============================================================
+  function handleStatusChange(selectElement, transactionId) {
+    const row = selectElement.closest('tr');
+    //const closedDropdown = row.querySelector('.closed-dropdown-field');
+    //const autoSetMsg = row.querySelector('.auto-set-msg');
+    //const newStatus = selectElement.value;
+
+    // Business Rule: If Status is "Closed", auto-set Closed to "True"
+    //if (newStatus === 'Closed') {
+    //  closedDropdown.value = 'True';
+     // closedDropdown.classList.add('modified');
+     // autoSetMsg.classList.add('visible');
+    //} else {
+      // If Status is Open or Ongoing, Closed must be False
+    //  closedDropdown.value = 'False';
+    //  autoSetMsg.classList.remove('visible');
+    //}
+
+    markAsModified(transactionId, row);
+  }
 
 
 
+  function markAsModified(transactionId, row) {
+    const original = originalValues[transactionId];
+    const currentStatus = row.querySelector('.status-dropdown-field').value;
+
+    // Check if actually different from original
+    if (currentStatus !== original.status) {
+      modifiedRows.add(transactionId);
+      row.querySelectorAll('.status-dropdown').forEach(dd => dd.classList.add('modified'));
+    } else {
+      modifiedRows.delete(transactionId);
+      row.querySelectorAll('.status-dropdown').forEach(dd => dd.classList.remove('modified'));
+    }
+  }
+
+  // ============================================================
+  // Save All Changes
+  // ============================================================
+  async function saveAllChanges() {
+    if (modifiedRows.size === 0) {
+      showToast('No changes to save.', 'info');
+      return;
+    }
+
+    const updates = [];
+
+    // Collect all changes
+    modifiedRows.forEach(transactionId => {
+      const row = document.querySelector(`tr[data-transaction-id="${transactionId}"]`);
+      updates.push({
+        transactionId: parseInt(transactionId),
+        status: row.querySelector('.status-dropdown-field').value,
+      });
+    });
+
+    // Send updates to backend (one at a time for simplicity)
+    let successCount = 0;
+    let errorCount = 0;
+
+    // Get CSRF token from meta tags
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    for (const update of updates) {
+      try {
+        const response = await fetch(`/transactions/${update.transactionId}/status?status=${encodeURIComponent(update.status)}`, {
+          method: 'PUT',
+          headers: {
+            [csrfHeader]: csrfToken  // Include CSRF token
+          },
+        });
+
+        if (response.ok) {
+          successCount++;
+          // Update the static text to reflect the saved value
+          const row = document.querySelector(`tr[data-transaction-id="${update.transactionId}"]`);
+          row.querySelector('.status-text-value').textContent = update.status;
+
+          // Update original values so cancel works correctly
+          originalValues[update.transactionId] = {
+            status: update.status,
+          };
+        } else {
+          errorCount++;
+          const errorData = await response.json();
+          console.error(`Failed to update transaction ${update.transactionId}:`, errorData);
+        }
+      } catch (error) {
+        errorCount++;
+        console.error(`Error updating transaction ${update.transactionId}:`, error);
+      }
+    }
+
+    // Show result toast
+    if (errorCount === 0) {
+      showToast(`${successCount} transaction(s) updated successfully!`, 'success');
+      exitEditMode();
+    } else if (successCount > 0) {
+      showToast(`${successCount} updated, ${errorCount} failed. Check console for details.`, 'error');
+    } else {
+      showToast('Failed to save changes. Please try again.', 'error');
+    }
+  }
 </script>
 
 

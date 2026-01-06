@@ -5,6 +5,7 @@ import com.banking.dto.transaction.CustomerTransactionDTO;
 import com.banking.dto.transaction.NewTransactionDTO;
 import com.banking.exception.AccountNotFoundException;
 import com.banking.exception.InsufficientFundsException;
+import com.banking.exception.ResourceNotFoundException;
 import com.banking.model.Customer;
 import com.banking.model.Transaction;
 import com.banking.repository.BankerRepository;
@@ -14,6 +15,7 @@ import com.banking.security.BankingUserDetails;
 import com.banking.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -238,6 +240,22 @@ public class TransactionController {
         return "transactions/review-external-transfers";
     }
 
+    @PutMapping("{transactionId}/status")
+    @PreAuthorize("hasRole('BANKER')")
+    @ResponseBody
+    public ResponseEntity<?> updateExternalTransferStatus(
+            @PathVariable Integer transactionId,
+            @RequestParam String status) {
+
+        try{
+            Transaction updateTransaction = transactionService.updateTransactionStatus(transactionId, status);
+            return ResponseEntity.ok(updateTransaction);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
 
